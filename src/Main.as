@@ -28,39 +28,45 @@
 	public class Main extends Sprite {
 		
 		//Stage Objects
-		var adminPanel:AdminPanel;
+		var menu:Menu;
+		var icon:Icon;
 			
-		//Main initializes object
-		public function Main()  {		
-			//load resources here
-			adminPanel = new AdminPanel(300, stage.stageHeight);
-			adminPanel.alpha = .75;
-			adminPanel.x = stage.stageWidth;
-			adminPanel.y = 0;
-			adminPanel.openX = adminPanel.x - adminPanel.width;
-			adminPanel.closeX = adminPanel.x;
+		//Main initializes objects and gives them values
+		public function Main()  {
+			//Create a new admin panel		
+			//menu width and height
+			menu = new Menu(300, stage.stageHeight);
+			
+			menu.x = stage.stageWidth-48;
+			menu.y = 0;
+			menu.openX = stage.stageWidth - menu.width;
+			menu.closeX = menu.x;
+			
+			//Create a new tab
+			
+			//Call init 
 			init();
 		}
 		
-		//Init Adds resources to stage and sets up event listeners
+		//Init Adds resources to stage and sets up initial event listeners
 		private function init():void {
-			addChild(adminPanel);
-			stage.addEventListener(MouseEvent.MOUSE_DOWN, open);
-			//open();			
+			addChild(menu);			
+			stage.addEventListener(MouseEvent.MOUSE_DOWN, open);		
 		}
 		
-		//This is a function to be called by unrealscript in order to open the AdminPanel
+		//The menu handles its own opening and closing, but the Main decides when and how this happens
+		//This is a function to be called by unrealscript in order to open the Menu
 		public function open(e:MouseEvent = null):void {
-			adminPanel.addEventListener(Event.ENTER_FRAME, adminPanel.onEnterFrameOpen);
-			adminPanel.removeEventListener(Event.ENTER_FRAME, adminPanel.onEnterFrameClose);
+			menu.addEventListener(Event.ENTER_FRAME, menu.onEnterFrameOpen);
+			menu.removeEventListener(Event.ENTER_FRAME, menu.onEnterFrameClose);
 			stage.removeEventListener(MouseEvent.MOUSE_DOWN, open);
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, close);
 		}
 		
-		//This is a function to be called by unrealscript in order to close the AdminPanel
+		//This is a function to be called by unrealscript in order to close the Menu
 		public function close(e:MouseEvent = null):void {
-			adminPanel.addEventListener(Event.ENTER_FRAME, adminPanel.onEnterFrameClose);
-			adminPanel.removeEventListener(Event.ENTER_FRAME, adminPanel.onEnterFrameOpen);
+			menu.addEventListener(Event.ENTER_FRAME, menu.onEnterFrameClose);
+			menu.removeEventListener(Event.ENTER_FRAME, menu.onEnterFrameOpen);
 			stage.removeEventListener(MouseEvent.MOUSE_DOWN, close);
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, open);
 		}	
