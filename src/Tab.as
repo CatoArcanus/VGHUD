@@ -1,4 +1,4 @@
-package  {
+package {
 	
 	import flash.display.Sprite;	
 	import flash.display.MovieClip;
@@ -34,29 +34,29 @@ package  {
 		public var myWidth:int; 
 		public var myHeight:int; 
 		public var myFont:Font; 
-				
-		public function Tab(tabName:String):void {
-			icon = new Icon(tabName);
-			icon.x = 8;
-			icon.y = 16;
+		
+		public function Tab(tabName:String, TAB_HEIGHT:int):void {
+			icon = new Icon(tabName, TAB_HEIGHT);
+			icon.x = TAB_HEIGHT/8;
+			icon.y = TAB_HEIGHT/4;
 			
-			var myFont = new Museo300();			
+			var myFont = new Museo300();
 			var myFormat:TextFormat = new TextFormat();
-			myFormat.size = 32;
+			myFormat.size = TAB_HEIGHT/2;
 			myFormat.font = "Arial";
 			
 			text = new TextField();
 						
 			text.text = tabName;
 			text.textColor = 0xFFFFFF;
-			text.x = 54;			
-			text.y = 10;
+			text.x = TAB_HEIGHT*.875;
+			text.y = TAB_HEIGHT*.15625;
 			text.width = 300-text.x;
 			text.embedFonts = true;  
 			text.setTextFormat(myFormat);
-									
-			this.myWidth = 300;			
-			this.myHeight = 64;			
+			
+			this.myWidth = 300;
+			this.myHeight = TAB_HEIGHT;
 			init();
 		}
 		
@@ -68,7 +68,6 @@ package  {
 		
 		public function highlight(e:MouseEvent = null):void {
 			trace("highlit");
-			
 			graphics.clear();
 			graphics.beginFill(0x222222, 1.0);
 			graphics.drawRect(0, 0, this.myWidth, this.myHeight); 
@@ -93,6 +92,6 @@ package  {
 			graphics.beginFill(0x000000, .0);
 			graphics.drawRect(0, 0, width, height); 
 			graphics.endFill();
-		}		
-	}	
+		}
+	}
 }

@@ -1,4 +1,4 @@
-package  {
+package {
 	
 	import flash.display.Sprite;	
 	import flash.display.MovieClip;
@@ -15,7 +15,7 @@ package  {
 	import flash.display.BitmapData;
 	import flash.geom.ColorTransform;
 	import flash.geom.Rectangle;
-		
+	
 	///////////////////
 	//* Description *//
 	///////////////////
@@ -33,21 +33,21 @@ package  {
 	//* Icon Class *//
 	////////////////////////	
 	public class Icon extends Sprite {
-						
-		public var image_black:Sprite;		
-		public var image_white:Sprite;		
+		
+		public var image_black:Sprite;
+		public var image_white:Sprite;
 		public var myBitmapData:BitmapData;
 		
-		public function Icon(name:String):void {
-			this.name = name;		
-			image_black = loadImage(image_black, "../src/img/"+name+"_icon_black.png", 0, 0 ,32 ,32);
-			image_white = loadImage(image_white, "../src/img/"+name+"_icon_white.png", 0, 0 ,32 ,32);
-			init();
+		public function Icon(name:String, TAB_HEIGHT:int):void {
+			this.name = name;
+			var icon_size:int = TAB_HEIGHT/2;
+			image_black = loadImage(image_black, "../src/img/"+name+"_icon_black.png", 0, 0 , icon_size, icon_size);
+			image_white = loadImage(image_white, "../src/img/"+name+"_icon_white.png", 0, 0 , icon_size, icon_size);
 		}
 		
 		private function init():void {
-			addChild(image_white);	
-		}		
+			//addChild(image_white);	
+		}
 		
 		private function loadImage(new_mc:Sprite, urlString:String, x:int, y:int, height:int, width:int ):Sprite {
 			new_mc = new Sprite();
@@ -57,6 +57,7 @@ package  {
 			myLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, functionOnImageLoaded);
 			myLoader.load(url);
 			addChild(new_mc);
+			//init();
 			return new_mc;
 		}
 		
@@ -78,6 +79,6 @@ package  {
 		public function draw():void {
 			//removeChild(image_black);
 			//addChild(image_white);
-		}		
-	}	
+		}
+	}
 }

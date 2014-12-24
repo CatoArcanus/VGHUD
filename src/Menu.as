@@ -1,4 +1,4 @@
-package  {
+package {
 	
 	import flash.display.Sprite;	
 	import flash.display.MovieClip;
@@ -12,21 +12,23 @@ package  {
 	/**
 	 * The Menu is the main window that is loaded for the HuD
 	 *
-	 * @category   movieclip
+	 * @category   sprite
 	 * @package    src
 	 * @author     Monte Nichols (Original Author) <monte.nichols.ii@gmail.com>
 	 * @copyright  Virtual Reality Labs at the Center for Brainhealth
-	 * @version    1.0 (12/20/2014)
+	 * @version    1.1 (12/23/2014)
 	 */
 
-	////////////////////////
+	//////////////////
 	//* Menu Class *//
-	////////////////////////	
+	//////////////////	
 	public class Menu extends Sprite {
+		
 		//Properties
 		var easing:Number = 0.25;
 		var openX:int;
 		var closeX:int;
+		var moveX:int;
 		var dx:int;
 		var frameCounter:int = 0;
 		
@@ -34,53 +36,50 @@ package  {
 		var tabs:Array = new Array();
 		
 		//Menu initializes objects and gives them values
-		public function Menu(width:int, height:int):void {		
-			var tab = new Tab("avatars");
-			tab.x = 0;
-			tab.y = 0;
-			tab.draw(width, 64);
-			//tab.height = 64;			
-			tabs.push(tab);
-			
+		public function Menu(width:int, height:int, tabNames:Array, TAB_HEIGHT:int):void {
+			var tabY:int = 0;
+			for each(var tabName:String in tabNames){
+				trace(tabName);
+				var tab = new Tab(tabName, TAB_HEIGHT);
+				tab.x = 0;
+				tab.y = tabY;
+				tab.draw(width, TAB_HEIGHT);
+				tabs.push(tab);
+				tabY +=TAB_HEIGHT;
+			}
 			init();
-			draw(width, height);			
+			draw(width, height);
 		}
-			
+		
 		//Init Adds resources to stage and sets up initial event listeners
 		private function init():void {
 			for each(var tab:Tab in tabs){
 				addChild(tab);
-			}			
+			}
 		}
 		
+		//Draw creates the background of black and 50% opactiy
 		public function draw(width, height):void {
 			graphics.beginFill(0x000000, .5);
 			graphics.drawRect(0, 0, width, height); 
 			graphics.endFill(); 
 		}
 		
-		public function onEnterFrameOpen(e:Event):void {
+		//This handles opening the Menu frame by frame, until is it done 
+		//This is arbitrary X movement, but could allow for any type of movement
+		public function onEnterFrame(e:Event):void {
 			//trace(frameCounter + " -- " + (openX - x) * easing);
-			dx = ( openX - x);
+			//My distance = (where I want to go) - where I am
+			dx = ( moveX - x);
+			//If where I want to go is less than 1, I will stay there
+			//Otherwise move a proportional distance to my target "easing" my way there
 			if(Math.abs(dx) < 1) {
-				removeEventListener(Event.ENTER_FRAME, onEnterFrameOpen);
+				removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 				frameCounter = 0;
 			} else {
-				x += dx * easing;				
-			}
-			frameCounter++;			
-		}
-		
-		public function onEnterFrameClose(e:Event):void {
-			//trace(frameCounter + " -- " + (closeX - x) * easing);
-			dx = ( closeX - x);
-			if(Math.abs(dx) < 1) {
-				removeEventListener(Event.ENTER_FRAME, onEnterFrameClose);
-				frameCounter = 0;
-			} else {
-				x += dx * easing;				
+				x += dx * easing;
 			}
 			frameCounter++;
-		}				
-	}	
+		}
+	}
 }
