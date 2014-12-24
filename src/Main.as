@@ -35,7 +35,8 @@
 		//Stage Objects
 		var menu:Menu;
 		var icon:Icon;
-		var tabNames:Array = new Array("Avatars", "Avatars", "Avatars", "Avatars");
+		var tabNames:Array = new Array("Chat", "Kick", "Avatars", "Possess", "Scenario");
+		//var tabNames:Array = new Array("Avatars", "Avatars", "Avatars", "Avatars", "Avatars");
 		
 		//Main initializes objects and gives them values
 		public function Main()  {

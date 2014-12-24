@@ -32,8 +32,12 @@ package {
 		var dx:int;
 		var frameCounter:int = 0;
 		
+		//variables
+		var currentPanel:String = "";
+		
 		//Objects
 		var tabs:Array = new Array();
+		var panels:Array = new Array();
 		
 		//Menu initializes objects and gives them values
 		public function Menu(width:int, height:int, tabNames:Array, TAB_HEIGHT:int):void {
@@ -43,9 +47,12 @@ package {
 				var tab = new Tab(tabName, TAB_HEIGHT);
 				tab.x = 0;
 				tab.y = tabY;
-				tab.draw(width, TAB_HEIGHT);
+				tab.draw();
+				tab.buttonMode=true;
+				tab.mouseChildren=false;
+				tab.addEventListener(MouseEvent.MOUSE_DOWN, showPanel);
 				tabs.push(tab);
-				tabY +=TAB_HEIGHT;
+				tabY += TAB_HEIGHT;
 			}
 			init();
 			draw(width, height);
@@ -80,6 +87,20 @@ package {
 				x += dx * easing;
 			}
 			frameCounter++;
+		}
+		
+		public function showPanel(e:MouseEvent = null):void {
+			animateOut(currentPanel);
+			animateIn(e.target.tabName);			
+		}
+		
+		public function animateOut(panelName:String):void {
+			trace("Animate out: " + currentPanel);			
+		}
+	
+		public function animateIn(panelName:String):void {
+			trace("Animate in: " + panelName);			
+			currentPanel = panelName;			
 		}
 	}
 }

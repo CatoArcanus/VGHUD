@@ -1,8 +1,8 @@
 package {
 	
-	import flash.display.Sprite;	
+	import flash.display.Sprite;
 	import flash.display.MovieClip;
-	import flash.display.Shape;	
+	import flash.display.Shape;
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -33,14 +33,19 @@ package {
 		public var tabName:String;
 		public var myWidth:int; 
 		public var myHeight:int; 
-		public var myFont:Font; 
+		public var easing:Number = .3;
+		public var maxAlpha:Number = 1.0; 
+		public var minAlpha:Number = 0.0; 
+		public var fade:Number = 0.0;
+		public var currentAlpha = 0.0;
+		public var dx:Number;  
+		public var frameCounter:int = 0;  
 		
 		public function Tab(tabName:String, TAB_HEIGHT:int):void {
 			icon = new Icon(tabName, TAB_HEIGHT);
 			icon.x = TAB_HEIGHT/8;
 			icon.y = TAB_HEIGHT/4;
 			
-			var myFont = new Museo300();
 			var myFormat:TextFormat = new TextFormat();
 			myFormat.size = TAB_HEIGHT/2;
 			myFormat.font = "Arial";
@@ -54,43 +59,56 @@ package {
 			text.width = 300-text.x;
 			text.embedFonts = true;  
 			text.setTextFormat(myFormat);
+			text.selectable = false;
 			
 			this.myWidth = 300;
 			this.myHeight = TAB_HEIGHT;
+			this.tabName = tabName 
 			init();
 		}
 		
 		private function init():void {
 			addChild(icon);
 			addChild(text);
-			addEventListener(MouseEvent.MOUSE_OVER, highlight);
+			addEventListener(MouseEvent.ROLL_OVER, highlight);
 		}
 		
 		public function highlight(e:MouseEvent = null):void {
-			trace("highlit");
-			graphics.clear();
-			graphics.beginFill(0x222222, 1.0);
-			graphics.drawRect(0, 0, this.myWidth, this.myHeight); 
-			graphics.endFill();
-			
-			removeEventListener(MouseEvent.MOUSE_OVER, highlight);
-			addEventListener(MouseEvent.MOUSE_OUT, unHighlight);
-			
-		}
+			//trace("highlight");
+			fade = maxAlpha;		
+			addEventListener(Event.ENTER_FRAME, onEnterFrame);			
+			addEventListener(MouseEvent.ROLL_OUT, unHighlight);
+			removeEventListener(MouseEvent.ROLL_OVER, highlight);
+		}	
 		
 		public function unHighlight(e:MouseEvent = null):void {
-			trace("unhighlit");
-			graphics.clear();
-			graphics.beginFill(0x000000, .0);
-			graphics.drawRect(0, 0, this.myWidth, this.myHeight); 
-			graphics.endFill();
-			removeEventListener(MouseEvent.MOUSE_OUT, unHighlight);
-			addEventListener(MouseEvent.MOUSE_OVER, highlight);
+			//trace("unhighlight");
+			fade = minAlpha;		
+			removeEventListener(MouseEvent.ROLL_OUT, unHighlight);
+			addEventListener(MouseEvent.ROLL_OVER, highlight);
+			addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
 		
-		public function draw(width:int, height:int):void {
-			graphics.beginFill(0x000000, .0);
-			graphics.drawRect(0, 0, width, height); 
+		private function onEnterFrame(e:Event):void {
+			//trace(frameCounter + "fade: "+fade+" -- dx:" + (dx)+ "currentAlpha: "+currentAlpha+ " abs " + (Math.abs(dx *100)));
+			//My distance = (where I want to go) - where I am
+			dx = ( fade - currentAlpha);
+			//If where I want to go is less than 1, I will stay there
+			//Otherwise move a proportional distance to my target "easing" my way there
+			if(Math.abs(dx *100) < .01) {
+				removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+				frameCounter = 0;
+			} else {
+				currentAlpha += dx * easing;
+				draw();
+			}
+			frameCounter++;
+		}
+		
+		public function draw():void {
+			graphics.clear();
+			graphics.beginFill(0x222222, currentAlpha);
+			graphics.drawRect(0, 0, myWidth, myHeight); 
 			graphics.endFill();
 		}
 	}
