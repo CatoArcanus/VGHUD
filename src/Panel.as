@@ -26,20 +26,15 @@ package  {
 	////////////////////////
 	//* Panel Class *//
 	////////////////////////	
-	public class Panel extends Sprite {
+	public class Panel extends UIElement {
 		
 		var panelName:String;
 		public var text:TextField;
-		public var moveX:Number;
-		public var openX:Number;
-		public var closeX:Number;
-		public var easing:Number = .2;
-		public var dx:Number;
-		public var frameCounter:int;
-		public var myWidth:int;
-		public var myHeight:int;
 				
 		public function Panel(panelName:String, width:int, height:int):void {		
+			this.easing = .2;
+			this.color = 0x222222;
+			this.currentAlpha = .5;
 					
 			var myFormat:TextFormat = new TextFormat();
 			//TODO: make this number modular
@@ -67,12 +62,6 @@ package  {
 			addChild(text);
 			draw();
 		}	
-		
-		public function draw():void {
-			graphics.clear();
-			graphics.beginFill(0x222222, .5);
-			graphics.drawRect(0, 0, myWidth, myHeight); 
-			graphics.endFill();
-		}		
+					
 	}	
 }

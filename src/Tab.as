@@ -16,7 +16,7 @@ package {
 	/**
 	 * The Tab is one of many objects in a menu
 	 *
-	 * @namespace  root.menu.tab[]
+	 * @namespace  root.menu.tab
 	 * @package    src
 	 * @author     Monte Nichols (Original Author) <monte.nichols.ii@gmail.com>
 	 * @copyright  Virtual Reality Labs at the Center for Brainhealth
@@ -26,22 +26,19 @@ package {
 	////////////////////////
 	//* Tab Class *//
 	////////////////////////	
-	public class Tab extends Sprite {
+	public class Tab extends UIElement {
 		
 		public var icon:Icon;
 		public var text:TextField;
-		public var tabName:String;
-		public var myWidth:int; 
-		public var myHeight:int; 
-		public var easing:Number = .3;
-		public var maxAlpha:Number = 1.0; 
-		public var minAlpha:Number = 0.0; 
-		public var fade:Number = 0.0;
-		public var currentAlpha = 0.0;
-		public var dx:Number;  
-		public var frameCounter:int = 0;  
+		public var tabName:String;	
 		
 		public function Tab(tabName:String, width:int, TAB_HEIGHT:int):void {
+			this.easing = .3;
+			this.maxAlpha = 1.0; 
+			this.minAlpha = 0.0; 
+			this.fade = 0.0;
+			this.currentAlpha = 0.0;
+			
 			icon = new Icon(tabName, TAB_HEIGHT);
 			icon.x = TAB_HEIGHT/8;
 			icon.y = TAB_HEIGHT/4;
@@ -90,12 +87,12 @@ package {
 		}
 		
 		private function onEnterFrame(e:Event):void {
-			//trace(frameCounter + "fade: "+fade+" -- dx:" + (dx)+ "currentAlpha: "+currentAlpha+ " abs " + (Math.abs(dx *100)));
+			//trace(frameCounter + "fade: "+fade+" -- dx:" + (dx)+ "currentAlpha: "+currentAlpha+ " abs " + (Math.abs(dx *10)));
 			//My distance = (where I want to go) - where I am
 			dx = ( fade - currentAlpha);
 			//If where I want to go is less than 1, I will stay there
 			//Otherwise move a proportional distance to my target "easing" my way there
-			if(Math.abs(dx *100) < .01) {
+			if(Math.abs(dx *10) < .01) {
 				removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 				frameCounter = 0;
 			} else {
@@ -103,13 +100,7 @@ package {
 				draw();
 			}
 			frameCounter++;
-		}
+		}		
 		
-		public function draw():void {
-			graphics.clear();
-			graphics.beginFill(0x222222, currentAlpha);
-			graphics.drawRect(0, 0, myWidth, myHeight); 
-			graphics.endFill();
-		}
 	}
 }

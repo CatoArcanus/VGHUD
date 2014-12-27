@@ -22,17 +22,9 @@ package {
 	//////////////////
 	//* Menu Class *//
 	//////////////////	
-	public class Menu extends Sprite {
+	public class Menu extends UIElement {
 		
 		//Properties
-		var easing:Number = 0.25;
-		var openX:int;
-		var closeX:int;
-		var moveX:int;
-		var dx:int;
-		var frameCounter:int = 0;
-		public var myWidth:int; 
-		public var myHeight:int; 
 		public var none:int;
 		
 		//variables
@@ -46,12 +38,15 @@ package {
 		
 		//Menu initializes objects and gives them values
 		public function Menu(width:int, height:int, tabNames:Array, TAB_HEIGHT:int):void {
+			this.easing = .25;
 			this.myWidth = width;
 			this.myHeight = height;
+			this.currentAlpha = .5;
+			this.color = 0x000000;				
 			
 			var tabY:int = 0;
 			for each(var tabName:String in tabNames){
-				
+							
 				var panelMask:Sprite = new Sprite();
 				panelMask.graphics.beginFill(0xffFF00); 
 				panelMask.graphics.drawRect(0, 0, width, height); 
@@ -80,7 +75,7 @@ package {
 				panels[tabName] = panel;
 			}
 			init();
-			draw(width, height);
+			draw();
 		}
 		
 		private function tabClick(panelName:String):Function {
@@ -102,15 +97,7 @@ package {
 				addChild(panels[key]);
 			}
 		}
-		
-		//Draw creates the background of black and 50% opactiy
-		public function draw(width, height):void {
-			graphics.beginFill(0x000000, .5);
-			graphics.drawRect(0, 0, width, height); 
-			graphics.endFill();
-			
-		}
-		
+				
 		public function animateOut(panelName:String):void {
 			trace("Animate out: " + currentPanel);			
 			if(currentPanel != "") {
