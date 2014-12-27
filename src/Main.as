@@ -6,6 +6,7 @@
 	import flash.display.MovieClip;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.events.KeyboardEvent;
 	
 	///////////////////
 	//* Description *//
@@ -51,7 +52,7 @@
 			
 			menu.x = stage.stageWidth-TAB_HEIGHT*.75;
 			menu.y = 0;
-			menu.openX = stage.stageWidth - menu.width;
+			menu.openX = stage.stageWidth - menu.myWidth;
 			menu.closeX = menu.x;
 			menu.moveX = menu.openX;
 			
@@ -62,24 +63,43 @@
 		//Init Adds resources to stage and sets up initial event listeners
 		private function init():void {
 			addChild(menu);
-			stage.addEventListener(MouseEvent.MOUSE_DOWN, open);
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, reportKeyDown);
 		}
 		
+		private	function reportKeyDown(event:KeyboardEvent):void { 
+    		trace("Key Pressed: " + String.fromCharCode(event.charCode) +         " (character code: " + event.charCode + ")"); 
+			if (event.charCode == 111/*o*/) open(); 
+			else if (event.charCode == 99/*c*/) close(); 
+		} 
+				
 		//The menu handles its own opening and closing, but the Main decides when and how this happens
 		//This is a function to be called by unrealscript in order to open the Menu
 		public function open(e:MouseEvent = null):void {
 			menu.moveX = menu.openX;
-			menu.addEventListener(Event.ENTER_FRAME, menu.onEnterFrame);
-			stage.removeEventListener(MouseEvent.MOUSE_DOWN, open);
-			stage.addEventListener(MouseEvent.MOUSE_DOWN, close);
+			addEventListener(Event.ENTER_FRAME, onEase);
 		}
 		
 		//This is a function to be called by unrealscript in order to close the Menu
 		public function close(e:MouseEvent = null):void {
 			menu.moveX = menu.closeX;
-			menu.addEventListener(Event.ENTER_FRAME, menu.onEnterFrame);
-			stage.removeEventListener(MouseEvent.MOUSE_DOWN, close);
-			stage.addEventListener(MouseEvent.MOUSE_DOWN, open);
-		}		
+			addEventListener(Event.ENTER_FRAME, onEase);
+		}
+		
+		//This handles opening the Menu frame by frame, until is it done 
+		//This is arbitrary X movement, but could allow for any type of movement
+		public function onEase(e:Event):void {
+			trace(menu.frameCounter + " -- " + (menu.openX - menu.x) * menu.easing);
+			//My distance = (where I want to go) - where I am
+			menu.dx = ( menu.moveX - menu.x);
+			//If where I want to go is less than 1, I will stay there
+			//Otherwise move a proportional distance to my target "easing" my way there
+			if(Math.abs(menu.dx) < 1) {
+				removeEventListener(Event.ENTER_FRAME, onEase);
+				menu.frameCounter = 0;
+			} else {
+				menu.x += menu.dx * menu.easing;
+			}
+			menu.frameCounter++;
+		}
 	}
 }

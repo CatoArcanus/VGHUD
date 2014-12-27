@@ -16,7 +16,7 @@ package {
 	/**
 	 * The Tab is one of many objects in a menu
 	 *
-	 * @category   movieclip
+	 * @namespace  root.menu.tab[]
 	 * @package    src
 	 * @author     Monte Nichols (Original Author) <monte.nichols.ii@gmail.com>
 	 * @copyright  Virtual Reality Labs at the Center for Brainhealth
@@ -41,7 +41,7 @@ package {
 		public var dx:Number;  
 		public var frameCounter:int = 0;  
 		
-		public function Tab(tabName:String, TAB_HEIGHT:int):void {
+		public function Tab(tabName:String, width:int, TAB_HEIGHT:int):void {
 			icon = new Icon(tabName, TAB_HEIGHT);
 			icon.x = TAB_HEIGHT/8;
 			icon.y = TAB_HEIGHT/4;
@@ -56,12 +56,12 @@ package {
 			text.textColor = 0xFFFFFF;
 			text.x = TAB_HEIGHT*.875;
 			text.y = TAB_HEIGHT*.15625;
-			text.width = 300-text.x;
+			text.width = width-text.x;
 			text.embedFonts = true;  
 			text.setTextFormat(myFormat);
 			text.selectable = false;
 			
-			this.myWidth = 300;
+			this.myWidth = width;
 			this.myHeight = TAB_HEIGHT;
 			this.tabName = tabName 
 			init();

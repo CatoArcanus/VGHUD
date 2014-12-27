@@ -5,14 +5,18 @@ package  {
 	import flash.display.Shape;	
 	import flash.display.Stage;
 	import flash.events.Event;
-	import flash.events.MouseEvent;	
+	import flash.events.MouseEvent;
+	import flash.text.TextField;
+	import flash.text.Font;
+	import flash.text.TextFormat;
+		
 	///////////////////
 	//* Description *//
 	///////////////////
 	/**
 	 * The Panel is one of many objects in a menu
 	 *
-	 * @category   movieclip
+	 * @category   root.menu.panel[]
 	 * @package    src
 	 * @author     Monte Nichols (Original Author) <monte.nichols.ii@gmail.com>
 	 * @copyright  Virtual Reality Labs at the Center for Brainhealth
@@ -23,16 +27,52 @@ package  {
 	//* Panel Class *//
 	////////////////////////	
 	public class Panel extends Sprite {
+		
+		var panelName:String;
+		public var text:TextField;
+		public var moveX:Number;
+		public var openX:Number;
+		public var closeX:Number;
+		public var easing:Number = .2;
+		public var dx:Number;
+		public var frameCounter:int;
+		public var myWidth:int;
+		public var myHeight:int;
 				
-		public function Panel(width:int, height:int):void {		
-			draw(width, height);
+		public function Panel(panelName:String, width:int, height:int):void {		
+					
+			var myFormat:TextFormat = new TextFormat();
+			//TODO: make this number modular
+			myFormat.size = 24;
+			myFormat.font = "Arial";
+			
+			text = new TextField();
+						
+			text.text = panelName;
+			text.textColor = 0xFFFFFF;
+			text.x = 15;
+			text.y = 15;
+			text.width = width-text.x;
+			text.embedFonts = true;  
+			text.setTextFormat(myFormat);
+			text.selectable = false;
+			
+			this.myWidth = width;
+			this.myHeight = height;
+			this.panelName = panelName; 
+			init();
+		}
+		
+		private function init():void {
+			addChild(text);
+			draw();
 		}	
 		
-		public function draw(width, height):void {
-			graphics.beginFill(0x000000);
-			graphics.drawRect(0, 0, width, height); 
-			graphics.endFill(); 
+		public function draw():void {
+			graphics.clear();
+			graphics.beginFill(0x222222, .5);
+			graphics.drawRect(0, 0, myWidth, myHeight); 
+			graphics.endFill();
 		}		
-		
 	}	
 }
