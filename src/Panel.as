@@ -20,7 +20,7 @@ package  {
 	 * @package    src
 	 * @author     Monte Nichols (Original Author) <monte.nichols.ii@gmail.com>
 	 * @copyright  Virtual Reality Labs at the Center for Brainhealth
-	 * @version    1.0 (12/23/2014)
+	 * @version    1.1 (12/27/2014)
 	 */
 
 	////////////////////////
@@ -31,14 +31,19 @@ package  {
 		var panelName:String;
 		public var text:TextField;
 				
-		public function Panel(panelName:String, width:int, height:int):void {		
+		public function Panel(panelName:String, width:int, height:int, TAB_SIZE:Number):void {		
 			this.easing = .2;
 			this.color = 0x222222;
 			this.currentAlpha = .5;
+			this.x = 0;
+			this.y = 0;
+			this.closeX = 0;
+			this.openX = width*(-1);
+			this.visible = false;
 					
 			var myFormat:TextFormat = new TextFormat();
 			//TODO: make this number modular
-			myFormat.size = 24;
+			myFormat.size = TAB_SIZE/2;
 			myFormat.font = "Arial";
 			
 			text = new TextField();

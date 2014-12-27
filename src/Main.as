@@ -1,12 +1,14 @@
 ﻿package  {
 	
-	import flash.display.Sprite;	
-	import flash.display.Shape;	
+	import flash.display.Sprite;		
 	import com.montenichols.utils.Scrollbar;
-	import flash.display.MovieClip;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.events.KeyboardEvent;
+	import flash.events.KeyboardEvent;	
+	import flash.text.TextField;
+	import flash.text.Font;
+	import flash.text.TextFormat;
+	import flash.text.TextFieldAutoSize;
 	
 	///////////////////
 	//* Description *//
@@ -20,7 +22,7 @@
 	 * @package    src
 	 * @author     Monte Nichols (Original Author) <monte.nichols.ii@gmail.com>
 	 * @copyright  Virtual Reality Labs at the Center for Brainhealth
-	 * @version    1.3 (12/23/2014)
+	 * @version    1.4 (12/27/2014)
 	 */
 
 	//////////////////
@@ -31,7 +33,7 @@
 		//Consts
 		//This number actually controls the entire size of the menu. 
 		//It is the measure in pixels of the tab width/height
-		var TAB_HEIGHT:int = 48;
+		var TAB_SIZE:Number = 48;
 		
 		//Stage Objects
 		var menu:Menu;
@@ -43,14 +45,38 @@
 		public function Main()  {
 			//Create a new admin panel
 			//menu width and height
+			var myFormat:TextFormat = new TextFormat();
+			myFormat.size = TAB_SIZE/2;
+			myFormat.font = "Arial";
 			
+			var myWidth:int = 0;
 			//TODO: this 300 is arbitrary. Let's calculate a value using tab_height and the longest
 			//Word in tabNames
+			for each (var tabName:String in tabNames) {
+				var info:TextField = new TextField();
+				info.border = false;
+				info.multiline = false;
+				info.wordWrap = false;
+				info.selectable = false;
+				//get it to be auto size
+				info.autoSize = TextFieldAutoSize.LEFT;
+								
+				//apply the format
+				info.defaultTextFormat = myFormat;
+				//set the color
+				info.textColor = 0xFFFFFF;
+				//set the text
+				info.text = (tabName);
+				if(info.width > myWidth)
+				{
+					myWidth = info.width;
+				}
+			}
 			
 			//Create menu
-			menu = new Menu(300, stage.stageHeight, tabNames, TAB_HEIGHT);
+			menu = new Menu((myWidth + TAB_SIZE), stage.stageHeight, tabNames, TAB_SIZE);
 			
-			menu.x = stage.stageWidth-TAB_HEIGHT*.75;
+			menu.x = stage.stageWidth-TAB_SIZE*.75;
 			menu.y = 0;
 			menu.openX = stage.stageWidth - menu.myWidth;
 			menu.closeX = menu.x;

@@ -12,9 +12,8 @@ package  {
 	//* Description *//
 	///////////////////
 	/**
-	 * The Main Class is the Document Class
-	 *
-	 * Note: This Class is considered "root" by Unrealscipt
+	 * This is an "abstract" class that holds similar variables for 
+	 * sprites that are UI elements.
 	 *
 	 * @category   root
 	 * @package    src

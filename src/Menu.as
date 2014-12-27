@@ -16,7 +16,7 @@ package {
 	 * @package    src
 	 * @author     Monte Nichols (Original Author) <monte.nichols.ii@gmail.com>
 	 * @copyright  Virtual Reality Labs at the Center for Brainhealth
-	 * @version    1.1 (12/23/2014)
+	 * @version    1.0 (12/27/2014)
 	 */
 
 	//////////////////
@@ -37,17 +37,18 @@ package {
 		var panelMasks:Array = new Array();
 		
 		//Menu initializes objects and gives them values
-		public function Menu(width:int, height:int, tabNames:Array, TAB_HEIGHT:int):void {
+		public function Menu(width:int, height:int, tabNames:Array, TAB_SIZE:Number):void {
 			this.easing = .25;
 			this.myWidth = width;
 			this.myHeight = height;
 			this.currentAlpha = .5;
 			this.color = 0x000000;				
-			
+									
 			var tabY:int = 0;
-			for each(var tabName:String in tabNames){
+			var panelMask:Sprite = new Sprite();
+			for each(var tabName:String in tabNames) {
 							
-				var panelMask:Sprite = new Sprite();
+				panelMask = new Sprite();
 				panelMask.graphics.beginFill(0xffFF00); 
 				panelMask.graphics.drawRect(0, 0, width, height); 
 				panelMask.graphics.endFill(); 
@@ -55,25 +56,42 @@ package {
 				panelMask.y = 0;
 				panelMasks.push(panelMask);
 				
-				var tab = new Tab(tabName, width, TAB_HEIGHT);
-				tab.x = 0;
-				tab.y = tabY;
-				tab.draw();
-				tab.buttonMode=true;
-				tab.mouseChildren=false;
-				tab.addEventListener(MouseEvent.CLICK, tabClick(tabName));
-				tabs.push(tab);
-				tabY += TAB_HEIGHT;
-				
-				var panel = new Panel(tabName, width, height);
-				panel.x = 0;
-				panel.y = 0;
-				panel.closeX = 0;
-				panel.openX = width*(-1);
-				panel.visible = false;
+				var panel = new Panel(tabName, width, height, TAB_SIZE);			
 				panel.mask = panelMask;
 				panels[tabName] = panel;
+				
+				var tab = new Tab(tabName, width, tabY, TAB_SIZE);				
+				tab.addEventListener(MouseEvent.CLICK, tabClick(tabName));
+				tabs.push(tab);
+				tabY += TAB_SIZE;
+				
 			}
+			var chatPanel:ChatPanel = new ChatPanel("Chat", width*2, height, TAB_SIZE);
+			panelMask.graphics.beginFill(0xffFF00); 
+			panelMask.graphics.drawRect(0, 0, width*2, height); 
+			panelMask.graphics.endFill(); 
+			panelMask.x = width*(-2);
+			panelMask.y = 0;
+			panelMasks.push(panelMask);
+			chatPanel.mask = panelMask;
+			panels["Chat"] = chatPanel;
+			/*
+			//var tabNames:Array = new Array("Chat", "Kick", "Avatars", "Possess", "Scenario");
+			//Chat Panel
+			panels["Chat"].myWidth = 600;
+			panels["Chat"].draw();
+			//Kick Panel
+			panels["Kick"].draw();
+			
+			//Avatar Panel
+			panels["Avatars"].draw();
+			
+			//Possession Panel
+			panels["Possess"].draw();
+			
+			//Scenario Panel
+			panels["Scenario"].draw();
+			*/
 			init();
 			draw();
 		}

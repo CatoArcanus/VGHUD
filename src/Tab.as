@@ -32,34 +32,39 @@ package {
 		public var text:TextField;
 		public var tabName:String;	
 		
-		public function Tab(tabName:String, width:int, TAB_HEIGHT:int):void {
+		public function Tab(tabName:String, width:int, y:int, TAB_SIZE:Number):void {
 			this.easing = .3;
 			this.maxAlpha = 1.0; 
 			this.minAlpha = 0.0; 
 			this.fade = 0.0;
 			this.currentAlpha = 0.0;
+			this.x = 0;
+			this.y = y;
+			this.draw();
+			this.buttonMode=true;
+			this.mouseChildren=false;
 			
-			icon = new Icon(tabName, TAB_HEIGHT);
-			icon.x = TAB_HEIGHT/8;
-			icon.y = TAB_HEIGHT/4;
+			icon = new Icon(tabName, TAB_SIZE);
+			icon.x = TAB_SIZE/8;
+			icon.y = TAB_SIZE/4;
 			
 			var myFormat:TextFormat = new TextFormat();
-			myFormat.size = TAB_HEIGHT/2;
+			myFormat.size = TAB_SIZE/2;
 			myFormat.font = "Arial";
 			
 			text = new TextField();
 						
 			text.text = tabName;
 			text.textColor = 0xFFFFFF;
-			text.x = TAB_HEIGHT*.875;
-			text.y = TAB_HEIGHT*.15625;
+			text.x = TAB_SIZE*.875;
+			text.y = TAB_SIZE*.15625;
 			text.width = width-text.x;
 			text.embedFonts = true;  
 			text.setTextFormat(myFormat);
 			text.selectable = false;
 			
 			this.myWidth = width;
-			this.myHeight = TAB_HEIGHT;
+			this.myHeight = TAB_SIZE;
 			this.tabName = tabName 
 			init();
 		}

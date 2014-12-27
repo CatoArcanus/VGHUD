@@ -38,9 +38,9 @@ package {
 		public var image_white:Sprite;
 		public var myBitmapData:BitmapData;
 		
-		public function Icon(name:String, TAB_HEIGHT:int):void {
+		public function Icon(name:String, TAB_SIZE:Number):void {
 			this.name = name;
-			var icon_size:int = TAB_HEIGHT/2;
+			var icon_size:int = TAB_SIZE/2;
 			image_black = loadImage(image_black, "../src/img/"+name+"_icon_black.png", 0, 0 , icon_size, icon_size);
 			image_white = loadImage(image_white, "../src/img/"+name+"_icon_white.png", 0, 0 , icon_size, icon_size);
 		}
