@@ -33,6 +33,7 @@ package {
 		var frameCounter:int = 0;
 		public var myWidth:int; 
 		public var myHeight:int; 
+		public var none:int;
 		
 		//variables
 		var currentPanel:String = "";
