@@ -1,4 +1,4 @@
-package  {
+package {
 	
 	import flash.display.Sprite;	
 	import flash.display.Shape;	
@@ -9,9 +9,9 @@ package  {
 	import flash.text.Font;
 	import flash.text.TextFormat;
 		
-	///////////////////
-	//* Description *//
-	///////////////////
+	/////////////////
+	// Description //
+	/////////////////
 	/**
 	 * The ScenarioPanel is extended from the Panel class and is very specific in its
 	 * implementation
@@ -23,9 +23,9 @@ package  {
 	 * @version    1.0 (12/27/2014)
 	 */
 
-	////////////////////////
-	//* ScenarioPanel Class *//
-	////////////////////////	
+	/////////////////////////
+	// ScenarioPanel Class //
+	/////////////////////////	
 	public class ScenarioPanel extends Panel {
 		
 		public function ScenarioPanel(panelName:String, width:int, height:int):void {

@@ -6,9 +6,9 @@ package {
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.MouseEvent;	
-	///////////////////
-	//* Description *//
-	///////////////////
+	/////////////////
+	// Description //
+	/////////////////
 	/**
 	 * The Menu is the main window that is loaded for the HuD
 	 *
@@ -16,17 +16,16 @@ package {
 	 * @package    src
 	 * @author     Monte Nichols (Original Author) <monte.nichols.ii@gmail.com>
 	 * @copyright  Virtual Reality Labs at the Center for Brainhealth
-	 * @version    1.0 (12/27/2014)
+	 * @version    1.2 (12/29/2014)
 	 */
 
-	//////////////////
-	//* Menu Class *//
-	//////////////////	
+	////////////////
+	// Menu Class //
+	////////////////	
 	public class Menu extends UIElement {
 		
 		//Properties
-		public var none:int;
-		
+	
 		//variables
 		var currentPanel:String = "";
 		var outPanel:String = "";
@@ -38,20 +37,24 @@ package {
 		
 		//Menu initializes objects and gives them values
 		public function Menu(width:int, height:int, tabNames:Array, TAB_SIZE:Number, leftSide:Boolean):void {
+			//Set up paramaters that differ from the default
 			this.easing = .25;
 			this.myWidth = width;
 			this.myHeight = height;
 			this.currentAlpha = .5;
-			this.color = 0x000000;
+			
+			//This variable is used with the menu is on the left or right. 
+			//It isn't very elegant. Maybe we can do away with the Bool all together
+			//TODO: Time permiting, try to make this more elegant 
 			var pos:int = -1;
 			if(leftSide) {
 				pos = 1;
 			}				
-									
+			
+			//This variable will be incremented to put the tabs in vertical order						
 			var tabY:int = 0;
-			var panelMask:Sprite = new Sprite();
 			for each(var tabName:String in tabNames) {
-								
+				//This creates a series of panels. We will move away from this model				
 				panelMask = new Sprite();
 				panelMask.graphics.beginFill(0xffFF00); 
 				panelMask.graphics.drawRect(0, 0, width, height); 
@@ -60,10 +63,12 @@ package {
 				panelMask.y = 0;
 				panelMasks.push(panelMask);
 				
+				//A mask for the panels
 				var panel = new Panel(tabName, width, width, height, TAB_SIZE, leftSide);			
 				panel.mask = panelMask;
 				panels[tabName] = panel;
 				
+				//A series of tabs is generated based on the list of tab names
 				var tab = new Tab(tabName, width, TAB_SIZE, leftSide);
 				tab.x = 0;
 				tab.y = tabY;				
@@ -73,6 +78,9 @@ package {
 				
 			}
 			
+			//Chat Panel //
+			//First custom panel, it is just stubbed for now.
+			var panelMask:Sprite = new Sprite();
 			var chatPanelWidth:int = width*2;
 			var chatPanel:ChatPanel = new ChatPanel("Chat", width, chatPanelWidth, height, TAB_SIZE, leftSide);
 			panelMask.graphics.beginFill(0xffFF00); 
@@ -149,7 +157,7 @@ package {
 			addEventListener(Event.ENTER_FRAME, onEaseIn);
 		}
 		
-		//This handles opening the Menu frame by frame, until is it done 
+		//This handles closing the Menu frame by frame, until is it done 
 		//This is arbitrary X movement, but could allow for any type of movement
 		public function onEaseOut(e:Event):void {
 			//trace(frameCounter + " -- " + (openX - x) * easing);

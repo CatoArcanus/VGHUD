@@ -1,4 +1,4 @@
-package  {
+package {
 	
 	import flash.display.Sprite;
 	import flash.display.Shape;
@@ -10,9 +10,9 @@ package  {
 	import flash.text.TextFormat;
 	import flash.text.TextField;
 
-	///////////////////
-	//* Description *//
-	///////////////////
+	/////////////////
+	// Description //
+	/////////////////
 	/**
 	 * The ChatPanel is extended from the Panel class and is very specific in its
 	 * implementation
@@ -21,12 +21,12 @@ package  {
 	 * @package    src
 	 * @author     Monte Nichols (Original Author) <monte.nichols.ii@gmail.com>
 	 * @copyright  Virtual Reality Labs at the Center for Brainhealth
-	 * @version    1.0 (12/27/2014)
+	 * @version    1.2 (12/29/2014)
 	 */
 
-	////////////////////////
-	//* ChatPanel Class *//
-	////////////////////////
+	/////////////////////
+	// ChatPanel Class //
+	/////////////////////
 	public class ChatPanel extends Panel {
 		
 		var chatLog:TextField;
@@ -66,7 +66,7 @@ package  {
 			chatInput.x = chatInputBG.x;
 			chatInput.y = chatInputBG.y;
 			
-			
+			//Send Icon
 			sendIcon = new Icon("Avatars", TAB_SIZE);
 			sendButton = new Sprite();
 			sendButton.graphics.beginFill(0x000000, 0.5); 

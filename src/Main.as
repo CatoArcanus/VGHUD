@@ -1,4 +1,4 @@
-﻿package  {
+﻿package {
 	
 	import flash.display.Sprite;		
 	import com.montenichols.utils.Scrollbar;
@@ -10,9 +10,9 @@
 	import flash.text.TextFormat;
 	import flash.text.TextFieldAutoSize;
 	
-	///////////////////
-	//* Description *//
-	///////////////////
+	/////////////////
+	// Description //
+	/////////////////
 	/**
 	 * The Main Class is the Document Class
 	 *
@@ -22,42 +22,41 @@
 	 * @package    src
 	 * @author     Monte Nichols (Original Author) <monte.nichols.ii@gmail.com>
 	 * @copyright  Virtual Reality Labs at the Center for Brainhealth
-	 * @version    1.4 (12/27/2014)
+	 * @version    1.5 (12/29/2014)
 	 */
 
-	//////////////////
-	//* Main Class *//
-	//////////////////	
+	////////////////
+	// Main Class //
+	////////////////	
 	public class Main extends Sprite {
 		
 		//Consts
 		//This number actually controls the entire size of the menu. 
 		//It is the measure in pixels of the tab width/height
 		var TAB_SIZE:Number = 48;
+		//This places the menu to the left or the right
 		var leftSide:Boolean = false; 
 		
 		//Stage Objects
 		var menu:Menu;
-		var icon:Icon;
 		var tabNames:Array = new Array("Chat", "Kick", "Avatars", "Possess", "Scenario");
 		//var tabNames:Array = new Array("Avatars", "Avatars", "Avatars", "Avatars", "Avatars");
 		
 		//Main initializes objects and gives them values
 		public function Main()  {
-			//Create a new admin panel
 			//Get menu width
 			var myWidth:int = getMaxTextWidth(tabNames) + TAB_SIZE;
 					
 			//Create menu
 			menu = new Menu((myWidth), stage.stageHeight, tabNames, TAB_SIZE, leftSide);
+			//This puts it on the left or right, depending on what we have decided
 			if(leftSide) {
 				menu.x = (0-myWidth)+TAB_SIZE*.75;
 				menu.openX = 0;
 			} else {
 				menu.x = stage.stageWidth-TAB_SIZE*.75;
 				menu.openX = stage.stageWidth - menu.myWidth;
-			}
-			
+			}			
 			menu.y = 0;
 			menu.closeX = menu.x;
 			menu.moveX = menu.openX;

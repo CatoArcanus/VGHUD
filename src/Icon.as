@@ -22,7 +22,7 @@ package {
 	/**
 	 * The Icon is one of many objects in a menu
 	 *
-	 * @category   root.menu.tab[].icon
+	 * @category   root.menu.
 	 * @package    src
 	 * @author     Monte Nichols (Original Author) <monte.nichols.ii@gmail.com>
 	 * @copyright  Virtual Reality Labs at the Center for Brainhealth

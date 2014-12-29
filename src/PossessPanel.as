@@ -1,4 +1,4 @@
-package  {
+package {
 	
 	import flash.display.Sprite;	
 	import flash.display.Shape;	
@@ -9,9 +9,9 @@ package  {
 	import flash.text.Font;
 	import flash.text.TextFormat;
 		
-	///////////////////
-	//* Description *//
-	///////////////////
+	/////////////////
+	// Description //
+	/////////////////
 	/**
 	 * The PossessPanel is extended from the Panel class and is very specific in its
 	 * implementation
@@ -24,7 +24,7 @@ package  {
 	 */
 
 	////////////////////////
-	//* PossessPanel Class *//
+	// PossessPanel Class //
 	////////////////////////	
 	public class PossessPanel extends Panel {
 		

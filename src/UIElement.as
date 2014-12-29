@@ -1,4 +1,4 @@
-package  {
+package {
 	
 	import flash.display.Sprite;	
 	import flash.display.Shape;	
@@ -8,9 +8,9 @@ package  {
 	import flash.events.MouseEvent;
 	import flash.events.KeyboardEvent;
 	
-	///////////////////
-	//* Description *//
-	///////////////////
+	/////////////////
+	// Description //
+	/////////////////
 	/**
 	 * This is an "abstract" class that holds similar variables for 
 	 * sprites that are UI elements.
@@ -19,15 +19,15 @@ package  {
 	 * @package    src
 	 * @author     Monte Nichols (Original Author) <monte.nichols.ii@gmail.com>
 	 * @copyright  Virtual Reality Labs at the Center for Brainhealth
-	 * @version    1.3 (12/23/2014)
+	 * @version    1.4 (12/29/2014)
 	 */
 
-	//////////////////
-	//* Main Class *//
-	//////////////////	
+	////////////////
+	// Main Class //
+	////////////////	
 	public class UIElement extends Sprite {
 		
-		//Variables
+		//Default Variables
 		var easing:Number = 0.25;
 		var openX:int;
 		var closeX:int;
@@ -42,6 +42,7 @@ package  {
 		public var currentAlpha:Number = 0.0;
 		public var color:uint = 0x000000;
 		
+		//A draw function for all UI elements
 		public function draw():void {
 			graphics.clear();
 			graphics.beginFill(color, currentAlpha);
