@@ -37,44 +37,57 @@ package {
 		var panelMasks:Array = new Array();
 		
 		//Menu initializes objects and gives them values
-		public function Menu(width:int, height:int, tabNames:Array, TAB_SIZE:Number):void {
+		public function Menu(width:int, height:int, tabNames:Array, TAB_SIZE:Number, leftSide:Boolean):void {
 			this.easing = .25;
 			this.myWidth = width;
 			this.myHeight = height;
 			this.currentAlpha = .5;
-			this.color = 0x000000;				
+			this.color = 0x000000;
+			var pos:int = -1;
+			if(leftSide) {
+				pos = 1;
+			}				
 									
 			var tabY:int = 0;
 			var panelMask:Sprite = new Sprite();
 			for each(var tabName:String in tabNames) {
-							
+								
 				panelMask = new Sprite();
 				panelMask.graphics.beginFill(0xffFF00); 
 				panelMask.graphics.drawRect(0, 0, width, height); 
 				panelMask.graphics.endFill(); 
-				panelMask.x = width*(-1);
+				panelMask.x = width*(pos);
 				panelMask.y = 0;
 				panelMasks.push(panelMask);
 				
-				var panel = new Panel(tabName, width, height, TAB_SIZE);			
+				var panel = new Panel(tabName, width, width, height, TAB_SIZE, leftSide);			
 				panel.mask = panelMask;
 				panels[tabName] = panel;
 				
-				var tab = new Tab(tabName, width, tabY, TAB_SIZE);				
+				var tab = new Tab(tabName, width, TAB_SIZE, leftSide);
+				tab.x = 0;
+				tab.y = tabY;				
 				tab.addEventListener(MouseEvent.CLICK, tabClick(tabName));
 				tabs.push(tab);
 				tabY += TAB_SIZE;
 				
 			}
-			var chatPanel:ChatPanel = new ChatPanel("Chat", width*2, height, TAB_SIZE);
+			
+			var chatPanelWidth:int = width*2;
+			var chatPanel:ChatPanel = new ChatPanel("Chat", width, chatPanelWidth, height, TAB_SIZE, leftSide);
 			panelMask.graphics.beginFill(0xffFF00); 
-			panelMask.graphics.drawRect(0, 0, width*2, height); 
+			panelMask.graphics.drawRect(0, 0, chatPanelWidth, height); 
 			panelMask.graphics.endFill(); 
-			panelMask.x = width*(-2);
+			if(leftSide){
+				panelMask.x = this.myWidth;
+			} else {
+				panelMask.x = chatPanelWidth*(pos);
+			}
 			panelMask.y = 0;
 			panelMasks.push(panelMask);
 			chatPanel.mask = panelMask;
 			panels["Chat"] = chatPanel;
+			
 			/*
 			//var tabNames:Array = new Array("Chat", "Kick", "Avatars", "Possess", "Scenario");
 			//Chat Panel

@@ -1,15 +1,15 @@
 package  {
 	
-	import flash.display.Sprite;	
-	import flash.display.Shape;	
+	import flash.display.Sprite;
+	import flash.display.Shape;
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
 	import flash.text.Font;
 	import flash.text.TextFormat;
-	import flash.text.TextField;	
-			
+	import flash.text.TextField;
+
 	///////////////////
 	//* Description *//
 	///////////////////
@@ -26,7 +26,7 @@ package  {
 
 	////////////////////////
 	//* ChatPanel Class *//
-	////////////////////////	
+	////////////////////////
 	public class ChatPanel extends Panel {
 		
 		var chatLog:TextField;
@@ -37,8 +37,8 @@ package  {
 		var sendButton:Sprite;
 		var sendIcon:Icon;
 			
-		public function ChatPanel(panelName:String, width:int, height:int, TAB_SIZE:Number):void {
-			super(panelName, width, height, TAB_SIZE);
+		public function ChatPanel(panelName:String, menuWidth:int, panelWidth:int, height:int, TAB_SIZE:Number, leftSide:Boolean):void {
+			super(panelName, menuWidth, panelWidth, height, TAB_SIZE, leftSide);
 			
 			//Chat Log
 			chatLog = new TextField();
@@ -65,6 +65,7 @@ package  {
 			chatInput.height = TAB_SIZE;
 			chatInput.x = chatInputBG.x;
 			chatInput.y = chatInputBG.y;
+			
 			
 			sendIcon = new Icon("Avatars", TAB_SIZE);
 			sendButton = new Sprite();

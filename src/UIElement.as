@@ -40,7 +40,7 @@ package  {
 		public var minAlpha:Number = 0.0; 
 		public var fade:Number = 0.0; 
 		public var currentAlpha:Number = 0.0;
-		public var color:uint;
+		public var color:uint = 0x000000;
 		
 		public function draw():void {
 			graphics.clear();

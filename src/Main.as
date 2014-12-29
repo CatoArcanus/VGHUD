@@ -34,6 +34,7 @@
 		//This number actually controls the entire size of the menu. 
 		//It is the measure in pixels of the tab width/height
 		var TAB_SIZE:Number = 48;
+		var leftSide:Boolean = false; 
 		
 		//Stage Objects
 		var menu:Menu;
@@ -44,15 +45,40 @@
 		//Main initializes objects and gives them values
 		public function Main()  {
 			//Create a new admin panel
-			//menu width and height
+			//Get menu width
+			var myWidth:int = getMaxTextWidth(tabNames) + TAB_SIZE;
+					
+			//Create menu
+			menu = new Menu((myWidth), stage.stageHeight, tabNames, TAB_SIZE, leftSide);
+			if(leftSide) {
+				menu.x = (0-myWidth)+TAB_SIZE*.75;
+				menu.openX = 0;
+			} else {
+				menu.x = stage.stageWidth-TAB_SIZE*.75;
+				menu.openX = stage.stageWidth - menu.myWidth;
+			}
+			
+			menu.y = 0;
+			menu.closeX = menu.x;
+			menu.moveX = menu.openX;
+			
+			//Call init 
+			init();
+		}
+		
+		//Init Adds resources to stage and sets up initial event listeners
+		private function init():void {
+			addChild(menu);
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, reportKeyDown);
+		}
+		
+		//This temporarily makes some text fields and measures how big they are
+		private function getMaxTextWidth(strings:Array):int {
 			var myFormat:TextFormat = new TextFormat();
 			myFormat.size = TAB_SIZE/2;
 			myFormat.font = "Arial";
-			
 			var myWidth:int = 0;
-			//TODO: this 300 is arbitrary. Let's calculate a value using tab_height and the longest
-			//Word in tabNames
-			for each (var tabName:String in tabNames) {
+			for each (var tabName:String in strings) {
 				var info:TextField = new TextField();
 				info.border = false;
 				info.multiline = false;
@@ -72,28 +98,11 @@
 					myWidth = info.width;
 				}
 			}
-			
-			//Create menu
-			menu = new Menu((myWidth + TAB_SIZE), stage.stageHeight, tabNames, TAB_SIZE);
-			
-			menu.x = stage.stageWidth-TAB_SIZE*.75;
-			menu.y = 0;
-			menu.openX = stage.stageWidth - menu.myWidth;
-			menu.closeX = menu.x;
-			menu.moveX = menu.openX;
-			
-			//Call init 
-			init();
-		}
-		
-		//Init Adds resources to stage and sets up initial event listeners
-		private function init():void {
-			addChild(menu);
-			stage.addEventListener(KeyboardEvent.KEY_DOWN, reportKeyDown);
+			return myWidth;
 		}
 		
 		private	function reportKeyDown(event:KeyboardEvent):void { 
-    		trace("Key Pressed: " + String.fromCharCode(event.charCode) +         " (character code: " + event.charCode + ")"); 
+    		trace("Key Pressed: " + String.fromCharCode(event.charCode) + " (character code: " + event.charCode + ")"); 
 			if (event.charCode == 111/*o*/) open(); 
 			else if (event.charCode == 99/*c*/) close(); 
 		} 

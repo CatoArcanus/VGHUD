@@ -28,7 +28,14 @@ package  {
 	////////////////////////	
 	public class PossessPanel extends Panel {
 		
-		//var ghostButton:Button;
+		//Buttons to do actions
+		var ghostButton:Sprite;
+		var ghostIcon:Icon;
+		var humanButton:Sprite;
+		var labelsButton:Sprite;
+		
+		//List fillable by unrealscript of possessable NPCs
+		var possessList:Array = new Array();
 			
 		public function PossessPanel(panelName:String, width:int, height:int):void {
 			super(panelName, width, height);
