@@ -16,9 +16,9 @@ package {
 	import flash.geom.ColorTransform;
 	import flash.geom.Rectangle;
 	
-	///////////////////
-	//* Description *//
-	///////////////////
+	/////////////////
+	// Description //
+	/////////////////
 	/**
 	 * The Icon is one of many objects in a menu
 	 *
@@ -29,9 +29,9 @@ package {
 	 * @version    1.0 (12/23/2014)
 	 */
 
-	////////////////////////
-	//* Icon Class *//
-	////////////////////////	
+	////////////////
+	// Icon Class //
+	////////////////	
 	public class Icon extends Sprite {
 		
 		public var image_black:Sprite;

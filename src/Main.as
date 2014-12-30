@@ -35,7 +35,7 @@
 		//It is the measure in pixels of the tab width/height
 		var TAB_SIZE:Number = 48;
 		//This places the menu to the left or the right
-		var leftSide:Boolean = false; 
+		var leftSide:Boolean = true; 
 		
 		//Stage Objects
 		var menu:Menu;

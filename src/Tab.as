@@ -30,6 +30,12 @@ package {
 		
 		public function Tab(buttonName:String, width:int, TAB_SIZE:Number, leftSide:Boolean):void {
 			super(buttonName, width, TAB_SIZE);
+			
+			this.maxAlpha = 1.0;
+			this.minAlpha = 0.0;
+			this.currentAlpha = minAlpha;
+			this.fade = currentAlpha;
+			
 			icon = new Icon(buttonName, TAB_SIZE);
 			if(leftSide) {
 				icon.x = myWidth - TAB_SIZE*.625;

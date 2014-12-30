@@ -23,9 +23,9 @@ package {
 	 * @version    1.0 (12/29/2014)
 	 */
 
-	///////////////
+	//////////////////////////
 	// AbstractButton Class //
-	///////////////	
+	//////////////////////////
 	public class AbstractButton extends UIElement {
 		
 		public var icon:Icon;
@@ -38,7 +38,7 @@ package {
 			this.buttonName = buttonName;
 			this.easing = .3;
 			this.maxAlpha = 1.0;
-			this.minAlpha = 0.0;
+			this.minAlpha = 0.5;
 			this.currentAlpha = minAlpha;
 			this.fade = currentAlpha;
 			this.buttonMode = true;

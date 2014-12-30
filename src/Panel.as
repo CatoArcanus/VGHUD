@@ -41,7 +41,7 @@ package {
 			this.visible = false;
 			
 			//This is needed for right/left side
-			if(leftSide){
+			if(leftSide) {
 				this.closeX = panelWidth*(-1);
 				this.openX = menuWidth;
 			} else {

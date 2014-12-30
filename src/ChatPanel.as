@@ -33,9 +33,8 @@ package {
 		var chatLogBG:Sprite;
 		var chatInput:TextField;
 		var chatInputBG:Sprite;
-		var chatScroller:DefaultScrollBar;
-		var sendButton:Sprite;
-		var sendIcon:Icon;
+		//var chatScroller:DefaultScrollBar;
+		var sendButton:IconButton;
 			
 		public function ChatPanel(panelName:String, menuWidth:int, panelWidth:int, height:int, TAB_SIZE:Number, leftSide:Boolean):void {
 			super(panelName, menuWidth, panelWidth, height, TAB_SIZE, leftSide);
@@ -65,17 +64,10 @@ package {
 			chatInput.height = TAB_SIZE;
 			chatInput.x = chatInputBG.x;
 			chatInput.y = chatInputBG.y;
-			
-			//Send Icon
-			sendIcon = new Icon("Avatars", TAB_SIZE);
-			sendButton = new Sprite();
-			sendButton.graphics.beginFill(0x000000, 0.5); 
-			sendButton.graphics.drawRect(0, 0, chatInput.height, chatInput.height); 
-			sendButton.graphics.endFill();
+						
+			sendButton = new IconButton("Avatars", TAB_SIZE);
 			sendButton.y = chatInput.y;
 			sendButton.x = chatInputBG.width - TAB_SIZE*.5;
-			sendIcon.x = sendButton.x+TAB_SIZE*.25;
-			sendIcon.y = sendButton.y+TAB_SIZE*.25;
 			initialize();
 		}
 		
@@ -85,8 +77,7 @@ package {
 			addChild(chatInputBG);
 			addChild(chatInput);
 			addChild(sendButton)
-			addChild(sendIcon);
-			draw();
+			this.draw();
 		}
 	}
 }
