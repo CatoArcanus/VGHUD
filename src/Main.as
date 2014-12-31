@@ -22,7 +22,7 @@
 	 * @package    src
 	 * @author     Monte Nichols (Original Author) <monte.nichols.ii@gmail.com>
 	 * @copyright  Virtual Reality Labs at the Center for Brainhealth
-	 * @version    1.5 (12/29/2014)
+	 * @version    1.7 (12/31/2014)
 	 */
 
 	////////////////
@@ -35,11 +35,11 @@
 		//It is the measure in pixels of the tab width/height
 		var TAB_SIZE:Number = 48;
 		//This places the menu to the left or the right
-		var leftSide:Boolean = true; 
+		var leftSide:Boolean = false; 
 		
 		//Stage Objects
 		var menu:Menu;
-		var tabNames:Array = new Array("Chat","Chat", "Kick", "Avatars", "Possess", "Scenario");
+		var tabNames:Array = new Array("Chat", "Kick", "Avatars", "Possess", "Scenario");
 		//var tabNames:Array = new Array("Avatars", "Avatars", "Avatars", "Avatars", "Avatars");
 		
 		//Main initializes objects and gives them values
@@ -134,6 +134,10 @@
 				menu.x += menu.dx * menu.easing;
 			}
 			menu.frameCounter++;
+		}
+		
+		public function simulateUnrealScriptPolls() {
+			
 		}
 	}
 }

@@ -69,7 +69,7 @@ package {
 			chatInput.textColor = 0xFFFFFF; 
 			chatInput.setTextFormat(myFormat); 
 						
-			sendButton = new IconButton("Avatars", TAB_SIZE/2);
+			sendButton = new IconButton("send", TAB_SIZE/2);
 			sendButton.y = chatInput.y;
 			sendButton.x = chatInputBG.width;
 			initialize();

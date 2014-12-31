@@ -49,8 +49,9 @@ package {
 			var pos:int = -1;
 			if(leftSide) {
 				pos = 1;
-			}				
+			}
 			
+			draw();
 			//This variable will be incremented to put the tabs in vertical order						
 			var tabY:int = 0;
 			for each(var tabName:String in tabNames) {
@@ -71,11 +72,13 @@ package {
 				//A series of tabs is generated based on the list of tab names
 				var tab = new Tab(tabName, width, TAB_SIZE, leftSide);
 				tab.x = 0;
-				tab.y = tabY;				
+				tab.y = tabY;
 				tab.addEventListener(MouseEvent.CLICK, tabClick(tabName));
 				tabs.push(tab);
-				tabY += TAB_SIZE;
-				
+				tabY += TAB_SIZE+1;
+				this.graphics.lineStyle(1, 0xCCCCCC, .75);
+				this.graphics.moveTo(0, tabY); 
+				this.graphics.lineTo(tab.myWidth, tabY);
 			}
 			
 			//Chat Panel //
@@ -130,11 +133,23 @@ package {
 			panels["Scenario"].draw();
 			*/
 			init();
-			draw();
 		}
 		
 		private function tabClick(panelName:String):Function {
 			return function(e:MouseEvent):void {
+				for each(var tab:Tab in tabs) {
+					trace("Looking at: " + tab.buttonName);
+					if(tab.buttonName == currentPanel) {
+						trace("Found tab named " + currentPanel + "setting it's minAlpha to 0.0");
+						tab.minAlpha = 0.0;
+						tab.unHighlight();
+					}
+					
+					if(tab.buttonName == panelName) {
+						trace("Found tab named " + panelName + "setting it's minAlpha to 0.3");
+						tab.minAlpha = 0.5;
+					}
+				}
 				trace( "function: " + panelName);
 				animateOut(panelName);
 			};
@@ -154,20 +169,20 @@ package {
 		}
 				
 		public function animateOut(panelName:String):void {
-			trace("Animate out: " + currentPanel);			
+			trace("Animate out: " + currentPanel);
 			if(currentPanel != "") {
 				outPanel = currentPanel;
 				panels[outPanel].moveX = panels[outPanel].closeX;
 				addEventListener(Event.ENTER_FRAME, onEaseOut);
-				currentPanel = panelName;				
+				currentPanel = panelName;
 			} else {
-				currentPanel = panelName;				
+				currentPanel = panelName;
 				animateIn();
 			}
 		}
 	
 		public function animateIn():void {
-			trace("Animate in: " + currentPanel);			
+			trace("Animate in: " + currentPanel);
 			panels[currentPanel].visible = true;
 			panels[currentPanel].moveX = panels[currentPanel].openX;
 			addEventListener(Event.ENTER_FRAME, onEaseIn);
@@ -202,7 +217,7 @@ package {
 			//Otherwise move a proportional distance to my target "easing" my way there
 			if(Math.abs(panels[currentPanel].dx) < 1) {
 				removeEventListener(Event.ENTER_FRAME, onEaseIn);
-				panels[currentPanel].frameCounter = 0;				
+				panels[currentPanel].frameCounter = 0;
 			} else {
 				panels[currentPanel].x += panels[currentPanel].dx * panels[currentPanel].easing;
 			}

@@ -49,7 +49,6 @@ package {
 			myFormat.font = "Arial";
 			
 			text = new TextField();
-			
 			text.text = buttonName;
 			text.textColor = 0xFFFFFF;
 			if(leftSide) {
@@ -64,7 +63,7 @@ package {
 			text.selectable = false;
 			init();
 		}
-		
+				
 		private function init():void {
 			addChild(icon);
 			addChild(text);

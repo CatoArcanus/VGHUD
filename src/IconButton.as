@@ -31,9 +31,9 @@ package {
 		public function IconButton(buttonName:String, TAB_SIZE:Number):void {
 			super(buttonName, TAB_SIZE, TAB_SIZE);
 			
-			icon = new Icon(buttonName, TAB_SIZE);
-			icon.x = TAB_SIZE/4;
-			icon.y = TAB_SIZE/4;
+			icon = new Icon(buttonName, TAB_SIZE*1.5);
+			icon.x = TAB_SIZE/8;
+			icon.y = TAB_SIZE/8;
 			
 			this.draw();
 			init();

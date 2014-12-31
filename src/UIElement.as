@@ -48,7 +48,6 @@ package {
 			graphics.beginFill(color, currentAlpha);
 			graphics.drawRect(0, 0, myWidth, myHeight); 
 			graphics.endFill();
-		} 
-		
+		}	
 	}
 }

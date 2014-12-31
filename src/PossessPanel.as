@@ -38,11 +38,11 @@ package {
 			
 		public function PossessPanel(panelName:String, menuWidth:int, panelWidth:int, height:int, TAB_SIZE:Number, leftSide:Boolean):void {
 			super(panelName, menuWidth, panelWidth, height, TAB_SIZE, leftSide);
-			ghostButton = new IconButton("Avatars", TAB_SIZE*2.25);
+			ghostButton = new IconButton("Ghost", TAB_SIZE*2.25);
 			ghostButton.y = TAB_SIZE;
 			ghostButton.x = TAB_SIZE*.5;
 			
-			humanButton = new IconButton("Avatars", TAB_SIZE*2.25);
+			humanButton = new IconButton("Human", TAB_SIZE*2.25);
 			humanButton.y = TAB_SIZE;
 			humanButton.x = panelWidth - humanButton.width - TAB_SIZE*.5;
 			
