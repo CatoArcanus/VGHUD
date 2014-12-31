@@ -96,6 +96,22 @@ package {
 			chatPanel.mask = panelMask;
 			panels["Chat"] = chatPanel;
 			
+			panelMask = new Sprite();
+			var possessPanelWidth:int = TAB_SIZE*6;
+			var possessPanel:PossessPanel = new PossessPanel("Possess", width, possessPanelWidth, height, TAB_SIZE, leftSide);
+			panelMask.graphics.beginFill(0xffFF00); 
+			panelMask.graphics.drawRect(0, 0, possessPanelWidth, height); 
+			panelMask.graphics.endFill(); 
+			if(leftSide){
+				panelMask.x = this.myWidth;
+			} else {
+				panelMask.x = possessPanelWidth*(pos);
+			}
+			panelMask.y = 0;
+			panelMasks.push(panelMask);
+			possessPanel.mask = panelMask;
+			panels["Possess"] = possessPanel;
+			
 			/*
 			//var tabNames:Array = new Array("Chat", "Kick", "Avatars", "Possess", "Scenario");
 			//Chat Panel

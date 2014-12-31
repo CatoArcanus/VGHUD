@@ -5,10 +5,7 @@ package {
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.text.TextField;
-	import flash.text.Font;
-	import flash.text.TextFormat;
-	import flash.text.TextField;
+	import flash.text.*; 
 
 	/////////////////
 	// Description //
@@ -39,6 +36,10 @@ package {
 		public function ChatPanel(panelName:String, menuWidth:int, panelWidth:int, height:int, TAB_SIZE:Number, leftSide:Boolean):void {
 			super(panelName, menuWidth, panelWidth, height, TAB_SIZE, leftSide);
 			
+			var myFormat:TextFormat = new TextFormat();
+			myFormat.size = TAB_SIZE*.30;
+			myFormat.font = "Arial";
+			
 			//Chat Log
 			chatLog = new TextField();
 			chatLogBG = new Sprite();
@@ -47,7 +48,7 @@ package {
 			chatLogBG.graphics.endFill();
 			chatLogBG.x = TAB_SIZE*.5;
 			chatLogBG.y = TAB_SIZE*2;
-			chatLog.width = width - TAB_SIZE*.75;
+			chatLog.width = menuWidth - TAB_SIZE*.75;
 			chatLog.height = height - TAB_SIZE*.75;
 			chatLog.x = TAB_SIZE*.75;
 			chatLog.y = TAB_SIZE*2;
@@ -56,18 +57,21 @@ package {
 			chatInput = new TextField();
 			chatInputBG = new Sprite();
 			chatInputBG.graphics.beginFill(0x000000, 0.8); 
-			chatInputBG.graphics.drawRect(0, 0, chatLogBG.width, TAB_SIZE); 
+			chatInputBG.graphics.drawRect(0, 0, width-TAB_SIZE, TAB_SIZE/2); 
 			chatInputBG.graphics.endFill();
 			chatInputBG.x = chatLogBG.x;
 			chatInputBG.y = chatLogBG.y+chatLogBG.height+TAB_SIZE*.5;
-			chatInput.width = chatLog.width;
+			chatInput.width = chatInputBG.width-TAB_SIZE/2;
 			chatInput.height = TAB_SIZE;
 			chatInput.x = chatInputBG.x;
 			chatInput.y = chatInputBG.y;
+			chatInput.type = TextFieldType.INPUT;
+			chatInput.textColor = 0xFFFFFF; 
+			chatInput.setTextFormat(myFormat); 
 						
-			sendButton = new IconButton("Avatars", TAB_SIZE);
+			sendButton = new IconButton("Avatars", TAB_SIZE/2);
 			sendButton.y = chatInput.y;
-			sendButton.x = chatInputBG.width - TAB_SIZE*.5;
+			sendButton.x = chatInputBG.width;
 			initialize();
 		}
 		

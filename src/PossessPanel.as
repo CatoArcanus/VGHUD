@@ -20,7 +20,7 @@ package {
 	 * @package    src
 	 * @author     Monte Nichols (Original Author) <monte.nichols.ii@gmail.com>
 	 * @copyright  Virtual Reality Labs at the Center for Brainhealth
-	 * @version    1.0 (12/27/2014)
+	 * @version    1.1 (12/29/2014)
 	 */
 
 	////////////////////////
@@ -29,21 +29,34 @@ package {
 	public class PossessPanel extends Panel {
 		
 		//Buttons to do actions
-		var ghostButton:Sprite;
-		var ghostIcon:Icon;
-		var humanButton:Sprite;
-		var labelsButton:Sprite;
+		var ghostButton:IconButton;
+		var humanButton:IconButton;
+		var labelButton:TextButton;
 		
 		//List fillable by unrealscript of possessable NPCs
 		var possessList:Array = new Array();
 			
-		public function PossessPanel(panelName:String, width:int, height:int):void {
-			super(panelName, width, height);
+		public function PossessPanel(panelName:String, menuWidth:int, panelWidth:int, height:int, TAB_SIZE:Number, leftSide:Boolean):void {
+			super(panelName, menuWidth, panelWidth, height, TAB_SIZE, leftSide);
+			ghostButton = new IconButton("Avatars", TAB_SIZE*2.25);
+			ghostButton.y = TAB_SIZE;
+			ghostButton.x = TAB_SIZE*.5;
+			
+			humanButton = new IconButton("Avatars", TAB_SIZE*2.25);
+			humanButton.y = TAB_SIZE;
+			humanButton.x = panelWidth - humanButton.width - TAB_SIZE*.5;
+			
+			labelButton = new TextButton("Show Labels", TAB_SIZE);
+			labelButton.y = ghostButton.y+ghostButton.height+TAB_SIZE*.5;
+			labelButton.x = panelWidth/2-labelButton.width/2;
+			
 			initialize();
 		}
 		
 		private function initialize():void {
-		
+			addChild(ghostButton);
+			addChild(humanButton);
+			addChild(labelButton);
 		}
 	}
 }

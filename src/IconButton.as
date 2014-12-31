@@ -34,7 +34,7 @@ package {
 			icon = new Icon(buttonName, TAB_SIZE);
 			icon.x = TAB_SIZE/4;
 			icon.y = TAB_SIZE/4;
-												
+			
 			this.draw();
 			init();
 		}
