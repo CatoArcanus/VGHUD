@@ -24,30 +24,12 @@ package {
 
 	////////////////
 	// Main Class //
-	////////////////	
-	public class UIElement extends Sprite {
+	////////////////
+	public class Easer {
 		
 		//Default Variables
-		var easing:Number = 0.25;
-		var openX:int;
-		var closeX:int;
-		var moveX:int;
-		var dx:Number;
-		var frameCounter:int = 0;
-		public var myWidth:int; 
-		public var myHeight:int;
-		public var maxAlpha:Number = 1.0; 
-		public var minAlpha:Number = 0.0; 
-		public var fade:Number = 0.0; 
-		public var currentAlpha:Number = 0.0;
-		public var color:uint = 0x000000;
 		
 		//A draw function for all UI elements
-		public function draw():void {
-			graphics.clear();
-			graphics.beginFill(color, currentAlpha);
-			graphics.drawRect(0, 0, myWidth, myHeight); 
-			graphics.endFill();
-		}
+		
 	}
 }

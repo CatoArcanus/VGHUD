@@ -28,8 +28,9 @@ package {
 	/////////////////////////	
 	public class ScenarioPanel extends Panel {
 		
-		public function ScenarioPanel(panelName:String, width:int, height:int):void {
-			super(panelName, width, height);
+		public function ScenarioPanel(panelName:String, menuWidth:int, panelWidth:int, height:int, TAB_SIZE:Number, leftSide:Boolean):void {
+			super(panelName, menuWidth, panelWidth, height, TAB_SIZE, leftSide);
+			nextY = TAB_SIZE;
 			initialize();
 		}
 		

@@ -50,6 +50,8 @@ package {
 			labelButton.y = ghostButton.y+ghostButton.height+TAB_SIZE*.5;
 			labelButton.x = panelWidth/2-labelButton.width/2;
 			
+			nextY = labelButton.y+labelButton.height+TAB_SIZE;
+			
 			initialize();
 		}
 		

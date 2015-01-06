@@ -42,9 +42,9 @@ package {
 			this.currentAlpha = minAlpha;
 			this.fade = currentAlpha;
 			this.buttonMode = true;
-			this.mouseChildren = false;			
+			this.mouseChildren = false;
 		}
-				
+		
 		public function highlight(e:MouseEvent = null):void {
 			//trace("highlight");
 			fade = maxAlpha;

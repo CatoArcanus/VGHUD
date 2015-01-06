@@ -30,6 +30,7 @@ package {
 		
 		var panelName:String;
 		public var text:TextField;
+		public var nextY:int = 0;
 				
 		public function Panel(panelName:String, menuWidth:int, panelWidth:int, height:int, TAB_SIZE:Number, leftSide:Boolean):void {		
 			//Variables that are not the default
@@ -62,17 +63,25 @@ package {
 			text.embedFonts = true;  
 			text.setTextFormat(myFormat);
 			text.selectable = false;
+			nextY = text.y + text.height;
 			
 			this.myWidth = panelWidth;
 			this.myHeight = height;
-			this.panelName = panelName; 
+			this.panelName = panelName;
 			init();
 		}
 		
 		private function init():void {
 			addChild(text);
 			draw();
-		}	
-					
+		}
+		
+		public function addSureLabel(sureTitle:String, sureText:String, TAB_SIZE:Number) {
+			var sureLabel:SureLabel = new SureLabel(sureTitle, sureText, TAB_SIZE);
+			sureLabel.x = TAB_SIZE/2;	
+			sureLabel.y = nextY;
+			nextY = sureLabel.y + sureLabel.myHeight + TAB_SIZE/4;
+			addChild(sureLabel);	
+		}				
 	}	
 }

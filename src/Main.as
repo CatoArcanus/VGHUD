@@ -69,6 +69,11 @@
 		private function init():void {
 			addChild(menu);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, reportKeyDown);
+			simulateUnrealScriptPolls();
+		}
+		
+		private function addPlayertoPlayerList(playerName:String):void {
+			menu.panels["Kick"].addSureLabel(playerName, "Kick", TAB_SIZE);
 		}
 		
 		//This temporarily makes some text fields and measures how big they are
@@ -136,8 +141,13 @@
 			menu.frameCounter++;
 		}
 		
+		
+		
 		public function simulateUnrealScriptPolls() {
-			
+			var playerNames:Array = new Array("Caesar 251", "Cato 252", "Pompey253", "Cicero 254");
+			for each (var playerName:String in playerNames) {
+				addPlayertoPlayerList(playerName);
+			} 
 		}
 	}
 }

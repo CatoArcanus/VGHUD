@@ -28,13 +28,14 @@ package {
 	/////////////////////	
 	public class KickPanel extends Panel {
 		
-		public function KickPanel(panelName:String, width:int, height:int):void {
-			super(panelName, width, height);
+		public function KickPanel(panelName:String, menuWidth:int, panelWidth:int, height:int, TAB_SIZE:Number, leftSide:Boolean):void {
+			super(panelName, menuWidth, panelWidth, height, TAB_SIZE, leftSide);
+			nextY = TAB_SIZE;
 			initialize();
 		}
 		
 		private function initialize():void {
-			
-		}
+		
+		}				
 	}
 }
