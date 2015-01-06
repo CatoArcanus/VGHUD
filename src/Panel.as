@@ -63,7 +63,7 @@ package {
 			text.embedFonts = true;  
 			text.setTextFormat(myFormat);
 			text.selectable = false;
-			nextY = text.y + text.height;
+			nextY = text.y + text.height/2;
 			
 			this.myWidth = panelWidth;
 			this.myHeight = height;

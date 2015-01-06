@@ -47,7 +47,7 @@ package {
 			chatLogBG.graphics.drawRect(0, 0, width-TAB_SIZE, height-TAB_SIZE*4); 
 			chatLogBG.graphics.endFill();
 			chatLogBG.x = TAB_SIZE*.5;
-			chatLogBG.y = TAB_SIZE*2;
+			chatLogBG.y = nextY;
 			chatLog.width = menuWidth - TAB_SIZE*.75;
 			chatLog.height = height - TAB_SIZE*.75;
 			chatLog.x = TAB_SIZE*.75;

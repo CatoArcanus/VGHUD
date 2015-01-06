@@ -57,14 +57,19 @@ package {
 			for each(var tabName:String in tabNames) {
 				//This creates a series of panels. We will move away from this model				
 				var panelWidth:Number = TAB_SIZE*6;
-				panelMask = new Sprite();
-				panelMask.graphics.beginFill(0xffFF00); 
-				panelMask.graphics.drawRect(0, 0, panelWidth, height); 
-				panelMask.graphics.endFill(); 
-				panelMask.x = panelWidth*(pos);
-				panelMask.y = 0;
-				panelMasks.push(panelMask);
-				
+				if(!(tabName == "Possess" || tabName == "Chat")) {
+					panelMask = new Sprite();
+					panelMask.graphics.beginFill(0xffFF00); 
+					panelMask.graphics.drawRect(0, 0, panelWidth, height); 
+					panelMask.graphics.endFill(); 
+					if(leftSide) {
+						panelMask.x = this.myWidth;
+					} else {
+						panelMask.x = panelWidth*(pos);
+					}
+					panelMask.y = 0;
+					panelMasks.push(panelMask);
+				}
 				//A mask for the panels
 				var panel = new Panel(tabName, width, panelWidth, height, TAB_SIZE, leftSide);			
 				panel.mask = panelMask;

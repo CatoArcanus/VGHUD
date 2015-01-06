@@ -35,11 +35,11 @@
 		//It is the measure in pixels of the tab width/height
 		var TAB_SIZE:Number = 48;
 		//This places the menu to the left or the right
-		var leftSide:Boolean = false; 
+		var leftSide:Boolean = true; 
 		
 		//Stage Objects
 		var menu:Menu;
-		var tabNames:Array = new Array("Chat", "Kick", "Avatars", "Possess", "Scenario");
+		var tabNames:Array = new Array("Chat", "Possess", "Kick", "Avatars", "Scenario");
 		//var tabNames:Array = new Array("Avatars", "Avatars", "Avatars", "Avatars", "Avatars");
 		
 		//Main initializes objects and gives them values
