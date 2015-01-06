@@ -35,7 +35,7 @@
 		//It is the measure in pixels of the tab width/height
 		var TAB_SIZE:Number = 48;
 		//This places the menu to the left or the right
-		var leftSide:Boolean = true; 
+		var leftSide:Boolean = false; 
 		
 		//Stage Objects
 		var menu:Menu;
@@ -45,7 +45,7 @@
 		//Main initializes objects and gives them values
 		public function Main()  {
 			//Get menu width
-			var myWidth:int = getMaxTextWidth(tabNames) + TAB_SIZE;
+			var myWidth:int = getMaxTextWidth(tabNames) + TAB_SIZE*2;
 					
 			//Create menu
 			menu = new Menu((myWidth), stage.stageHeight, tabNames, TAB_SIZE, leftSide);
@@ -139,9 +139,7 @@
 				menu.x += menu.dx * menu.easing;
 			}
 			menu.frameCounter++;
-		}
-		
-		
+		}		
 		
 		public function simulateUnrealScriptPolls() {
 			var playerNames:Array = new Array("Caesar 251", "Cato 252", "Pompey253", "Cicero 254");

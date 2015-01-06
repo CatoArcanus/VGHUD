@@ -38,22 +38,22 @@ package {
 		public var image_white:Sprite;
 		public var myBitmapData:BitmapData;
 		
-		public function Icon(name:String, TAB_SIZE:Number):void {
+		public function Icon(name:String, TAB_SIZE:Number, center:Boolean = false):void {
 			this.name = name;
 			var icon_size:int = TAB_SIZE/2;
-			image_black = loadImage(image_black, "../src/img/"+name+"_icon_black.png", 0, 0 , icon_size, icon_size);
-			image_white = loadImage(image_white, "../src/img/"+name+"_icon_white.png", 0, 0 , icon_size, icon_size);
+			image_black = loadImage(image_black, "../src/img/"+name+"_icon_black.png", 0, 0 , icon_size, icon_size, center);
+			image_white = loadImage(image_white, "../src/img/"+name+"_icon_white.png", 0, 0 , icon_size, icon_size, center);
 		}
 		
 		private function init():void {
 			//addChild(image_white);	
 		}
 		
-		private function loadImage(new_mc:Sprite, urlString:String, x:int, y:int, height:int, width:int ):Sprite {
+		private function loadImage(new_mc:Sprite, urlString:String, x:int, y:int, height:int, width:int, center:Boolean ):Sprite {
 			new_mc = new Sprite();
 			var myLoader:Loader = new Loader(); 
 			var url :URLRequest = new URLRequest(urlString);
-			var functionOnImageLoaded:Function = onImageLoaded(new_mc, x, y, height, width);
+			var functionOnImageLoaded:Function = onImageLoaded(new_mc, x, y, height, width, center);
 			myLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, functionOnImageLoaded);
 			myLoader.load(url);
 			addChild(new_mc);
@@ -61,7 +61,7 @@ package {
 			return new_mc;
 		}
 		
-		private function onImageLoaded(new_mc:Sprite, x:int, y:int, height:int, width:int ):Function {
+		private function onImageLoaded(new_mc:Sprite, x:int, y:int, height:int, width:int, center:Boolean):Function {
 			return function(e:Event):void {
 				myBitmapData = e.target.content.bitmapData;
 				var bitmap = new Bitmap(myBitmapData);
@@ -70,6 +70,10 @@ package {
 				bitmap.width = width;
 				bitmap.x = x;
 				bitmap.y = y;
+				if(center) {
+					bitmap.x = -width/2;
+					bitmap.y = -height/2;	
+				}
 				bitmap.smoothing = true;
 				new_mc.addChild(bitmap);
 				//draw();

@@ -28,7 +28,10 @@ package {
 	///////////////	
 	public class Tab extends AbstractButton {
 		
-		public function Tab(buttonName:String, width:int, TAB_SIZE:Number, leftSide:Boolean):void {
+		public var rotatingIcon:RotatingIcon;
+		public var dr:Number;
+		
+		public function Tab(buttonName:String, width:int, TAB_SIZE:Number, leftSide:Boolean, accordian:Boolean = false):void {
 			super(buttonName, width, TAB_SIZE);
 			
 			this.maxAlpha = 1.0;
@@ -61,6 +64,17 @@ package {
 			text.embedFonts = true;  
 			text.setTextFormat(myFormat);
 			text.selectable = false;
+			
+			rotatingIcon = new RotatingIcon("ArrowLeft", TAB_SIZE);
+			if(accordian){
+				if(leftSide) {
+					rotatingIcon.x = TAB_SIZE/8;
+				} else {
+					rotatingIcon.x = myWidth - TAB_SIZE*.625;
+				}
+				rotatingIcon.y = TAB_SIZE/2;
+				addChild(rotatingIcon);
+			}
 			init();
 		}
 				
@@ -68,6 +82,38 @@ package {
 			addChild(icon);
 			addChild(text);
 			addEventListener(MouseEvent.ROLL_OVER, highlight);
+		}
+		
+		public function rotateIconDown(e:MouseEvent = null):void {
+			//trace("highlight");
+			rotatingIcon.myRotation = rotatingIcon.maxRotation;
+			addEventListener(Event.ENTER_FRAME, onRotate);
+		}
+		
+		public function rotateIconUp(e:MouseEvent = null):void {
+			//trace("highlight");
+			rotatingIcon.myRotation = rotatingIcon.minRotation;
+			addEventListener(Event.ENTER_FRAME, onRotate);
+		}
+				
+		private function onRotate(e:Event):void {
+			//My distance = (where I want to go) - where I am
+			dr = ( rotatingIcon.rotation - rotatingIcon.myRotation);
+			trace(frameCounter + "rotation: "+rotatingIcon.rotation+" -- dr:" + (dr)+ "myRotation: "+rotatingIcon.myRotation+ " abs " + (Math.abs(dr)));
+			//If where I want to go is less than 1, I will stay there
+			//Otherwise move a proportional distance to my target "easing" my way there
+			if(rotatingIcon.rotation == rotatingIcon.myRotation) {
+				removeEventListener(Event.ENTER_FRAME, onRotate);
+				frameCounter = 0;
+			} else {
+				if(rotatingIcon.myRotation == rotatingIcon.minRotation) {
+					rotatingIcon.rotation -= 10;
+				} else {
+					rotatingIcon.rotation += 10;
+				}
+				draw();
+			}
+			frameCounter++;
 		}
 	}
 }

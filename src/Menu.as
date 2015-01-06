@@ -57,6 +57,7 @@ package {
 			for each(var tabName:String in tabNames) {
 				//This creates a series of panels. We will move away from this model				
 				var panelWidth:Number = TAB_SIZE*6;
+				var isAccordian:Boolean = false;
 				if(!(tabName == "Possess" || tabName == "Chat")) {
 					panelMask = new Sprite();
 					panelMask.graphics.beginFill(0xffFF00); 
@@ -69,6 +70,7 @@ package {
 					}
 					panelMask.y = 0;
 					panelMasks.push(panelMask);
+					isAccordian = true;
 				}
 				//A mask for the panels
 				var panel = new Panel(tabName, width, panelWidth, height, TAB_SIZE, leftSide);			
@@ -76,7 +78,7 @@ package {
 				panels[tabName] = panel;
 				
 				//A series of tabs is generated based on the list of tab names
-				var tab = new Tab(tabName, width, TAB_SIZE, leftSide);
+				var tab = new Tab(tabName, width, TAB_SIZE, leftSide, isAccordian);
 				tab.x = 0;
 				tab.y = tabY;
 				tab.addEventListener(MouseEvent.CLICK, tabClick(tabName));
@@ -149,11 +151,13 @@ package {
 						trace("Found tab named " + currentPanel + "setting it's minAlpha to 0.0");
 						tab.minAlpha = 0.0;
 						tab.unHighlight();
+						tab.rotateIconDown();
 					}
 					
 					if(tab.buttonName == panelName) {
 						trace("Found tab named " + panelName + "setting it's minAlpha to 0.3");
 						tab.minAlpha = 0.5;
+						tab.rotateIconUp();
 					}
 				}
 				trace( "function: " + panelName);

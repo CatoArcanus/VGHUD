@@ -31,18 +31,8 @@ package {
 		public var minRotation:Number = -90; 
 		public var myRotation:Number = 0; 
 					
-		public function RotatingIcon(buttonName:String, TAB_SIZE:Number):void {
-			super(buttonName, TAB_SIZE, TAB_SIZE);
-			
-			this.easing = .3;
-			this.maxAlpha = 0.0;
-			this.minAlpha = 0.0;
-			this.currentAlpha = minAlpha;
-			this.fade = currentAlpha;
-			
-			icon = new Icon(buttonName, TAB_SIZE);
-			icon.x = TAB_SIZE/4;
-			icon.y = TAB_SIZE/4;
+		public function RotatingIcon(name:String, TAB_SIZE:Number):void {
+			super(name, TAB_SIZE/2, true);
 			
 			this.draw();
 			init();
@@ -50,7 +40,7 @@ package {
 		
 		//Add items to stage
 		private function init():void {
-			addChild(icon);
+			
 		}
 	}
 }
