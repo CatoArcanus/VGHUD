@@ -76,13 +76,19 @@ package {
 				}
 				bitmap.smoothing = true;
 				new_mc.addChild(bitmap);
-				//draw();
+				draw();
 			};
 		}
 		
 		public function draw():void {
-			//removeChild(image_black);
-			//addChild(image_white);
+			/*
+			graphics.lineStyle(1, 0x990000, .75);
+			graphics.moveTo(0, 0); 
+			graphics.lineTo(0, height); 
+			graphics.lineTo(width, height); 
+			graphics.lineTo(width, 0); 
+			graphics.lineTo(0, 0); 
+			*/
 		}
 	}
 }

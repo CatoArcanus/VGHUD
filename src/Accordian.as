@@ -1,6 +1,7 @@
 package {
 	
 	import flash.display.Sprite;	
+	import flash.display.MovieClip;
 	import flash.display.Shape;	
 	import flash.display.Stage;
 	import flash.events.Event;
@@ -13,7 +14,7 @@ package {
 	// Description //
 	/////////////////
 	/**
-	 * The Panel is one of many objects in a menu
+	 * The Accordian is one of many objects in a menu
 	 *
 	 * @category   root.menu.panel[]
 	 * @package    src
@@ -23,24 +24,32 @@ package {
 	 */
 
 	/////////////////
-	// Panel Class //
+	// Accordian Class //
 	/////////////////
-	public class Panel extends UIElement {
+	public class Accordian extends UIElement {
 		
 		var panelName:String;
 		public var text:TextField;
 		public var nextY:int = 0;
-		public var tabNumber:Number = 0;
 				
-		public function Panel(panelName:String, width:int, height:int, TAB_SIZE:Number, leftSide:Boolean):void {		
+		public function Accordian(panelName:String, menuWidth:int, panelWidth:int, height:int, TAB_SIZE:Number, leftSide:Boolean):void {		
 			//Variables that are not the default
 			this.easing = .2;
 			this.color = 0x222222;
+			this.x = 0;
+			this.y = 0;
 			this.currentAlpha = .5;			
-			this.visible = true;
+			this.visible = false;
 			
 			//This is needed for right/left side
-														
+			if(leftSide) {
+				this.closeX = panelWidth*(-1);
+				this.openX = menuWidth;
+			} else {
+				this.closeX = 0;
+				this.openX = panelWidth*(-1);
+			}
+								
 			var myFormat:TextFormat = new TextFormat();
 			myFormat.size = TAB_SIZE/2;
 			myFormat.font = "Arial";
@@ -50,14 +59,14 @@ package {
 			text.textColor = 0xFFFFFF;
 			text.x = 15;
 			text.y = 15;
-			text.width = myWidth-text.x;
+			text.width = panelWidth-text.x;
 			text.embedFonts = true;  
 			text.setTextFormat(myFormat);
 			text.selectable = false;
-			nextY = TAB_SIZE/4;
+			nextY = text.y + text.height/2;
 			
-			this.myWidth = myWidth;
-			this.myHeight = height+TAB_SIZE/4;
+			this.myWidth = panelWidth;
+			this.myHeight = height;
 			this.panelName = panelName;
 			init();
 		}
@@ -72,10 +81,7 @@ package {
 			sureLabel.x = TAB_SIZE/2;	
 			sureLabel.y = nextY;
 			nextY = sureLabel.y + sureLabel.myHeight + TAB_SIZE/4;
-			addChild(sureLabel);
-			this.y -= TAB_SIZE;
-			this.closeY = this.y;
-			myHeight +=	TAB_SIZE;
+			addChild(sureLabel);	
 		}				
 	}	
 }

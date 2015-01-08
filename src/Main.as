@@ -1,7 +1,6 @@
 ﻿package {
 	
 	import flash.display.Sprite;		
-	import com.montenichols.utils.Scrollbar;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.events.KeyboardEvent;	
@@ -22,7 +21,7 @@
 	 * @package    src
 	 * @author     Monte Nichols (Original Author) <monte.nichols.ii@gmail.com>
 	 * @copyright  Virtual Reality Labs at the Center for Brainhealth
-	 * @version    1.7 (12/31/2014)
+	 * @version    1.7 (01/08/2015)
 	 */
 
 	////////////////
@@ -36,16 +35,26 @@
 		var TAB_SIZE:Number = 48;
 		//This places the menu to the left or the right
 		var leftSide:Boolean = false; 
+		//This lets tabs be acordians or not
+		var accordian:Boolean = true;
 		
 		//Stage Objects
 		var menu:Menu;
-		var tabNames:Array = new Array("Chat", "Possess", "Kick", "Avatars", "Scenario");
-		//var tabNames:Array = new Array("Avatars", "Avatars", "Avatars", "Avatars", "Avatars");
 		
+		//Tabs
+		var tabNames:Array = new Array(
+			new TabInfo("Chat", 	!accordian),
+			new TabInfo("Ghost", 	!accordian),
+			new TabInfo("Avatars", 	!accordian),
+			new TabInfo("Possess", 	accordian),
+			new TabInfo("Kick", 	accordian),
+			new TabInfo("Scenario", accordian)
+		);
+			
 		//Main initializes objects and gives them values
 		public function Main()  {
 			//Get menu width
-			var myWidth:int = getMaxTextWidth(tabNames) + TAB_SIZE*2;
+			var myWidth:int = TAB_SIZE*5//getMaxTextWidth(tabNames) + TAB_SIZE*2;
 					
 			//Create menu
 			menu = new Menu((myWidth), stage.stageHeight, tabNames, TAB_SIZE, leftSide);
@@ -72,39 +81,12 @@
 			simulateUnrealScriptPolls();
 		}
 		
+		//This will eventutally be called by unrealscript
 		private function addPlayertoPlayerList(playerName:String):void {
 			menu.panels["Kick"].addSureLabel(playerName, "Kick", TAB_SIZE);
-		}
+		}			
 		
-		//This temporarily makes some text fields and measures how big they are
-		private function getMaxTextWidth(strings:Array):int {
-			var myFormat:TextFormat = new TextFormat();
-			myFormat.size = TAB_SIZE/2;
-			myFormat.font = "Arial";
-			var myWidth:int = 0;
-			for each (var tabName:String in strings) {
-				var info:TextField = new TextField();
-				info.border = false;
-				info.multiline = false;
-				info.wordWrap = false;
-				info.selectable = false;
-				//get it to be auto size
-				info.autoSize = TextFieldAutoSize.LEFT;
-								
-				//apply the format
-				info.defaultTextFormat = myFormat;
-				//set the color
-				info.textColor = 0xFFFFFF;
-				//set the text
-				info.text = (tabName);
-				if(info.width > myWidth)
-				{
-					myWidth = info.width;
-				}
-			}
-			return myWidth;
-		}
-		
+		//This is primarily for debugging
 		private	function reportKeyDown(event:KeyboardEvent):void { 
     		trace("Key Pressed: " + String.fromCharCode(event.charCode) + " (character code: " + event.charCode + ")"); 
 			if (event.charCode == 111/*o*/) open(); 
@@ -141,6 +123,7 @@
 			menu.frameCounter++;
 		}		
 		
+		//This is primarily for testing
 		public function simulateUnrealScriptPolls() {
 			var playerNames:Array = new Array("Caesar 251", "Cato 252", "Pompey253", "Cicero 254");
 			for each (var playerName:String in playerNames) {

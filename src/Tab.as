@@ -33,7 +33,7 @@ package {
 		
 		public function Tab(buttonName:String, width:int, TAB_SIZE:Number, leftSide:Boolean, accordian:Boolean = false):void {
 			super(buttonName, width, TAB_SIZE);
-			
+			this.color = 0x000000;
 			this.maxAlpha = 1.0;
 			this.minAlpha = 0.0;
 			this.currentAlpha = minAlpha;
@@ -75,6 +75,7 @@ package {
 				rotatingIcon.y = TAB_SIZE/2;
 				addChild(rotatingIcon);
 			}
+			
 			init();
 		}
 				
@@ -86,13 +87,13 @@ package {
 		
 		public function rotateIconDown(e:MouseEvent = null):void {
 			//trace("highlight");
-			rotatingIcon.myRotation = rotatingIcon.maxRotation;
+			rotatingIcon.myRotation = rotatingIcon.minRotation;
 			addEventListener(Event.ENTER_FRAME, onRotate);
 		}
 		
 		public function rotateIconUp(e:MouseEvent = null):void {
 			//trace("highlight");
-			rotatingIcon.myRotation = rotatingIcon.minRotation;
+			rotatingIcon.myRotation = rotatingIcon.maxRotation;
 			addEventListener(Event.ENTER_FRAME, onRotate);
 		}
 				
@@ -111,9 +112,19 @@ package {
 				} else {
 					rotatingIcon.rotation += 10;
 				}
-				draw();
+				this.draw();
 			}
 			frameCounter++;
+		}
+		
+		public override function draw():void {
+			super.draw();
+			trace("i'm being called");
+			graphics.lineStyle(1, 0xFFFFFF, .75);
+			graphics.moveTo(0, 0); 
+			graphics.lineTo(myWidth, 0);
+			//graphics.moveTo(0, myHeight); 
+			//graphics.lineTo(myWidth, myHeight);
 		}
 	}
 }

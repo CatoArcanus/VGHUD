@@ -20,7 +20,7 @@ package {
 	 * @package    src
 	 * @author     Monte Nichols (Original Author) <monte.nichols.ii@gmail.com>
 	 * @copyright  Virtual Reality Labs at the Center for Brainhealth
-	 * @version    1.0 (12/29/2014)
+	 * @version    1.0 (01/06/2015)
 	 */
 
 	/////////////////////////
@@ -31,6 +31,8 @@ package {
 		public var text:TextField;
 		public var labelName:String;
 		
+		//Labels are just text on something. They can have an arbitrary amount of 
+		//elements based on the specific implementation of the child label 
 		public function AbstractLabel(labelName:String, width:int, TAB_SIZE:Number):void {
 			this.myWidth = width;
 			this.myHeight = TAB_SIZE;

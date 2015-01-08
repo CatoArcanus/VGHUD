@@ -20,7 +20,7 @@ package {
 	 * @package    src
 	 * @author     Monte Nichols (Original Author) <monte.nichols.ii@gmail.com>
 	 * @copyright  Virtual Reality Labs at the Center for Brainhealth
-	 * @version    1.0 (12/29/2014)
+	 * @version    1.1 (01/08/2015)
 	 */
 
 	//////////////////////////
@@ -28,10 +28,12 @@ package {
 	//////////////////////////
 	public class AbstractButton extends UIElement {
 		
+		//Objects in a button
 		public var icon:Icon;
 		public var text:TextField;
 		public var buttonName:String;
 		
+		//We only need a width, because the height is the tab_size
 		public function AbstractButton(buttonName:String, width:int, TAB_SIZE:Number):void {
 			this.myWidth = width;
 			this.myHeight = TAB_SIZE;
@@ -45,37 +47,39 @@ package {
 			this.mouseChildren = false;
 		}
 		
+		//All buttons should be highlighted when moused over
 		public function highlight(e:MouseEvent = null):void {
-			//trace("highlight");
+			trace("highlight " + buttonName);
 			fade = maxAlpha;
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
-			addEventListener(MouseEvent.ROLL_OUT, unHighlight);
-			removeEventListener(MouseEvent.ROLL_OVER, highlight);
+			addEventListener(MouseEvent.MOUSE_OUT, unHighlight);
+			removeEventListener(MouseEvent.MOUSE_OVER, highlight);
 		}
 		
+		//All buttons should be unhighlighted when moused out
 		public function unHighlight(e:MouseEvent = null):void {
-			//trace("unhighlight");
+			trace("unhighlight " + buttonName);
 			fade = minAlpha;
-			removeEventListener(MouseEvent.ROLL_OUT, unHighlight);
-			addEventListener(MouseEvent.ROLL_OVER, highlight);
+			removeEventListener(MouseEvent.MOUSE_OUT, unHighlight);
+			addEventListener(MouseEvent.MOUSE_OVER, highlight);
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
 		
+		//handle alpha changes, positive or negative
 		private function onEnterFrame(e:Event):void {
-			//trace(frameCounter + "fade: "+fade+" -- dx:" + (dx)+ "currentAlpha: "+currentAlpha+ " abs " + (Math.abs(dx *10)));
+			trace(frameCounter + "fade: "+fade+" -- da:" + (da)+ "currentAlpha: "+currentAlpha+ " abs " + (Math.abs(da *10)));
 			//My distance = (where I want to go) - where I am
-			dx = ( fade - currentAlpha);
+			da = ( fade - currentAlpha);
 			//If where I want to go is less than 1, I will stay there
 			//Otherwise move a proportional distance to my target "easing" my way there
-			if(Math.abs(dx *10) < .01) {
+			if(Math.abs(da *10) < .01) {
 				removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 				frameCounter = 0;
 			} else {
-				currentAlpha += dx * easing;
-				draw();
+				currentAlpha += da * easing;
+				this.draw();
 			}
 			frameCounter++;
 		}
-	
 	}
 }
