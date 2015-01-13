@@ -37,9 +37,9 @@
 		var leftSide:Boolean = false; 
 		//This lets tabs be acordians or not
 		var accordian:Boolean = true;
-		
 		//Stage Objects
 		var menu:Menu;
+		var chatWindow:ChatWindow;
 		
 		//Tabs
 		var tabNames:Array = new Array(
@@ -57,7 +57,10 @@
 			var myWidth:int = TAB_SIZE*5//getMaxTextWidth(tabNames) + TAB_SIZE*2;
 					
 			//Create menu
-			menu = new Menu((myWidth), stage.stageHeight, tabNames, TAB_SIZE, leftSide);
+			menu = new Menu((myWidth), stage.stageHeight, tabNames, TAB_SIZE, leftSide, stage);
+			chatWindow = new ChatWindow("chatWindow", TAB_SIZE*10, TAB_SIZE*7, TAB_SIZE, leftSide, stage);
+			chatWindow.x = TAB_SIZE;
+			chatWindow.y = stage.stageHeight - chatWindow.height - TAB_SIZE;
 			//This puts it on the left or right, depending on what we have decided
 			if(leftSide) {
 				menu.x = (0-myWidth)+TAB_SIZE*.75;
@@ -77,6 +80,7 @@
 		//Init Adds resources to stage and sets up initial event listeners
 		private function init():void {
 			addChild(menu);
+			addChild(chatWindow);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, reportKeyDown);
 			simulateUnrealScriptPolls();
 		}

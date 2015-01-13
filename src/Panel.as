@@ -8,7 +8,7 @@ package {
 	import flash.text.TextField;
 	import flash.text.Font;
 	import flash.text.TextFormat;
-		
+	
 	/////////////////
 	// Description //
 	/////////////////
@@ -36,11 +36,11 @@ package {
 			//Variables that are not the default
 			this.easing = .2;
 			this.color = 0x222222;
-			this.currentAlpha = .5;			
+			this.currentAlpha = .5;
 			this.visible = true;
 			
 			//This is needed for right/left side
-														
+			
 			var myFormat:TextFormat = new TextFormat();
 			myFormat.size = TAB_SIZE/2;
 			myFormat.font = "Arial";
@@ -69,13 +69,13 @@ package {
 		
 		public function addSureLabel(sureTitle:String, sureText:String, TAB_SIZE:Number) {
 			var sureLabel:SureLabel = new SureLabel(sureTitle, sureText, TAB_SIZE);
-			sureLabel.x = TAB_SIZE/2;	
+			sureLabel.x = TAB_SIZE/2;
 			sureLabel.y = nextY;
 			nextY = sureLabel.y + sureLabel.myHeight + TAB_SIZE/4;
 			addChild(sureLabel);
 			this.y -= TAB_SIZE;
 			this.closeY = this.y;
 			myHeight +=	TAB_SIZE;
-		}				
-	}	
+		}
+	}
 }

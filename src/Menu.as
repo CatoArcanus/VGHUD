@@ -29,14 +29,14 @@ package {
 		//variables
 		var currentPanel:String = "";
 		var outPanel:String = "";
-		
+			
 		//Objects
 		var tabs:Array = new Array();
 		var panels:Array = new Array();
 		var panelMasks:Array = new Array();
 		
 		//Menu initializes objects and gives them values
-		public function Menu(width:int, height:int, tabInfos:Array, TAB_SIZE:Number, leftSide:Boolean):void {
+		public function Menu(width:int, height:int, tabInfos:Array, TAB_SIZE:Number, leftSide:Boolean, stageRef:Stage):void {
 			//Set up paramaters that differ from the default
 			this.easing = .25;
 			this.myWidth = width;
@@ -68,6 +68,7 @@ package {
 				tabs.push(tab);
 				//Accordians need panels
 				if(tabInfo.accordian) {
+					
 					//set up a panel mask
 					var panelMask:Sprite = new Sprite();
 					panelMask.graphics.beginFill(0xffFF00, .5); 
@@ -75,6 +76,7 @@ package {
 					panelMask.graphics.endFill(); 
 					panelMask.x = 0;
 					panelMask.y = tab.y + tab.myHeight;
+					
 					//set up a panel
 					var panel = new Panel(tabInfo.tabName, width, TAB_SIZE, TAB_SIZE, leftSide);
 					panel.x = 0;
@@ -89,6 +91,7 @@ package {
 				tabY += TAB_SIZE+1;
 				tabNumber++;
 			}
+			
 						
 			init();
 		}
