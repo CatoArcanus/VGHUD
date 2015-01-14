@@ -30,7 +30,7 @@ package {
 		var windowName:String;
 			
 		public function Window(windowName:String, width:int, height:int, TAB_SIZE:Number, leftSide:Boolean):void {		
-			this.myWidth = myWidth;
+			this.myWidth = width;
 			this.myHeight = height+TAB_SIZE/4;
 			this.windowName = windowName;
 			init();

@@ -21,7 +21,7 @@
 	 * @package    src
 	 * @author     Monte Nichols (Original Author) <monte.nichols.ii@gmail.com>
 	 * @copyright  Virtual Reality Labs at the Center for Brainhealth
-	 * @version    1.7 (01/08/2015)
+	 * @version    1.7 (01/13/2015)
 	 */
 
 	////////////////
@@ -40,6 +40,7 @@
 		//Stage Objects
 		var menu:Menu;
 		var chatWindow:ChatWindow;
+		var avatarWindow:AvatarWindow;
 		
 		//Tabs
 		var tabNames:Array = new Array(
@@ -58,9 +59,16 @@
 					
 			//Create menu
 			menu = new Menu((myWidth), stage.stageHeight, tabNames, TAB_SIZE, leftSide, stage);
-			chatWindow = new ChatWindow("chatWindow", TAB_SIZE*10, TAB_SIZE*7, TAB_SIZE, leftSide, stage);
+			
+			//Create chat window
+			chatWindow = new ChatWindow("chatWindow", TAB_SIZE, leftSide, stage);
 			chatWindow.x = TAB_SIZE;
 			chatWindow.y = stage.stageHeight - chatWindow.height - TAB_SIZE;
+			
+			avatarWindow = new AvatarWindow("avatarWindow", TAB_SIZE, leftSide, stage);
+			avatarWindow.x = 0;
+			avatarWindow.y = 0;
+			
 			//This puts it on the left or right, depending on what we have decided
 			if(leftSide) {
 				menu.x = (0-myWidth)+TAB_SIZE*.75;
@@ -81,6 +89,7 @@
 		private function init():void {
 			addChild(menu);
 			addChild(chatWindow);
+			addChild(avatarWindow);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, reportKeyDown);
 			simulateUnrealScriptPolls();
 		}

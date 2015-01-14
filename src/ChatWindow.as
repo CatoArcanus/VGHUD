@@ -11,21 +11,22 @@ package {
 	// Description //
 	/////////////////
 	/**
-	 * The ChatWindow is extended from the Panel class and is very specific in its
+	 * The ChatWindow is extended from the Window class and is very specific in its
 	 * implementation
 	 *
 	 * @category   root.menu.panel
 	 * @package    src
 	 * @author     Monte Nichols (Original Author) <monte.nichols.ii@gmail.com>
 	 * @copyright  Virtual Reality Labs at the Center for Brainhealth
-	 * @version    1.2 (12/29/2014)
+	 * @version    1.3 (01/13/2015)
 	 */
 
-	/////////////////////
+	//////////////////////
 	// ChatWindow Class //
-	/////////////////////
+	//////////////////////
 	public class ChatWindow extends Window {
 		
+		//Objects
 		var chatBG:Sprite;
 		var chatLog:TextField;
 		var chatLogBG:Sprite;
@@ -34,30 +35,32 @@ package {
 		var scroller:Scroller;
 		var sendButton:IconButton;
 			
-		public function ChatWindow(windowName:String, width:int, height:int, TAB_SIZE:Number, leftSide:Boolean, stageRef:Stage):void {
-			super(windowName, width, height, TAB_SIZE, leftSide);
+		public function ChatWindow(windowName:String, TAB_SIZE:Number, leftSide:Boolean, stageRef:Stage):void {
+			super(windowName, TAB_SIZE*10, TAB_SIZE*7, TAB_SIZE, leftSide);
 			
+			//Format for text
 			var myFormat:TextFormat = new TextFormat();
 			myFormat.size = TAB_SIZE*.30;
 			myFormat.font = "Arial";
 			
-			//Chat BG
+			//Chat Log BG
 			chatBG = new Sprite();
 			chatBG.graphics.beginFill(0x000000, 0.2); 
-			chatBG.graphics.drawRect(0, 0, width, height); 
+			chatBG.graphics.drawRect(0, 0, this.myWidth, this.myHeight); 
 			chatBG.graphics.endFill();
 			chatBG.x = 0;
 			chatBG.y = 0;
 			
-			//Chat Log
+			//Chat Log Background
 			chatLog = new TextField();
 			chatLogBG = new Sprite();
 			chatLogBG.graphics.beginFill(0x000000, 0.6); 
-			chatLogBG.graphics.drawRect(0, 0, width-TAB_SIZE, height-TAB_SIZE*2); 
+			chatLogBG.graphics.drawRect(0, 0, this.width-TAB_SIZE, this.height-TAB_SIZE*2); 
 			chatLogBG.graphics.endFill();
 			chatLogBG.x = TAB_SIZE*.5;
 			chatLogBG.y = TAB_SIZE*.5;
 			
+			//Chat Log textfield
 			chatLog.height = chatLogBG.height// - TAB_SIZE/2;
 			chatLog.x = chatLogBG.x + TAB_SIZE/4;
 			chatLog.y = chatLogBG.y;//TAB_SIZE*.75;
@@ -67,7 +70,7 @@ package {
 			chatLog.wordWrap = true;
 			chatLog.text = "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n";
 			
-			//Chat Input
+			//Chat Input Background
 			chatInput = new TextField();
 			chatInputBG = new Sprite();
 			chatInputBG.graphics.beginFill(0x000000, 0.8); 
@@ -76,6 +79,7 @@ package {
 			chatInputBG.x = chatLogBG.x;
 			chatInputBG.y = chatLogBG.y+chatLogBG.height+TAB_SIZE*.5;
 			
+			//Chat Input textfield
 			chatInput.width = chatInputBG.width-TAB_SIZE/8;
 			chatInput.height = TAB_SIZE;
 			chatInput.x = chatInputBG.x;
@@ -96,6 +100,7 @@ package {
 			initialize();
 		}
 		
+		//Add objects to stage
 		private function initialize():void {
 			addChild(chatBG);
 			addChild(chatLogBG);

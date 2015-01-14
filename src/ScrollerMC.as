@@ -22,18 +22,18 @@ package {
 	 */
 
 	/////////////////////
-	// Scroller Class //
+	// ScrollerMC Class //
 	/////////////////////
-	public class Scroller extends UIElement {
+	public class ScrollerMC extends UIElement {
 	
-		var target:TextField;	
+		var target:Sprite;	
 		var track:Sprite;
 		var handle:Sprite;
 		var yOffset:Number;
 		var TAB_SIZE:int; 	
 		var stageRef:Stage;
 		
-		public function Scroller(target:TextField, TAB_SIZE:int, stageRef:Stage) {
+		public function ScrollerMC(target:Sprite, TAB_SIZE:int, stageRef:Stage, windowHeight:Number) {
 			
 			this.target = target;
 			this.TAB_SIZE = TAB_SIZE;
@@ -42,7 +42,7 @@ package {
 			//Track
 			track = new Sprite();
 			track.graphics.beginFill(0xcccccc, 0.1); 
-			track.graphics.drawRect(0, 0, TAB_SIZE/2, target.height); 
+			track.graphics.drawRect(0, 0, TAB_SIZE/2, windowHeight); 
 			track.graphics.endFill();
 			
 			//Handle
@@ -67,28 +67,26 @@ package {
 		public function sethandle (e:Event):void {
 			//trace("doing this every frame");
 			//get the ratio of the track to the max scroll of the textbox.
-			var ratio:Number = track.height / target.maxScrollV; 
+			var ratio:Number = track.height / target.height;
+			trace(ratio); 
 			//assign the ratio to the height of the handle + 40 pixels, to give it a decent initial size. 
-			handle.height = ratio + TAB_SIZE*2; 
+			handle.height = ratio * track.height; 
 		}
 		
 		//set the height of the handle dynamically on enter frame
 		public function moveHandle (e:Event):void {
+		/*
 			var yMin:Number = 0;
 			var yMax:Number = track.height - handle.height;
-			var minPos = 0; 
-			if(target.scrollV == 1) {
-				minPos = -1;				
-			}
-			handle.y = (((target.scrollV+minPos)*yMax)/target.maxScrollV+1);
+			handle.y = (((target.y)*yMax)/target.height);
 			if (handle.y <= 0) {
 				handle.y = 0;
 			} 
 			if (handle.y >= yMax) {
 				handle.y = yMax;
 			}			
+		*/	
 		}		
-			
 		public function startScroll (e:MouseEvent):void {
 			stageRef.addEventListener (MouseEvent.MOUSE_MOVE, handlemove);
 			yOffset = mouseY - handle.y;
@@ -104,7 +102,8 @@ package {
 			var yMin:Number = 0;
 			var yMax:Number = track.height - handle.height;
 			//this scrolls the text
-			target.scrollV = (((handle.y - yMin)/yMax)*target.maxScrollV);
+			//target.y = -(handle.y * (target.height - yMax)/yMax) - target.y;
+			target.y = (((handle.y - yMin)/yMax)*(target.height-track.height+TAB_SIZE/4))*-1;
 			//Here, when scrolling is activated, and handle move...we then set the handle Y to the mouse Y - the
 			//Y offset we made earlier to prevent snapping.
 			handle.y = mouseY - yOffset; 
