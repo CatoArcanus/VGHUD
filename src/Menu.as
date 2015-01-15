@@ -185,6 +185,7 @@ package {
 				removeEventListener(Event.ENTER_FRAME, onEaseOut);
 				panels[outPanel].frameCounter = 0;
 				panels[outPanel].visible = false;
+				
 				if(currentPanel != "")
 				{
 					animateIn();
@@ -218,6 +219,6 @@ package {
 				}
 			}
 			panels[currentPanel].frameCounter++;
-		}
+		}				
 	}
 }

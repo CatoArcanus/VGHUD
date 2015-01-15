@@ -69,6 +69,23 @@
 			avatarWindow.x = 0;
 			avatarWindow.y = 0;
 			
+			var kickWindow = new Window("KickWindow", TAB_SIZE, 300, 100, leftSide);
+			kickWindow.x = 1200;
+			kickWindow.y = 10;
+			var addButton:TextButton = new TextButton("addKick", TAB_SIZE/2);
+			addButton.x = 10;
+			addButton.y = 10;
+			var deleteButton:TextButton = new TextButton("deleteKick", TAB_SIZE/2);
+			deleteButton.x = 100;
+			deleteButton.y = 10;
+			
+			addButton.addEventListener(MouseEvent.CLICK, addJulius);
+			deleteButton.addEventListener(MouseEvent.CLICK, deleteJulius);
+			
+			kickWindow.addChild(addButton);
+			kickWindow.addChild(deleteButton);
+			addChild(kickWindow);
+			
 			//This puts it on the left or right, depending on what we have decided
 			if(leftSide) {
 				menu.x = (0-myWidth)+TAB_SIZE*.75;
@@ -96,7 +113,47 @@
 		
 		//This will eventutally be called by unrealscript
 		private function addPlayertoPlayerList(playerName:String):void {
-			menu.panels["Kick"].addSureLabel(playerName, "Kick", TAB_SIZE);
+			if( menu.panels["Kick"].visible == true) {
+				menu.tabs[menu.tabs.length-1].openY = menu.tabs[menu.tabs.length-1].y+TAB_SIZE * 5/4;	
+				menu.tabs[menu.tabs.length-1].moveY = menu.tabs[menu.tabs.length-1].openY;
+				addEventListener(Event.ENTER_FRAME, onAddOne);	
+			} else {
+				menu.panels["Kick"].addSureLabel(playerName, "Kick", TAB_SIZE);
+			}
+		}
+		
+		//This handles opening the Panel frame by frame, until is it done 
+		//This is arbitrary X movement, but could allow for any type of movement
+		public function onAddOne(e:Event):void {
+			trace(( menu.tabs[menu.tabs.length-1].moveY - menu.tabs[menu.tabs.length-1].y));
+			//My distance = (where I want to go) - where I am
+			menu.tabs[menu.tabs.length-1].dy = ( menu.tabs[menu.tabs.length-1].moveY - menu.tabs[menu.tabs.length-1].y);
+			//If where I want to go is less than 1, I will stay there
+			//Otherwise move a proportional distance to my target "easing" my way there
+			if(Math.abs(menu.tabs[menu.tabs.length-1].dy) < 1) {
+				for(var i:int = menu.panels["Kick"].tabNumber; i < menu.tabs.length; i++) {
+					trace("move tab " + i)
+					menu.tabs[i].y = menu.tabs[i].openY;
+				}
+				removeEventListener(Event.ENTER_FRAME, onAddOne);
+				menu.panels["Kick"].addSureLabel("Boop", "Kick", 48/*TAB_SIZE*/);
+			} else {
+				//panels[currentPanel].y += panels[currentPanel].dy * panels[currentPanel].easing;
+				for(var i:int = menu.panels["Kick"].tabNumber; i < menu.tabs.length; i++) {
+					trace("move tab " + i)
+					menu.tabs[i].y += menu.tabs[i].dy * menu.tabs[i].easing;
+				}
+			}
+		}
+		
+		//This is a function to be called by unrealscript in order to open the Menu
+		public function addJulius(e:MouseEvent = null):void {
+			addPlayertoPlayerList("Caesar 251");
+		}
+		
+		//This is a function to be called by unrealscript in order to open the Menu
+		public function deleteJulius(e:MouseEvent = null):void {
+			addPlayertoPlayerList("Caesar 251");
 		}			
 		
 		//This is primarily for debugging
@@ -141,7 +198,7 @@
 			var playerNames:Array = new Array("Caesar 251", "Cato 252", "Pompey253", "Cicero 254");
 			for each (var playerName:String in playerNames) {
 				addPlayertoPlayerList(playerName);
-			} 
+			}
 		}
 	}
 }

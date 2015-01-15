@@ -49,7 +49,7 @@ package {
 		
 		//All buttons should be highlighted when moused over
 		public function highlight(e:MouseEvent = null):void {
-			trace("highlight " + buttonName);
+			//trace("highlight " + buttonName);
 			fade = maxAlpha;
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			addEventListener(MouseEvent.MOUSE_OUT, unHighlight);
@@ -58,7 +58,7 @@ package {
 		
 		//All buttons should be unhighlighted when moused out
 		public function unHighlight(e:MouseEvent = null):void {
-			trace("unhighlight " + buttonName);
+			//trace("unhighlight " + buttonName);
 			fade = minAlpha;
 			removeEventListener(MouseEvent.MOUSE_OUT, unHighlight);
 			addEventListener(MouseEvent.MOUSE_OVER, highlight);
@@ -67,7 +67,7 @@ package {
 		
 		//handle alpha changes, positive or negative
 		private function onEnterFrame(e:Event):void {
-			trace(frameCounter + "fade: "+fade+" -- da:" + (da)+ "currentAlpha: "+currentAlpha+ " abs " + (Math.abs(da *10)));
+			//trace(frameCounter + "fade: "+fade+" -- da:" + (da)+ "currentAlpha: "+currentAlpha+ " abs " + (Math.abs(da *10)));
 			//My distance = (where I want to go) - where I am
 			da = ( fade - currentAlpha);
 			//If where I want to go is less than 1, I will stay there

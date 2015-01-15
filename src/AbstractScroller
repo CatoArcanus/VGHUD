@@ -21,19 +21,18 @@ package {
 	 * @version    1.2 (12/29/2014)
 	 */
 
-	/////////////////////
-	// ScrollerMC Class //
-	/////////////////////
-	public class ScrollerMC extends UIElement {
+	////////////////////////////
+	// AbstractScroller Class //
+	////////////////////////////
+	public class AbstractScroller extends UIElement {
 	
-		var target:Sprite;	
 		var track:Sprite;
 		var handle:Sprite;
 		var yOffset:Number;
 		var TAB_SIZE:int; 	
 		var stageRef:Stage;
 		
-		public function ScrollerMC(target:Sprite, TAB_SIZE:int, stageRef:Stage, windowHeight:Number) {
+		public function AbstractScroller(target:Sprite, TAB_SIZE:int, stageRef:Stage, windowHeight:Number) {
 			
 			this.target = target;
 			this.TAB_SIZE = TAB_SIZE;
@@ -56,7 +55,7 @@ package {
 			stageRef.addEventListener (MouseEvent.MOUSE_UP, stopScroll);
 			target.addEventListener (Event.ENTER_FRAME, moveHandle);
 			init();
-		}		
+		}
 		
 		public function init() {
 			addChild(track);
@@ -68,7 +67,7 @@ package {
 			//trace("doing this every frame");
 			//get the ratio of the track to the max scroll of the textbox.
 			var ratio:Number = track.height / target.height;
-			//trace(ratio);
+			trace(ratio);
 			if(ratio > 1.0) {
 				handle.visible = false;
 				track.visible = false;

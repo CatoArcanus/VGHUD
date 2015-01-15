@@ -33,14 +33,14 @@ package {
 		
 		//Stuff for easing
 		var easing:Number = 0.25;
-		var openX:int;
-		var openY:int;
-		var closeX:int;
-		var closeY:int;
-		var moveX:int;
-		var moveY:int;
-		var dx:Number;
-		var dy:Number;
+		var openX:int = 0;
+		var openY:int = 0;
+		var closeX:int = 0;
+		var closeY:int = 0;
+		var moveX:int = 0;
+		var moveY:int = 0;
+		var dx:Number = 0;
+		var dy:Number = 0;
 		
 		//For drawing
 		public var myWidth:int; 
@@ -57,7 +57,7 @@ package {
 		//A draw function for all UI elements
 		public function draw():void {
 			graphics.clear();
-			trace("I'm drawing, the currentAlpha is :" + currentAlpha);
+			//trace("I'm drawing, the currentAlpha is :" + currentAlpha);
 			graphics.beginFill(color, currentAlpha);
 			graphics.drawRect(0, 0, myWidth, myHeight); 
 			if (debug) {

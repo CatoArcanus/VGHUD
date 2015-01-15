@@ -37,10 +37,9 @@ package {
 			this.easing = .2;
 			this.color = 0x222222;
 			this.currentAlpha = .5;
-			this.visible = true;
+			this.visible = false;
 			
-			//This is needed for right/left side
-			
+			//This is needed for right/left side			
 			var myFormat:TextFormat = new TextFormat();
 			myFormat.size = TAB_SIZE/2;
 			myFormat.font = "Arial";
@@ -57,7 +56,7 @@ package {
 			nextY = TAB_SIZE/4;
 			
 			this.myWidth = myWidth;
-			this.myHeight = height+TAB_SIZE/4;
+			this.myHeight = TAB_SIZE/4;
 			this.panelName = panelName;
 			init();
 		}
@@ -73,9 +72,11 @@ package {
 			sureLabel.y = nextY;
 			nextY = sureLabel.y + sureLabel.myHeight + TAB_SIZE/4;
 			addChild(sureLabel);
-			this.y -= TAB_SIZE;
-			this.closeY = this.y;
-			myHeight +=	TAB_SIZE;
+			myHeight +=	TAB_SIZE*5/4;
+			this.closeY -= TAB_SIZE*5/4;
+			if(!visible){
+				this.y -= TAB_SIZE*5/4;
+			}
 		}
 	}
 }
