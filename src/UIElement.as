@@ -32,15 +32,15 @@ package {
 		var debug:Boolean = false;		
 		
 		//Stuff for easing
-		var easing:Number = 0.25;
-		var openX:int = 0;
-		var openY:int = 0;
-		var closeX:int = 0;
-		var closeY:int = 0;
-		var moveX:int = 0;
-		var moveY:int = 0;
-		var dx:Number = 0;
-		var dy:Number = 0;
+		public var easing:Number = 0.25;
+		public var openX:int = 0;
+		public var openY:int = 0;
+		public var closeX:int = 0;
+		public var closeY:int = 0;
+		public var moveX:int = 0;
+		public var moveY:int = 0;
+		public var dx:Number = 0;
+		public var dy:Number = 0;
 		
 		//For drawing
 		public var myWidth:int; 

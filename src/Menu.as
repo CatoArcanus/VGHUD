@@ -6,6 +6,8 @@ package {
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.MouseEvent;	
+	import flash.events.TimerEvent;	
+	import flash.utils.Timer;	
 	/////////////////
 	// Description //
 	/////////////////
@@ -29,6 +31,9 @@ package {
 		//variables
 		var currentPanel:String = "";
 		var outPanel:String = "";
+		var TAB_SIZE:Number;
+		var addOne:Function;
+		var deleteOne:Function;
 			
 		//Objects
 		var tabs:Array = new Array();
@@ -42,6 +47,7 @@ package {
 			this.myWidth = width;
 			this.myHeight = height;
 			this.currentAlpha = .5;
+			this.TAB_SIZE = TAB_SIZE;
 			
 			//This variable is used with the menu is on the left or right. 
 			//It isn't very elegant. Maybe we can do away with the Bool all together
@@ -92,7 +98,7 @@ package {
 				tabNumber++;
 			}
 			
-						
+			
 			init();
 		}
 		
@@ -126,10 +132,10 @@ package {
 						tab.minAlpha = 0.5;
 						tab.rotateIconDown();
 					}
-					//If we have another tab open, let's unhighlight it.					
+					//If we have another tab open, let's unhighlight it.
 					if(currentPanel == panelName)  {
 						tab.minAlpha = 0.0;
-						tab.unHighlight();							
+						tab.unHighlight();
 						tab.rotateIconUp();
 					}
 				}
@@ -144,7 +150,7 @@ package {
 				
 			};
 		}
-		*/				
+		*/
 		public function animateOut(panelName:String):void {
 			//If no current panel, just open the panel and make it the current
 			if(currentPanel == "") {
@@ -161,7 +167,7 @@ package {
 				//if not, get ready to close the panel
 					currentPanel = panelName;
 				}
-			}				
+			}
 		}
 		
 		//Only called once it knows everything else was animated out
@@ -219,6 +225,85 @@ package {
 				}
 			}
 			panels[currentPanel].frameCounter++;
-		}				
+		}
+		
+		public function addPlayertoPlayerList(labelName:String, panelName:String):void {
+			if(!panels[panelName].labels.hasOwnProperty(labelName)) {
+				var lastTabNum:int = tabs.length-1;
+				if( panels[panelName].visible == true) {
+					if(!hasEventListener(Event.ENTER_FRAME)) {
+						tabs[lastTabNum].openY = tabs[lastTabNum].y+TAB_SIZE * 5/4;	
+						tabs[lastTabNum].moveY = tabs[lastTabNum].openY;
+						addOne = squish( labelName, panelName, true);
+						addEventListener(Event.ENTER_FRAME, addOne);
+					} else {
+						// AS3
+						var tryThatAgain:Function = tryAgain(labelName, panelName, arguments.callee);
+						var myTimer:Timer = new Timer(100, 1); // .1 second
+						myTimer.addEventListener(TimerEvent.TIMER, tryThatAgain);
+						myTimer.start();
+					}	
+				} else {
+					panels[panelName].addSureLabel(labelName, panelName, TAB_SIZE);
+				}
+			}
+		}
+		
+		public function tryAgain(labelName:String, panelName:String, callee:Function):Function {
+			return function(e:TimerEvent):void {
+				callee(labelName, panelName);
+				//addPlayertoPlayerList(labelName, panelName);
+			}
+		}
+		
+		public function deletePlayerFromPlayerList(labelName:String, panelName:String):void {
+			trace("panels[panelName].labels.hasOwnProperty(labelName): " + panels[panelName].labels.hasOwnProperty(labelName));
+			if(panels[panelName].labels.hasOwnProperty(labelName)) {
+				var lastTabNum:int = tabs.length-1;
+				if(!hasEventListener(Event.ENTER_FRAME)) {
+					panels[panelName].removeSureLabel(labelName);
+					tabs[lastTabNum].openY = tabs[lastTabNum].y-TAB_SIZE * 5/4;	
+					tabs[lastTabNum].moveY = tabs[lastTabNum].openY;
+					if( panels[panelName].visible == true) {
+						deleteOne = squish( labelName, panelName, false);
+						addEventListener(Event.ENTER_FRAME, deleteOne);	
+					}
+				} else {
+					// AS3
+					var tryThatAgain:Function = tryAgain(labelName, panelName, arguments.callee);
+					var myTimer:Timer = new Timer(100, 1); // .1 second
+					myTimer.addEventListener(TimerEvent.TIMER, tryThatAgain);
+					myTimer.start();
+				}
+			}
+		}
+				
+		public function squish(labelName:String, panelName:String, isAdding:Boolean):Function {
+			return function(e:Event):void {
+				trace(( tabs[tabs.length-1].moveY - tabs[tabs.length-1].y));
+				//My distance = (where I want to go) - where I am
+				tabs[tabs.length-1].dy = ( tabs[tabs.length-1].moveY - tabs[tabs.length-1].y);
+				//If where I want to go is less than 1, I will stay there
+				//Otherwise move a proportional distance to my target "easing" my way there
+				if(Math.abs(tabs[tabs.length-1].dy) < 1) {
+					for(var i:int = panels[panelName].tabNumber; i < tabs.length; i++) {
+						trace("move tab " + i)
+						tabs[i].y = tabs[i].openY;
+					}
+					if(isAdding == true) {
+						panels[panelName].addSureLabel(labelName, panelName, TAB_SIZE);
+						removeEventListener(Event.ENTER_FRAME, addOne);
+					} else {
+						removeEventListener(Event.ENTER_FRAME, deleteOne);							
+					}
+				} else {
+					//panels[currentPanel].y += panels[currentPanel].dy * panels[currentPanel].easing;
+					for(var i:int = panels[panelName].tabNumber; i < tabs.length; i++) {
+						trace("move tab " + i)
+						tabs[i].y += tabs[i].dy * tabs[i].easing;
+					}
+				}
+			}
+		}
 	}
 }
