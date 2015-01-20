@@ -30,6 +30,8 @@ package {
 		
 		public var rotatingIcon:RotatingIcon;
 		public var dr:Number;
+		public var maxOpenY:Number = 3000;
+		public var minCloseY:Number = -100;
 		
 		public function Tab(buttonName:String, width:int, TAB_SIZE:Number, leftSide:Boolean, accordian:Boolean = false):void {
 			super(buttonName, width, TAB_SIZE);
@@ -83,6 +85,14 @@ package {
 			addChild(icon);
 			addChild(text);
 			addEventListener(MouseEvent.ROLL_OVER, highlight);
+		}
+		
+		public function setOpenY(number:int):void {
+			if( number > maxOpenY) {
+				this.openY = maxOpenY;	
+			} else {
+				this.openY = number; 
+			}
 		}
 		
 		public function rotateIconDown(e:MouseEvent = null):void {

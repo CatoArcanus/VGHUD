@@ -67,7 +67,7 @@ package {
 		private function init():void {
 			addChild(text);
 			draw();
-		}
+		}	
 		
 		public function addSureLabel(sureTitle:String, sureText:String, TAB_SIZE:Number) {
 			var sureLabel:SureLabel = new SureLabel(sureTitle, sureText, TAB_SIZE);

@@ -115,14 +115,14 @@
 						
 		//This will eventutally be called by unrealscript
 		public function addJulius(e:MouseEvent = null):void {
-			menu.addPlayertoPlayerList("Julius 251", "Kick");
-			menu.addPlayertoPlayerList("Julius 252", "Kick");
+			menu.addToList("Julius 251", "Kick");
+			menu.addToList("Julius 252", "Kick");
 		}
 		
 		//This is a function to be called by unrealscript in order to open the Menu
 		public function deleteJulius(e:MouseEvent = null):void {
-			menu.deletePlayerFromPlayerList("Julius 251", "Kick");
-			menu.deletePlayerFromPlayerList("Julius 252", "Kick");
+			menu.deleteFromList("Julius 251", "Kick");
+			menu.deleteFromList("Julius 252", "Kick");
 		}			
 		
 		//This is primarily for debugging
@@ -166,7 +166,17 @@
 		public function simulateUnrealScriptPolls() {
 			var playerNames:Array = new Array("Nope", "Boop", "Pompey253", "Cicero 254");
 			for each (var playerName:String in playerNames) {
-				menu.addPlayertoPlayerList(playerName, "Kick");
+				menu.addToList(playerName, "Kick");
+			}
+			
+			var NPCNames:Array = new Array("Kirk", "Spock", "McCoy", "Chapel", "Scotty", "Sulu", "Chekov", "Uhura", "Red Shirt", "Khan", "Evil Spock", "Computer", "Hadley", "Brent", "Q", "Picard", "Riker", "Deanna", "Data");
+			for each (var NPCName:String in NPCNames) {
+				menu.addToList(NPCName, "Possess");
+			}
+			
+			var scenarioNames:Array = new Array("BasketBall", "Coffee Shop");
+			for each (var ScenarioName:String in scenarioNames) {
+				menu.addToList(ScenarioName, "Scenario");
 			}
 		}
 	}

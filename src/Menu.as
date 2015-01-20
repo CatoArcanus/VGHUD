@@ -78,11 +78,13 @@ package {
 					//set up a panel mask
 					var panelMask:Sprite = new Sprite();
 					panelMask.graphics.beginFill(0xffFF00, .5); 
-					panelMask.graphics.drawRect(0, 0, width, height); 
+					panelMask.graphics.drawRect(0, 0, width, height-TAB_SIZE*tabInfos.length); 
 					panelMask.graphics.endFill(); 
 					panelMask.x = 0;
 					panelMask.y = tab.y + tab.myHeight;
-					
+					tab.maxOpenY = tab.y+panelMask.height;
+					tab.minCloseY = tab.y;
+					 
 					//set up a panel
 					var panel = new Panel(tabInfo.tabName, width, TAB_SIZE, TAB_SIZE, leftSide);
 					panel.x = 0;
@@ -96,8 +98,7 @@ package {
 				}
 				tabY += TAB_SIZE+1;
 				tabNumber++;
-			}
-			
+			}			
 			
 			init();
 		}
@@ -200,7 +201,11 @@ package {
 				panels[outPanel].y += panels[outPanel].dy * panels[outPanel].easing;
 				for(var i:int = panels[outPanel].tabNumber; i < tabs.length; i++) {
 					trace("move tab " + i)
-					tabs[i].y += panels[outPanel].dy * panels[outPanel].easing;
+					if(tabs[i].y < tabs[i].minCloseY) {
+						tabs[i].y += panels[outPanel].dy * panels[outPanel].easing;
+					} else {
+						tabs[i].y = tabs[i].minCloseY;
+					}
 				}
 			}
 			panels[outPanel].frameCounter++;
@@ -221,13 +226,17 @@ package {
 				panels[currentPanel].y += panels[currentPanel].dy * panels[currentPanel].easing;
 				for(var i:int = panels[currentPanel].tabNumber; i < tabs.length; i++) {
 					trace("move tab " + i)
-					tabs[i].y += panels[currentPanel].dy * panels[currentPanel].easing;
+					if(tabs[i].y < tabs[i].maxOpenY) {
+						tabs[i].y += panels[currentPanel].dy * panels[currentPanel].easing;
+					} else {
+						tabs[i].y = tabs[i].maxOpenY;
+					}
 				}
 			}
 			panels[currentPanel].frameCounter++;
 		}
 		
-		public function addPlayertoPlayerList(labelName:String, panelName:String):void {
+		public function addToList(labelName:String, panelName:String):void {
 			if(!panels[panelName].labels.hasOwnProperty(labelName)) {
 				var lastTabNum:int = tabs.length-1;
 				if( panels[panelName].visible == true) {
@@ -256,7 +265,7 @@ package {
 			}
 		}
 		
-		public function deletePlayerFromPlayerList(labelName:String, panelName:String):void {
+		public function deleteFromList(labelName:String, panelName:String):void {
 			trace("panels[panelName].labels.hasOwnProperty(labelName): " + panels[panelName].labels.hasOwnProperty(labelName));
 			if(panels[panelName].labels.hasOwnProperty(labelName)) {
 				var lastTabNum:int = tabs.length-1;
