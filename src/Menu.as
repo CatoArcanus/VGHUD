@@ -1,6 +1,6 @@
 package {
 	
-	import flash.display.Sprite;	
+	import flash.display.Sprite;
 	import flash.display.MovieClip;
 	import flash.display.Shape;	
 	import flash.display.Stage;
@@ -86,7 +86,7 @@ package {
 					tab.minCloseY = tab.y;
 					 
 					//set up a panel
-					var panel = new Panel(tabInfo.tabName, width, TAB_SIZE, TAB_SIZE, leftSide);
+					var panel = new Panel(tabInfo.tabName, width, TAB_SIZE, TAB_SIZE, leftSide, stageRef, panelMask.height);
 					panel.x = 0;
 					panel.y = tab.y + tab.myHeight - panel.myHeight;
 					panel.closeY = panel.y;
@@ -98,7 +98,7 @@ package {
 				}
 				tabY += TAB_SIZE+1;
 				tabNumber++;
-			}			
+			}
 			
 			init();
 		}
@@ -109,7 +109,7 @@ package {
 				addChild(panelMasks[ke]);
 			}
 			for (var key:String in tabs){
-				trace(key);
+				//trace(key);
 				addChild(tabs[key]);
 				tabs[key].draw();
 			}
@@ -174,7 +174,7 @@ package {
 		//Only called once it knows everything else was animated out
 		//or didn't need to be animated out
 		public function animateIn():void {
-			trace("Animate in: " + currentPanel);
+			//trace("Animate in: " + currentPanel);
 			panels[currentPanel].visible = true;
 			panels[currentPanel].moveY = panels[currentPanel].openY;
 			addEventListener(Event.ENTER_FRAME, onEaseIn);
@@ -200,7 +200,7 @@ package {
 			} else {
 				panels[outPanel].y += panels[outPanel].dy * panels[outPanel].easing;
 				for(var i:int = panels[outPanel].tabNumber; i < tabs.length; i++) {
-					trace("move tab " + i)
+					//trace("move tab " + i)
 					if(tabs[i].y < tabs[i].minCloseY) {
 						tabs[i].y += panels[outPanel].dy * panels[outPanel].easing;
 					} else {
@@ -225,7 +225,7 @@ package {
 			} else {
 				panels[currentPanel].y += panels[currentPanel].dy * panels[currentPanel].easing;
 				for(var i:int = panels[currentPanel].tabNumber; i < tabs.length; i++) {
-					trace("move tab " + i)
+					//trace("move tab " + i)
 					if(tabs[i].y < tabs[i].maxOpenY) {
 						tabs[i].y += panels[currentPanel].dy * panels[currentPanel].easing;
 					} else {
@@ -251,7 +251,7 @@ package {
 						var myTimer:Timer = new Timer(100, 1); // .1 second
 						myTimer.addEventListener(TimerEvent.TIMER, tryThatAgain);
 						myTimer.start();
-					}	
+					}
 				} else {
 					panels[panelName].addSureLabel(labelName, panelName, TAB_SIZE);
 				}
@@ -266,7 +266,7 @@ package {
 		}
 		
 		public function deleteFromList(labelName:String, panelName:String):void {
-			trace("panels[panelName].labels.hasOwnProperty(labelName): " + panels[panelName].labels.hasOwnProperty(labelName));
+			//trace("panels[panelName].labels.hasOwnProperty(labelName): " + panels[panelName].labels.hasOwnProperty(labelName));
 			if(panels[panelName].labels.hasOwnProperty(labelName)) {
 				var lastTabNum:int = tabs.length-1;
 				if(!hasEventListener(Event.ENTER_FRAME)) {
@@ -289,14 +289,14 @@ package {
 				
 		public function squish(labelName:String, panelName:String, isAdding:Boolean):Function {
 			return function(e:Event):void {
-				trace(( tabs[tabs.length-1].moveY - tabs[tabs.length-1].y));
+				//trace(( tabs[tabs.length-1].moveY - tabs[tabs.length-1].y));
 				//My distance = (where I want to go) - where I am
 				tabs[tabs.length-1].dy = ( tabs[tabs.length-1].moveY - tabs[tabs.length-1].y);
 				//If where I want to go is less than 1, I will stay there
 				//Otherwise move a proportional distance to my target "easing" my way there
 				if(Math.abs(tabs[tabs.length-1].dy) < 1) {
 					for(var i:int = panels[panelName].tabNumber; i < tabs.length; i++) {
-						trace("move tab " + i)
+						//trace("move tab " + i)
 						tabs[i].y = tabs[i].openY;
 					}
 					if(isAdding == true) {
@@ -308,7 +308,7 @@ package {
 				} else {
 					//panels[currentPanel].y += panels[currentPanel].dy * panels[currentPanel].easing;
 					for(var i:int = panels[panelName].tabNumber; i < tabs.length; i++) {
-						trace("move tab " + i)
+						//trace("move tab " + i)
 						tabs[i].y += tabs[i].dy * tabs[i].easing;
 					}
 				}

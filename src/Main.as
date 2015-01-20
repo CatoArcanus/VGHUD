@@ -164,7 +164,7 @@
 		
 		//This is primarily for testing
 		public function simulateUnrealScriptPolls() {
-			var playerNames:Array = new Array("Nope", "Boop", "Pompey253", "Cicero 254");
+			var playerNames:Array = new Array("Nope", "Boop", "Pompey253", "Cicero 254", "Publius");
 			for each (var playerName:String in playerNames) {
 				menu.addToList(playerName, "Kick");
 			}

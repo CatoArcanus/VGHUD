@@ -33,8 +33,10 @@ package {
 		public var tabNumber:Number = 0;
 		public var labels:Array = new Array();
 		public var TAB_SIZE:Number;
-					
-		public function Panel(panelName:String, width:int, height:int, TAB_SIZE:Number, leftSide:Boolean):void {		
+		var holderMC:Sprite;
+		var scrollerMC:ScrollerMC;
+		
+		public function Panel(panelName:String, width:int, height:int, TAB_SIZE:Number, leftSide:Boolean, stageRef:Stage, scrollerHeight:Number):void {		
 			//Variables that are not the default
 			this.easing = .2;
 			this.color = 0x222222;
@@ -42,7 +44,7 @@ package {
 			this.visible = false;
 			this.TAB_SIZE = TAB_SIZE;
 			
-			//This is needed for right/left side			
+			//This is needed for right/left side
 			var myFormat:TextFormat = new TextFormat();
 			myFormat.size = TAB_SIZE/2;
 			myFormat.font = "Arial";
@@ -58,33 +60,46 @@ package {
 			text.selectable = false;
 			nextY = TAB_SIZE/4;
 			
+			holderMC = new Sprite();
+						
+			//Scroller
+			scrollerMC = new ScrollerMC(holderMC, TAB_SIZE, stageRef, scrollerHeight);
+			scrollerMC.x = width-16;
+			scrollerMC.y = holderMC.y;
+						
 			this.myWidth = myWidth;
 			this.myHeight = TAB_SIZE/4;
 			this.panelName = panelName;
+						
 			init();
 		}
 		
 		private function init():void {
 			addChild(text);
+			addChild(holderMC);
+			addChild(scrollerMC);
 			draw();
-		}	
+		}
 		
 		public function addSureLabel(sureTitle:String, sureText:String, TAB_SIZE:Number) {
 			var sureLabel:SureLabel = new SureLabel(sureTitle, sureText, TAB_SIZE);
 			sureLabel.x = TAB_SIZE/2;
 			sureLabel.y = nextY;
 			nextY = sureLabel.y + sureLabel.myHeight + TAB_SIZE/4;
-			addChild(sureLabel);
+			holderMC.addChild(sureLabel);
 			myHeight +=	TAB_SIZE*5/4;
 			this.closeY -= TAB_SIZE*5/4;
 			if(!visible){
 				this.y -= TAB_SIZE*5/4;
 			}
 			labels[sureTitle] = sureLabel;
+			if(this.mask.height < this.myHeight) {
+				scrollerMC.visible = true;
+			}
 		}
 		
 		public function removeSureLabel(sureTitle:String) {
-			removeChild(labels[sureTitle]);
+			holderMC.removeChild(labels[sureTitle]);
 			nextY -= TAB_SIZE*5/4;
 			var thisY:Number = labels[sureTitle].y;
 			var belowStrings:Array = new Array();
@@ -98,7 +113,7 @@ package {
 			}
 			trace("BelowStrings.length = " + belowStrings.length);
 			if(belowStrings.length > 0) {
-				labels[belowStrings[0]].openY = thisY;//-TAB_SIZE * 5/4;	
+				labels[belowStrings[0]].openY = thisY;//-TAB_SIZE * 5/4;
 				labels[belowStrings[0]].moveY = labels[belowStrings[0]].openY;
 				var returnPullUp:Function = pullUp(belowStrings);
 				addEventListener(Event.ENTER_FRAME, returnPullUp);
