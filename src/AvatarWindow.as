@@ -34,7 +34,7 @@ package {
 		var TAB_SIZE:Number;
 					
 		public function AvatarWindow(windowName:String, TAB_SIZE:Number, leftSide:Boolean, stageRef:Stage):void {
-			super(windowName, TAB_SIZE*19, TAB_SIZE*12, TAB_SIZE, leftSide);
+			super(windowName, TAB_SIZE*19, TAB_SIZE*12, TAB_SIZE, leftSide, stageRef);
 			
 			this.TAB_SIZE = TAB_SIZE;
 			

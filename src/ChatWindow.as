@@ -36,7 +36,7 @@ package {
 		var sendButton:IconButton;
 			
 		public function ChatWindow(windowName:String, TAB_SIZE:Number, leftSide:Boolean, stageRef:Stage):void {
-			super(windowName, TAB_SIZE*10, TAB_SIZE*7, TAB_SIZE, leftSide);
+			super(windowName, TAB_SIZE*10, TAB_SIZE*7, TAB_SIZE, leftSide, stageRef);
 			
 			//Format for text
 			var myFormat:TextFormat = new TextFormat();

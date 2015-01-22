@@ -78,7 +78,7 @@ package {
 			var yMax:Number = track.height - handle.height;
 			var minPos = 0; 
 			if(target.scrollV == 1) {
-				minPos = -1;				
+				minPos = -1;
 			}
 			handle.y = (((target.scrollV+minPos)*yMax)/target.maxScrollV+1);
 			if (handle.y <= 0) {
@@ -86,9 +86,9 @@ package {
 			} 
 			if (handle.y >= yMax) {
 				handle.y = yMax;
-			}			
-		}		
-			
+			}
+		}
+		
 		public function startScroll (e:MouseEvent):void {
 			stageRef.addEventListener (MouseEvent.MOUSE_MOVE, handlemove);
 			yOffset = mouseY - handle.y;

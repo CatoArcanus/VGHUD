@@ -32,6 +32,7 @@ package {
 		public var dr:Number;
 		public var maxOpenY:Number = 3000;
 		public var minCloseY:Number = -100;
+		public var shadow;
 		
 		public function Tab(buttonName:String, width:int, TAB_SIZE:Number, leftSide:Boolean, accordian:Boolean = false):void {
 			super(buttonName, width, TAB_SIZE);
@@ -66,7 +67,7 @@ package {
 			text.embedFonts = true;  
 			text.setTextFormat(myFormat);
 			text.selectable = false;
-			
+						
 			rotatingIcon = new RotatingIcon("ArrowLeft", TAB_SIZE);
 			if(accordian){
 				if(leftSide) {
@@ -129,7 +130,7 @@ package {
 		
 		public override function draw():void {
 			super.draw();
-			trace("i'm being called");
+			//trace("i'm being called");
 			graphics.lineStyle(1, 0xFFFFFF, .75);
 			graphics.moveTo(0, 0); 
 			graphics.lineTo(myWidth, 0);

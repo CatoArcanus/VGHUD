@@ -5,7 +5,7 @@ package {
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.text.*; 
+	import flash.text.*;
 
 	/////////////////
 	// Description //

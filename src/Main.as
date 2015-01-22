@@ -49,7 +49,12 @@
 			new TabInfo("Avatars", 	!accordian),
 			new TabInfo("Possess", 	accordian),
 			new TabInfo("Kick", 	accordian),
-			new TabInfo("Scenario", accordian)
+			new TabInfo("Scenario", accordian),
+			new TabInfo("yes", 	accordian),
+			new TabInfo("no", 	!accordian),
+			new TabInfo("roger", 	!accordian),
+			new TabInfo("steven", 	!accordian),
+			new TabInfo("poo", 	!accordian)
 		);
 			
 		//Main initializes objects and gives them values
@@ -66,10 +71,10 @@
 			chatWindow.y = stage.stageHeight - chatWindow.height - TAB_SIZE;
 			
 			avatarWindow = new AvatarWindow("avatarWindow", TAB_SIZE, leftSide, stage);
-			avatarWindow.x = 0;
-			avatarWindow.y = 0;
-			
-			var kickWindow = new Window("KickWindow", TAB_SIZE, 300, 100, leftSide);
+			avatarWindow.x = stage.stageWidth/2 - avatarWindow.myWidth/2;
+			avatarWindow.y = stage.stageHeight/2 - avatarWindow.myHeight/2;
+									
+			var kickWindow = new Window("KickWindow", TAB_SIZE, 300, 100, leftSide, stage);
 			kickWindow.x = 1200;
 			kickWindow.y = 10;
 			var addButton:TextButton = new TextButton("addKick", TAB_SIZE/2);
@@ -91,7 +96,7 @@
 				menu.x = (0-myWidth)+TAB_SIZE*.75;
 				menu.openX = 0;
 			} else {
-				menu.x = stage.stageWidth-TAB_SIZE*.75;
+				menu.x = stage.stageWidth;//-TAB_SIZE*.75;
 				menu.openX = stage.stageWidth - menu.myWidth;
 			}			
 			menu.y = 0;
@@ -112,7 +117,7 @@
 			simulateUnrealScriptPolls();
 			open();
 		}
-						
+		
 		//This will eventutally be called by unrealscript
 		public function addJulius(e:MouseEvent = null):void {
 			menu.addToList("Julius 251", "Kick");

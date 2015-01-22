@@ -31,6 +31,7 @@ package {
 		//variables
 		var currentPanel:String = "";
 		var outPanel:String = "";
+		var activePanel:String="";
 		var TAB_SIZE:Number;
 		var addOne:Function;
 		var deleteOne:Function;
@@ -39,6 +40,10 @@ package {
 		var tabs:Array = new Array();
 		var panels:Array = new Array();
 		var panelMasks:Array = new Array();
+		
+		//Functions
+		var onEaseIn:Function;
+		var onEaseOut:Function;
 		
 		//Menu initializes objects and gives them values
 		public function Menu(width:int, height:int, tabInfos:Array, TAB_SIZE:Number, leftSide:Boolean, stageRef:Stage):void {
@@ -69,8 +74,9 @@ package {
 				if(tabInfo.accordian) {
 					tab.addEventListener(MouseEvent.CLICK, tabAccordian(tabInfo.tabName));
 				} else {
-					//tab.addEventListener(MouseEvent.CLICK, tabClick(tabInfo.tabName));
+					tab.addEventListener(MouseEvent.CLICK, tabClick(tabInfo.tabName));
 				}
+				
 				tabs.push(tab);
 				//Accordians need panels
 				if(tabInfo.accordian) {
@@ -82,8 +88,6 @@ package {
 					panelMask.graphics.endFill(); 
 					panelMask.x = 0;
 					panelMask.y = tab.y + tab.myHeight;
-					tab.maxOpenY = tab.y+panelMask.height;
-					tab.minCloseY = tab.y;
 					 
 					//set up a panel
 					var panel = new Panel(tabInfo.tabName, width, TAB_SIZE, TAB_SIZE, leftSide, stageRef, panelMask.height);
@@ -96,6 +100,9 @@ package {
 					panelMasks[tabInfo.tabName] = panelMask;
 					panels[tabInfo.tabName] = panel;
 				}
+				
+				tab.maxOpenY = tab.y+height-TAB_SIZE*tabInfos.length;
+				tab.minCloseY = tab.y;
 				tabY += TAB_SIZE+1;
 				tabNumber++;
 			}
@@ -125,6 +132,7 @@ package {
 					//If the tab -> currentPanel, we close it
 					if(tab.buttonName == currentPanel) {
 						tab.minAlpha = 0.0;
+						//tab.setShadow = true;
 						tab.unHighlight();
 						tab.rotateIconUp();
 					}
@@ -144,14 +152,14 @@ package {
 				animateOut(panelName);
 			};
 		}
-		/*
+		
 		//this is for normal toggleable tabs
 		private function tabClick(panelName:String):Function {
 			return function(e:MouseEvent):void {
 				
 			};
 		}
-		*/
+		
 		public function animateOut(panelName:String):void {
 			//If no current panel, just open the panel and make it the current
 			if(currentPanel == "") {
@@ -160,7 +168,14 @@ package {
 			} else {
 				outPanel = currentPanel;
 				panels[outPanel].moveY = panels[outPanel].closeY;
-				addEventListener(Event.ENTER_FRAME, onEaseOut);
+				trace("AA");
+				if(!hasEventListener(Event.ENTER_FRAME)) {
+					trace("@@@@");
+					activePanel = outPanel;
+					addEventListener(Event.ENTER_FRAME, onEasePanel);
+					//onEaseOut = onEasePanel(outPanel);
+					//addEventListener(Event.ENTER_FRAME, onEaseOut);
+				}
 				//if the current panel is the one we clicked, close it and set the state to stable
 				if(currentPanel == panelName)  {
 					currentPanel = "";
@@ -177,65 +192,63 @@ package {
 			//trace("Animate in: " + currentPanel);
 			panels[currentPanel].visible = true;
 			panels[currentPanel].moveY = panels[currentPanel].openY;
-			addEventListener(Event.ENTER_FRAME, onEaseIn);
+			trace("AA!");
+			if(!hasEventListener(Event.ENTER_FRAME)) {
+				trace("@@@@!");
+				activePanel = currentPanel;
+				addEventListener(Event.ENTER_FRAME, onEasePanel);
+				//onEaseIn = onEasePanel(currentPanel);
+				//addEventListener(Event.ENTER_FRAME, onEasePanel);
+			}
 		}
 		
 		//This handles closing the Panel frame by frame, until is it done 
 		//This is arbitrary X movement, but could allow for any type of movement
-		public function onEaseOut(e:Event):void {
-			//trace(frameCounter + " -- " + (openX - x) * easing);
+		public function onEasePanel(e:Event):void {
+			trace(panels[activePanel].frameCounter + " -- " + (panels[activePanel].moveX - x) * panels[activePanel].easing);
 			//My distance = (where I want to go) - where I am
-			panels[outPanel].dy = ( panels[outPanel].moveY - panels[outPanel].y);
+			panels[activePanel].dy = ( panels[activePanel].moveY - panels[activePanel].y);
 			//If where I want to go is less than 1, I will stay there
 			//Otherwise move a proportional distance to my target "easing" my way there
-			if(Math.abs(panels[outPanel].dy) < 1) {
-				removeEventListener(Event.ENTER_FRAME, onEaseOut);
-				panels[outPanel].frameCounter = 0;
-				panels[outPanel].visible = false;
+			if(Math.abs(panels[activePanel].dy) < 1) {
+				if(panels[activePanel].dy < 0) {
+					removeEventListener(Event.ENTER_FRAME, onEasePanel);
+					panels[activePanel].visible = false;
+					if(currentPanel != "") {
+						animateIn();
+					}
+				} else {
+					removeEventListener(Event.ENTER_FRAME, onEasePanel);
+				}
+				//removeEventListener(Event.ENTER_FRAME, arguments.callee);
+				panels[activePanel].frameCounter = 0;
+			} else {
+				var limit:Number;
+				var compare:Boolean;
+				var startingPoint:int = panels[activePanel].tabNumber * -1;
+				var newPos:int;
+				panels[activePanel].y += panels[activePanel].dy * panels[activePanel].easing;
+				for(var i:int = panels[activePanel].tabNumber; i < tabs.length; i++) {
+					if(panels[activePanel].dy < 0) {
+						limit = tabs[i].minCloseY;
+						compare = tabs[i].y > limit;
+						newPos = panels[activePanel].y + panels[activePanel].myHeight + tabs[i].height*2*(startingPoint+i) * panels[activePanel].easing;
+					} else {
+						limit = tabs[i].maxOpenY;
+						compare = tabs[i].y < limit;
+						newPos = tabs[i].y + panels[activePanel].dy * panels[activePanel].easing;
+					}
+					//trace("move tab " + i)
+					if(compare) {
+						tabs[i].y = newPos;//panels[activePanel].y + panels[activePanel].myHeight + tabs[i].height*2*(startingPoint+i) * panels[activePanel].easing;
+					} else {
+						tabs[i].y = limit;
+					}
+				}
+			}
+			panels[activePanel].frameCounter++;
+		}
 				
-				if(currentPanel != "")
-				{
-					animateIn();
-				}
-			} else {
-				panels[outPanel].y += panels[outPanel].dy * panels[outPanel].easing;
-				for(var i:int = panels[outPanel].tabNumber; i < tabs.length; i++) {
-					//trace("move tab " + i)
-					if(tabs[i].y < tabs[i].minCloseY) {
-						tabs[i].y += panels[outPanel].dy * panels[outPanel].easing;
-					} else {
-						tabs[i].y = tabs[i].minCloseY;
-					}
-				}
-			}
-			panels[outPanel].frameCounter++;
-		}
-		
-		//This handles opening the Panel frame by frame, until is it done 
-		//This is arbitrary X movement, but could allow for any type of movement
-		public function onEaseIn(e:Event):void {
-			//trace(frameCounter + " -- " + (openX - x) * easing);
-			//My distance = (where I want to go) - where I am
-			panels[currentPanel].dy = ( panels[currentPanel].moveY - panels[currentPanel].y);
-			//If where I want to go is less than 1, I will stay there
-			//Otherwise move a proportional distance to my target "easing" my way there
-			if(Math.abs(panels[currentPanel].dy) < 1) {
-				removeEventListener(Event.ENTER_FRAME, onEaseIn);
-				panels[currentPanel].frameCounter = 0;
-			} else {
-				panels[currentPanel].y += panels[currentPanel].dy * panels[currentPanel].easing;
-				for(var i:int = panels[currentPanel].tabNumber; i < tabs.length; i++) {
-					//trace("move tab " + i)
-					if(tabs[i].y < tabs[i].maxOpenY) {
-						tabs[i].y += panels[currentPanel].dy * panels[currentPanel].easing;
-					} else {
-						tabs[i].y = tabs[i].maxOpenY;
-					}
-				}
-			}
-			panels[currentPanel].frameCounter++;
-		}
-		
 		public function addToList(labelName:String, panelName:String):void {
 			if(!panels[panelName].labels.hasOwnProperty(labelName)) {
 				var lastTabNum:int = tabs.length-1;
