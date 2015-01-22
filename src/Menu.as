@@ -236,7 +236,7 @@ package {
 					} else {
 						limit = tabs[i].maxOpenY;
 						compare = tabs[i].y < limit;
-						newPos = tabs[i].y + panels[activePanel].dy * panels[activePanel].easing;
+						newPos = tabs[i].y + (panels[activePanel].dy + TAB_SIZE/16) * panels[activePanel].easing;
 					}
 					//trace("move tab " + i)
 					if(compare) {
@@ -304,13 +304,14 @@ package {
 			return function(e:Event):void {
 				//trace(( tabs[tabs.length-1].moveY - tabs[tabs.length-1].y));
 				//My distance = (where I want to go) - where I am
-				tabs[tabs.length-1].dy = ( tabs[tabs.length-1].moveY - tabs[tabs.length-1].y);
+				var lastTabNum:int = tabs.length-1;
+				tabs[lastTabNum].dy = ( tabs[lastTabNum].moveY - tabs[lastTabNum].y);
 				//If where I want to go is less than 1, I will stay there
 				//Otherwise move a proportional distance to my target "easing" my way there
-				if(Math.abs(tabs[tabs.length-1].dy) < 1) {
+				if(Math.abs(tabs[lastTabNum].dy) < 1) {
 					for(var i:int = panels[panelName].tabNumber; i < tabs.length; i++) {
 						//trace("move tab " + i)
-						tabs[i].y = tabs[i].openY;
+						//tabs[i].y = tabs[i].openY;
 					}
 					if(isAdding == true) {
 						panels[panelName].addSureLabel(labelName, panelName, TAB_SIZE);
@@ -320,9 +321,15 @@ package {
 					}
 				} else {
 					//panels[currentPanel].y += panels[currentPanel].dy * panels[currentPanel].easing;
-					for(var i:int = panels[panelName].tabNumber; i < tabs.length; i++) {
+					for(var i:int = lastTabNum; i >= panels[panelName].tabNumber; i--) {
 						//trace("move tab " + i)
-						tabs[i].y += tabs[i].dy * tabs[i].easing;
+						trace(tabs[i].y < tabs[i].maxOpenY);
+						if(tabs[i].y < tabs[i].maxOpenY) {
+							tabs[i].y += tabs[lastTabNum].dy * tabs[lastTabNum].easing;
+						} else {
+							tabs[i].y = tabs[i].maxOpenY;
+							tabs[i].moveY = tabs[i].y;
+						}
 					}
 				}
 			}

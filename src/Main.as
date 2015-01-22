@@ -53,8 +53,7 @@
 			new TabInfo("yes", 	accordian),
 			new TabInfo("no", 	!accordian),
 			new TabInfo("roger", 	!accordian),
-			new TabInfo("steven", 	!accordian),
-			new TabInfo("poo", 	!accordian)
+			new TabInfo("steven", 	!accordian)
 		);
 			
 		//Main initializes objects and gives them values
