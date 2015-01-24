@@ -2,7 +2,6 @@ package {
 	
 	import flash.display.Sprite;	
 	import flash.display.Shape;	
-	import com.montenichols.utils.Scrollbar;
 	import flash.display.MovieClip;
 	import flash.events.Event;
 	import flash.events.MouseEvent;

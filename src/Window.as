@@ -49,15 +49,12 @@ package {
 			this.y=0; 
 			dragHandle.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
 			dragHandle.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
-			//dragHandle.addEventListener (MouseEvent.MOUSE_DOWN, startMove);
-			//stageRef.addEventListener (MouseEvent.MOUSE_UP, stopMove);
-			//target.addEventListener (Event.ENTER_FRAME, moveHandle);
-			
+						
 			init();
 		}
 		
 		private function init():void {
-			//addChild(dragHandle);
+			addChild(dragHandle);
 			draw();
 		}
 		
@@ -68,36 +65,6 @@ package {
 		function mouseUpHandler(e:MouseEvent):void
 		{
 			this.stopDrag();
-		}
-		
-		/*
-		public function startMove (e:MouseEvent):void {
-			yOffset = mouseY - dragHandle.y;
-			xOffset = mouseX - dragHandle.x;
-			stageRef.addEventListener (Event.ENTER_FRAME, handlemove);
-		}
-		
-		public function stopMove (e:MouseEvent):void {
-			stageRef.removeEventListener (Event.ENTER_FRAME, handlemove);
-		}
-		
-		public function handlemove (e:Event):void { 
-			//var yMin:Number = 0;
-			//var yMax:Number = track.height - handle.height;
-			//this scrolls the text
-			//target.scrollV = (((handle.y - yMin)/yMax)*target.maxScrollV);
-			//Here, when scrolling is activated, and handle move...we then set the handle Y to the mouse Y - the
-			//Y offset we made earlier to prevent snapping.
-			//trace(mouseY-yOffset);
-			this.y = mouseY// - yOffset; 
-			this.x = mouseX// - xOffset;
-			//if (handle.y <= yMin) {
-			//	handle.y = yMin;
-			//} 
-			//if (handle.y >= yMax) {
-			//	handle.y = yMax;
-			//}
-		}
-		*/						
+		}				
 	}	
 }

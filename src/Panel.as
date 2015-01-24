@@ -28,13 +28,12 @@ package {
 	public class Panel extends UIElement {
 		
 		var panelName:String;
-		public var text:TextField;
 		public var nextY:int = 0;
 		public var tabNumber:Number = 0;
 		public var labels:Array = new Array();
 		public var TAB_SIZE:Number;
-		var holderMC:Sprite;
-		var scrollerMC:ScrollerMC;
+		public var labelContainer:Sprite = new Sprite();
+		var scroller:ScrollerMC;
 		
 		public function Panel(panelName:String, width:int, height:int, TAB_SIZE:Number, leftSide:Boolean, stageRef:Stage, scrollerHeight:Number):void {		
 			//Variables that are not the default
@@ -43,41 +42,27 @@ package {
 			this.currentAlpha = .5;
 			this.visible = false;
 			this.TAB_SIZE = TAB_SIZE;
-			
-			//This is needed for right/left side
-			var myFormat:TextFormat = new TextFormat();
-			myFormat.size = TAB_SIZE/2;
-			myFormat.font = "Arial";
-			//A title. This is fairly standard
-			text = new TextField();
-			text.text = panelName;
-			text.textColor = 0xFFFFFF;
-			text.x = 15;
-			text.y = 15;
-			text.width = myWidth-text.x;
-			text.embedFonts = true;  
-			text.setTextFormat(myFormat);
-			text.selectable = false;
-			nextY = TAB_SIZE/4;
-			
-			holderMC = new Sprite();
-						
-			//Scroller
-			scrollerMC = new ScrollerMC(holderMC, TAB_SIZE, stageRef, scrollerHeight);
-			scrollerMC.x = width-16;
-			scrollerMC.y = holderMC.y;
-						
 			this.myWidth = myWidth;
 			this.myHeight = TAB_SIZE/4;
 			this.panelName = panelName;
-						
+			
+			//Text Format
+			var myFormat:TextFormat = new TextFormat();
+			myFormat.size = TAB_SIZE/2;
+			myFormat.font = "Arial";
+			nextY = TAB_SIZE/4;
+									
+			//Scroller
+			scroller = new ScrollerMC(labelContainer, TAB_SIZE, stageRef, scrollerHeight);
+			scroller.x = width-16;
+			scroller.y = labelContainer.y;
+									
 			init();
 		}
 		
 		private function init():void {
-			addChild(text);
-			addChild(holderMC);
-			addChild(scrollerMC);
+			addChild(labelContainer);
+			addChild(scroller);
 			draw();
 		}
 		
@@ -85,8 +70,9 @@ package {
 			var sureLabel:SureLabel = new SureLabel(sureTitle, sureText, TAB_SIZE);
 			sureLabel.x = TAB_SIZE/2;
 			sureLabel.y = nextY;
+			sureLabel.openY = sureLabel.y;
 			nextY = sureLabel.y + sureLabel.myHeight + TAB_SIZE/4;
-			holderMC.addChild(sureLabel);
+			labelContainer.addChild(sureLabel);
 			myHeight +=	TAB_SIZE*5/4;
 			this.closeY -= TAB_SIZE*5/4;
 			if(!visible){
@@ -94,12 +80,12 @@ package {
 			}
 			labels[sureTitle] = sureLabel;
 			if(this.mask.height < this.myHeight) {
-				scrollerMC.visible = true;
+				scroller.visible = true;
 			}
 		}
 		
 		public function removeSureLabel(sureTitle:String) {
-			holderMC.removeChild(labels[sureTitle]);
+			labelContainer.removeChild(labels[sureTitle]);
 			nextY -= TAB_SIZE*5/4;
 			var thisY:Number = labels[sureTitle].y;
 			var belowStrings:Array = new Array();
@@ -113,7 +99,7 @@ package {
 			}
 			trace("BelowStrings.length = " + belowStrings.length);
 			if(belowStrings.length > 0) {
-				labels[belowStrings[0]].openY = thisY;//-TAB_SIZE * 5/4;
+				labels[belowStrings[0]].openY -= TAB_SIZE*5/4;//-TAB_SIZE * 5/4;
 				labels[belowStrings[0]].moveY = labels[belowStrings[0]].openY;
 				var returnPullUp:Function = pullUp(belowStrings);
 				addEventListener(Event.ENTER_FRAME, returnPullUp);

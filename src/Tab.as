@@ -33,6 +33,7 @@ package {
 		public var maxOpenY:Number = 3000;
 		public var minCloseY:Number = -100;
 		public var shadow;
+		public var accordian:Boolean = false; 
 		
 		public function Tab(buttonName:String, width:int, TAB_SIZE:Number, leftSide:Boolean, accordian:Boolean = false):void {
 			super(buttonName, width, TAB_SIZE);
@@ -41,6 +42,7 @@ package {
 			this.minAlpha = 0.0;
 			this.currentAlpha = minAlpha;
 			this.fade = currentAlpha;
+			this.accordian = accordian;
 			
 			icon = new Icon(buttonName, TAB_SIZE);
 			if(leftSide) {
@@ -98,27 +100,24 @@ package {
 		
 		public function rotateIconDown(e:MouseEvent = null):void {
 			//trace("highlight");
-			rotatingIcon.myRotation = rotatingIcon.minRotation;
+			rotatingIcon.rotateTo = rotatingIcon.minRotation;
 			addEventListener(Event.ENTER_FRAME, onRotate);
 		}
 		
 		public function rotateIconUp(e:MouseEvent = null):void {
 			//trace("highlight");
-			rotatingIcon.myRotation = rotatingIcon.maxRotation;
+			rotatingIcon.rotateTo = rotatingIcon.maxRotation;
 			addEventListener(Event.ENTER_FRAME, onRotate);
 		}
 				
 		private function onRotate(e:Event):void {
-			//My distance = (where I want to go) - where I am
-			dr = ( rotatingIcon.rotation - rotatingIcon.myRotation);
-			trace(frameCounter + "rotation: "+rotatingIcon.rotation+" -- dr:" + (dr)+ "myRotation: "+rotatingIcon.myRotation+ " abs " + (Math.abs(dr)));
 			//If where I want to go is less than 1, I will stay there
 			//Otherwise move a proportional distance to my target "easing" my way there
-			if(rotatingIcon.rotation == rotatingIcon.myRotation) {
+			if(rotatingIcon.rotation == rotatingIcon.rotateTo) {
 				removeEventListener(Event.ENTER_FRAME, onRotate);
 				frameCounter = 0;
 			} else {
-				if(rotatingIcon.myRotation == rotatingIcon.minRotation) {
+				if(rotatingIcon.rotateTo == rotatingIcon.minRotation) {
 					rotatingIcon.rotation -= 10;
 				} else {
 					rotatingIcon.rotation += 10;

@@ -1,9 +1,9 @@
 ﻿package {
 	
-	import flash.display.Sprite;		
+	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.events.KeyboardEvent;	
+	import flash.events.KeyboardEvent;
 	import flash.text.TextField;
 	import flash.text.Font;
 	import flash.text.TextFormat;
@@ -37,10 +37,13 @@
 		var leftSide:Boolean = false; 
 		//This lets tabs be acordians or not
 		var accordian:Boolean = true;
+		
 		//Stage Objects
 		var menu:Menu;
 		var chatWindow:ChatWindow;
 		var avatarWindow:AvatarWindow;
+		
+		var windows:Array = new Array(); 
 		
 		//Tabs
 		var tabNames:Array = new Array(
@@ -49,18 +52,14 @@
 			new TabInfo("Avatars", 	!accordian),
 			new TabInfo("Possess", 	accordian),
 			new TabInfo("Kick", 	accordian),
-			new TabInfo("Scenario", accordian),
-			new TabInfo("yes", 	accordian),
-			new TabInfo("no", 	!accordian),
-			new TabInfo("roger", 	!accordian),
-			new TabInfo("steven", 	!accordian)
+			new TabInfo("Scenario", accordian)
 		);
 			
 		//Main initializes objects and gives them values
 		public function Main()  {
 			//Get menu width
 			var myWidth:int = TAB_SIZE*5//getMaxTextWidth(tabNames) + TAB_SIZE*2;
-					
+			
 			//Create menu
 			menu = new Menu((myWidth), stage.stageHeight, tabNames, TAB_SIZE, leftSide, stage);
 			
@@ -68,11 +67,18 @@
 			chatWindow = new ChatWindow("chatWindow", TAB_SIZE, leftSide, stage);
 			chatWindow.x = TAB_SIZE;
 			chatWindow.y = stage.stageHeight - chatWindow.height - TAB_SIZE;
+			chatWindow.visible = false;
+			windows["Chat"] = chatWindow;
 			
+			//Create the Avatar Window
 			avatarWindow = new AvatarWindow("avatarWindow", TAB_SIZE, leftSide, stage);
 			avatarWindow.x = stage.stageWidth/2 - avatarWindow.myWidth/2;
 			avatarWindow.y = stage.stageHeight/2 - avatarWindow.myHeight/2;
-									
+			avatarWindow.visible = false;
+			windows["Avatars"] = avatarWindow;
+			
+			//This section is purely for testing
+			//
 			var kickWindow = new Window("KickWindow", TAB_SIZE, 300, 100, leftSide, stage);
 			kickWindow.x = 1200;
 			kickWindow.y = 10;
@@ -89,7 +95,8 @@
 			kickWindow.addChild(addButton);
 			kickWindow.addChild(deleteButton);
 			addChild(kickWindow);
-						
+			//
+			
 			//This puts it on the left or right, depending on what we have decided
 			if(leftSide) {
 				menu.x = (0-myWidth)+TAB_SIZE*.75;
@@ -97,7 +104,7 @@
 			} else {
 				menu.x = stage.stageWidth;//-TAB_SIZE*.75;
 				menu.openX = stage.stageWidth - menu.myWidth;
-			}			
+			}
 			menu.y = 0;
 			menu.closeX = menu.x;
 			menu.moveX = menu.openX;
@@ -113,29 +120,42 @@
 			addChild(chatWindow);
 			addChild(avatarWindow);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, reportKeyDown);
+			for (var key:String in menu.tabs){
+				//trace(key);
+				if(!menu.tabs[key].accordian) {
+					menu.tabs[key].addEventListener(MouseEvent.CLICK, tabClick(menu.tabs[key].buttonName));
+				}
+				
+			}
 			simulateUnrealScriptPolls();
 			open();
 		}
 		
-		//This will eventutally be called by unrealscript
+		//this is for normal toggleable tabs
+		private function tabClick(tabName:String):Function {
+			return function(e:MouseEvent):void {
+				windows[tabName].visible = !windows[tabName].visible;
+			};
+		}
+		//This will eventutally be called by unrealscript in a different way
 		public function addJulius(e:MouseEvent = null):void {
 			menu.addToList("Julius 251", "Kick");
 			menu.addToList("Julius 252", "Kick");
 		}
 		
-		//This is a function to be called by unrealscript in order to open the Menu
+		//This will eventutally be called by unrealscript in a different way
 		public function deleteJulius(e:MouseEvent = null):void {
-			menu.deleteFromList("Julius 251", "Kick");
-			menu.deleteFromList("Julius 252", "Kick");
+			menu.deleteFromList("Boop", "Kick");
+			//menu.deleteFromList("Julius 252", "Kick");
 		}			
 		
 		//This is primarily for debugging
 		private	function reportKeyDown(event:KeyboardEvent):void { 
-    		trace("Key Pressed: " + String.fromCharCode(event.charCode) + " (character code: " + event.charCode + ")"); 
+			trace("Key Pressed: " + String.fromCharCode(event.charCode) + " (character code: " + event.charCode + ")"); 
 			if (event.charCode == 111/*o*/) open(); 
 			else if (event.charCode == 99/*c*/) close(); 
 		} 
-				
+		
 		//The menu handles its own opening and closing, but the Main decides when and how this happens
 		//This is a function to be called by unrealscript in order to open the Menu
 		public function open(e:MouseEvent = null):void {
@@ -164,7 +184,7 @@
 				menu.x += menu.dx * menu.easing;
 			}
 			menu.frameCounter++;
-		}		
+		}
 		
 		//This is primarily for testing
 		public function simulateUnrealScriptPolls() {

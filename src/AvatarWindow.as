@@ -34,7 +34,7 @@ package {
 		var TAB_SIZE:Number;
 					
 		public function AvatarWindow(windowName:String, TAB_SIZE:Number, leftSide:Boolean, stageRef:Stage):void {
-			super(windowName, TAB_SIZE*19, TAB_SIZE*12, TAB_SIZE, leftSide, stageRef);
+			super(windowName, TAB_SIZE*16, TAB_SIZE*25, TAB_SIZE, leftSide, stageRef);
 			
 			this.TAB_SIZE = TAB_SIZE;
 			
@@ -80,15 +80,15 @@ package {
 		
 		private function debugAvatarMC() {
 			avatarMC = new Sprite();
-			for(var i:int = 0; i < 7; i++) {
+			for(var i:int = 0; i < 5; i++) {
 				for(var j:int = 0; j < 9; j++) {
 					trace(i +","+ j);
 					var temp:Sprite = new Sprite();
 					temp.graphics.beginFill(0xFF0000, 0.8); 
-					temp.graphics.drawRect(0, 0, 90, 90); 
+					temp.graphics.drawRect(0, 0, 140, 140); 
 					temp.graphics.endFill();
-					temp.x = i*100+(TAB_SIZE/8);
-					temp.y = j*100+(TAB_SIZE/8);
+					temp.x = i*150+(TAB_SIZE/8);
+					temp.y = j*150+(TAB_SIZE/8);
 					avatarMC.addChild(temp);
 				}
 			}

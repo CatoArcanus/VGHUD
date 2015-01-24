@@ -40,11 +40,7 @@ package {
 		var tabs:Array = new Array();
 		var panels:Array = new Array();
 		var panelMasks:Array = new Array();
-		
-		//Functions
-		var onEaseIn:Function;
-		var onEaseOut:Function;
-		
+						
 		//Menu initializes objects and gives them values
 		public function Menu(width:int, height:int, tabInfos:Array, TAB_SIZE:Number, leftSide:Boolean, stageRef:Stage):void {
 			//Set up paramaters that differ from the default
@@ -67,14 +63,14 @@ package {
 			var tabY:Number = 0;
 			var tabNumber = 1;
 			for each(var tabInfo:TabInfo in tabInfos) {
+				
 				//A series of tabs is generated based on the list of tab names
 				var tab = new Tab(tabInfo.tabName, width, TAB_SIZE, leftSide, tabInfo.accordian);
 				tab.x = 0;
 				tab.y = tabY;
+				//Assign the proper click trigger based on whether or not the tab is an accordian
 				if(tabInfo.accordian) {
 					tab.addEventListener(MouseEvent.CLICK, tabAccordian(tabInfo.tabName));
-				} else {
-					tab.addEventListener(MouseEvent.CLICK, tabClick(tabInfo.tabName));
 				}
 				
 				tabs.push(tab);
@@ -152,14 +148,7 @@ package {
 				animateOut(panelName);
 			};
 		}
-		
-		//this is for normal toggleable tabs
-		private function tabClick(panelName:String):Function {
-			return function(e:MouseEvent):void {
 				
-			};
-		}
-		
 		public function animateOut(panelName:String):void {
 			//If no current panel, just open the panel and make it the current
 			if(currentPanel == "") {

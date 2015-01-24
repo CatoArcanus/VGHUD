@@ -29,7 +29,7 @@ package {
 		
 		public var maxRotation:Number = 0; 
 		public var minRotation:Number = -90; 
-		public var myRotation:Number = 0; 
+		public var rotateTo:Number = 0; 
 					
 		public function RotatingIcon(name:String, TAB_SIZE:Number):void {
 			super(name, TAB_SIZE/2, true);
