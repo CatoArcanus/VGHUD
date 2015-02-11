@@ -81,7 +81,7 @@ package {
 		private function debugAvatarMC() {
 			avatarMC = new Sprite();
 			for(var i:int = 0; i < 5; i++) {
-				for(var j:int = 0; j < 9; j++) {
+				for(var j:int = 0; j < 5; j++) {
 					trace(i +","+ j);
 					var temp:Sprite = new Sprite();
 					temp.graphics.beginFill(0xFF0000, 0.8); 

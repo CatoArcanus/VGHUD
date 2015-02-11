@@ -6,6 +6,8 @@ package {
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.text.*; 
+		import flash.events.TimerEvent;	
+	import flash.utils.Timer;
 
 	/////////////////
 	// Description //
@@ -68,7 +70,7 @@ package {
 			chatLog.setTextFormat(myFormat); 
 			chatLog.multiline = true;
 			chatLog.wordWrap = true;
-			chatLog.text = "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n";
+			chatLog.text = "1\n2\n3\n4";
 			
 			//Chat Input Background
 			chatInput = new TextField();
@@ -100,6 +102,13 @@ package {
 			initialize();
 		}
 		
+		private function appendText() {
+			chatLog.text += "G\n";
+			var myTimer:Timer = new Timer(500, 1); // 2 seconds
+			myTimer.addEventListener(TimerEvent.TIMER, appendText);
+			myTimer.start();
+		}
+		
 		//Add objects to stage
 		private function initialize():void {
 			addChild(chatBG);
@@ -110,6 +119,9 @@ package {
 			addChild(sendButton);
 			addChild(scroller);
 			this.draw();
+			var myTimer:Timer = new Timer(500, 1); // 2 seconds
+			myTimer.addEventListener(TimerEvent.TIMER, appendText);
+			myTimer.start();
 		}
 	}
 }
