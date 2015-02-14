@@ -1,4 +1,4 @@
-package {
+package com.vrl {
 
 	/////////////////
 	// Description //
@@ -22,8 +22,8 @@ package {
 	public class TabInfo {
 		
 		//vars
-		var tabName:String;
-		var accordian:Boolean;
+		public var tabName:String;
+		public var accordian:Boolean;
 		
 		public function TabInfo(tabName:String, accordian:Boolean):void {
 			this.tabName = tabName;

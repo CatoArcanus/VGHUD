@@ -1,4 +1,4 @@
-package {
+package com.vrl.controls {
 	
 	import flash.display.Sprite;
 	import flash.display.Shape;
@@ -6,6 +6,8 @@ package {
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.text.*;
+	
+	import com.vrl.UIElement; 
 
 	/////////////////
 	// Description //
@@ -22,18 +24,18 @@ package {
 	 */
 
 	/////////////////////
-	// ScrollerMC Class //
+	// Scroller Class //
 	/////////////////////
-	public class ScrollerMC extends UIElement {
+	public class Scroller extends UIElement {
 	
-		var target:Sprite;	
+		var target:TextField;	
 		var track:Sprite;
 		var handle:Sprite;
 		var yOffset:Number;
 		var TAB_SIZE:int; 	
 		var stageRef:Stage;
 		
-		public function ScrollerMC(target:Sprite, TAB_SIZE:int, stageRef:Stage, windowHeight:Number) {
+		public function Scroller(target:TextField, TAB_SIZE:int, stageRef:Stage) {
 			
 			this.target = target;
 			this.TAB_SIZE = TAB_SIZE;
@@ -42,7 +44,7 @@ package {
 			//Track
 			track = new Sprite();
 			track.graphics.beginFill(0xcccccc, 0.1); 
-			track.graphics.drawRect(0, 0, TAB_SIZE/2, windowHeight); 
+			track.graphics.drawRect(0, 0, TAB_SIZE/2, target.height); 
 			track.graphics.endFill();
 			
 			//Handle
@@ -56,7 +58,7 @@ package {
 			stageRef.addEventListener (MouseEvent.MOUSE_UP, stopScroll);
 			target.addEventListener (Event.ENTER_FRAME, moveHandle);
 			init();
-		}		
+		}
 		
 		public function init() {
 			addChild(track);
@@ -67,33 +69,35 @@ package {
 		public function sethandle (e:Event):void {
 			//trace("doing this every frame");
 			//get the ratio of the track to the max scroll of the textbox.
-			var ratio:Number = track.height / target.height;
-			//trace(ratio);
-			if(ratio > 1.0) {
+			var ratio:Number = track.height / target.maxScrollV; 
+			//assign the ratio to the height of the handle + 40 pixels, to give it a decent initial size. 
+			if(ratio < target.height) {
+				handle.height = ratio + TAB_SIZE/2; 
+				handle.visible = true;
+				track.visible = true;
+			} else {
 				handle.visible = false;
 				track.visible = false;
-			} else {
-				handle.height = ratio * track.height; 
-				handle.visible = true;
-				track.visible = true;				
-			}
-			//assign the ratio to the height of the handle + 40 pixels, to give it a decent initial size. 
+			} 
 		}
 		
 		//set the height of the handle dynamically on enter frame
 		public function moveHandle (e:Event):void {
-		/*
 			var yMin:Number = 0;
 			var yMax:Number = track.height - handle.height;
-			handle.y = (((target.y)*yMax)/target.height);
+			var minPos = 0; 
+			if(target.scrollV == 1) {
+				minPos = -1;
+			}
+			handle.y = (((target.scrollV+minPos)*yMax)/target.maxScrollV+1);
 			if (handle.y <= 0) {
 				handle.y = 0;
 			} 
 			if (handle.y >= yMax) {
 				handle.y = yMax;
-			}			
-		*/	
-		}		
+			}
+		}
+		
 		public function startScroll (e:MouseEvent):void {
 			stageRef.addEventListener (MouseEvent.MOUSE_MOVE, handlemove);
 			yOffset = mouseY - handle.y;
@@ -109,8 +113,7 @@ package {
 			var yMin:Number = 0;
 			var yMax:Number = track.height - handle.height;
 			//this scrolls the text
-			//target.y = -(handle.y * (target.height - yMax)/yMax) - target.y;
-			target.y = (((handle.y - yMin)/yMax)*(target.height-track.height+TAB_SIZE/4))*-1;
+			target.scrollV = (((handle.y - yMin)/yMax)*target.maxScrollV);
 			//Here, when scrolling is activated, and handle move...we then set the handle Y to the mouse Y - the
 			//Y offset we made earlier to prevent snapping.
 			handle.y = mouseY - yOffset; 

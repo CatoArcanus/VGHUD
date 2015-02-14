@@ -1,4 +1,4 @@
-package {
+package com.vrl.utils {
 	
 	import flash.display.Sprite;
 	import flash.display.MovieClip;
@@ -6,6 +6,8 @@ package {
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	
+	
 	
 	/////////////////
 	// Description //

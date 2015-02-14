@@ -1,4 +1,4 @@
-package {
+package com.vrl.controls {
 	
 	import flash.display.Sprite;	
 	import flash.display.Shape;	
@@ -8,6 +8,10 @@ package {
 	import flash.text.TextField;
 	import flash.text.Font;
 	import flash.text.TextFormat;
+	
+	import com.vrl.UIElement;
+	import com.vrl.utils.SureLabel;
+	
 	
 	/////////////////
 	// Description //

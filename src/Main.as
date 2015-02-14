@@ -9,6 +9,13 @@
 	import flash.text.TextFormat;
 	import flash.text.TextFieldAutoSize;
 	
+	import com.vrl.controls.Menu;
+	import com.vrl.controls.Window;
+	import com.vrl.controls.ChatWindow;
+	import com.vrl.controls.AvatarWindow;
+	import com.vrl.buttons.TextButton;
+	import com.vrl.TabInfo;
+	
 	/////////////////
 	// Description //
 	/////////////////
@@ -47,7 +54,7 @@
 		
 		//Tabs
 		var tabNames:Array = new Array(
-			new TabInfo("Chat", 	!accordian),
+			new TabInfo("chat", 	!accordian),
 			new TabInfo("Ghost", 	!accordian),
 			new TabInfo("Avatars", 	!accordian),
 			new TabInfo("Possess", 	accordian),

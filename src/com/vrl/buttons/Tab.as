@@ -1,4 +1,4 @@
-package {
+package com.vrl.buttons {
 	
 	import flash.display.Sprite;
 	import flash.display.MovieClip;
@@ -9,6 +9,10 @@ package {
 	import flash.text.TextField;
 	import flash.text.Font;
 	import flash.text.TextFormat;
+	
+	import com.vrl.UIElement;
+	import com.vrl.utils.RotatingIcon;
+	import com.vrl.utils.Icon;
 	
 	/////////////////
 	// Description //
@@ -52,10 +56,13 @@ package {
 			}
 			icon.y = TAB_SIZE/4;
 			
+			var myFont = new Arial();
+			
 			var myFormat:TextFormat = new TextFormat();
 			myFormat.size = TAB_SIZE/2;
-			myFormat.font = "Arial";
-			
+			//myFormat.font = "Arial";
+			myFormat.font = myFont.fontName;
+									
 			text = new TextField();
 			text.text = buttonName;
 			text.textColor = 0xFFFFFF;
@@ -66,7 +73,9 @@ package {
 			}
 			text.y = TAB_SIZE*.15625;
 			text.width = width-text.x;
-			text.embedFonts = true;  
+			//text.embedFonts = true;
+			text.embedFonts = true;
+			//text.antiAliasType = AntiAliasType.ADVANCED;  
 			text.setTextFormat(myFormat);
 			text.selectable = false;
 						

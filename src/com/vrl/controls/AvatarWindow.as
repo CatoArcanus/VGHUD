@@ -1,11 +1,13 @@
-package {
+package com.vrl.controls {
 	
 	import flash.display.Sprite;
 	import flash.display.Shape;
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.text.*; 
+	import flash.text.*;
+	
+	import com.vrl.UIElement; 
 
 	/////////////////
 	// Description //

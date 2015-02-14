@@ -1,4 +1,4 @@
-package {
+package com.vrl.controls {
 	
 	import flash.display.Sprite;
 	import flash.display.MovieClip;
@@ -7,7 +7,11 @@ package {
 	import flash.events.Event;
 	import flash.events.MouseEvent;	
 	import flash.events.TimerEvent;	
-	import flash.utils.Timer;	
+	import flash.utils.Timer;
+	
+	import com.vrl.UIElement;
+	import com.vrl.TabInfo;	
+	import com.vrl.buttons.Tab;	
 	/////////////////
 	// Description //
 	/////////////////
@@ -37,7 +41,7 @@ package {
 		var deleteOne:Function;
 			
 		//Objects
-		var tabs:Array = new Array();
+		public var tabs:Array = new Array();
 		var panels:Array = new Array();
 		var panelMasks:Array = new Array();
 						

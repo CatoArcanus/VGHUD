@@ -1,4 +1,4 @@
-package {
+package com.vrl.buttons {
 	
 	import flash.display.Sprite;
 	import flash.display.MovieClip;
@@ -9,6 +9,9 @@ package {
 	import flash.text.TextField;
 	import flash.text.Font;
 	import flash.text.TextFormat;
+	
+	import com.vrl.UIElement;
+	import com.vrl.utils.Icon;
 	
 	/////////////////
 	// Description //

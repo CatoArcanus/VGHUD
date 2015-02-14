@@ -1,4 +1,4 @@
-package {
+package com.vrl {
 	
 	import flash.display.Sprite;	
 	import flash.display.Shape;	
@@ -27,7 +27,7 @@ package {
 	public class UIElement extends Sprite {
 		
 		// Default Variables //
-		var frameCounter:int = 0;
+		public var frameCounter:int = 0;
 		var debug:Boolean = false;		
 		
 		//Stuff for easing
@@ -51,7 +51,7 @@ package {
 		public var fade:Number = 0.0; 
 		public var currentAlpha:Number = 0.0;
 		public var color:uint = 0x000000;
-		var da:Number;
+		public var da:Number;
 		
 		//A draw function for all UI elements
 		public function draw():void {

@@ -1,4 +1,4 @@
-package {
+package com.vrl.controls {
 	
 	import flash.display.Sprite;	
 	import flash.display.Shape;	
@@ -8,6 +8,9 @@ package {
 	import flash.text.TextField;
 	import flash.text.Font;
 	import flash.text.TextFormat;
+	
+	import com.vrl.UIElement;
+	import com.vrl.buttons.IconButton;
 		
 	/////////////////
 	// Description //
@@ -45,8 +48,8 @@ package {
 			dragHandle.graphics.beginFill(0x000000, .5); 
 			dragHandle.graphics.drawRect(0, -.5*TAB_SIZE, width, TAB_SIZE/2);
 			dragHandle.graphics.endFill();
-			this.x=0;
-			this.y=0; 
+			this.x = 0;
+			this.y = 0; 
 			dragHandle.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
 			dragHandle.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
 						
