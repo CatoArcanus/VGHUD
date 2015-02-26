@@ -41,11 +41,15 @@ package com.vrl.utils {
 		public var image_white:Sprite;
 		public var myBitmapData:BitmapData;
 		
-		public function Icon(name:String, TAB_SIZE:Number, center:Boolean = false):void {
+		public function Icon(name:String, TAB_SIZE:Number, scaleForm:Boolean = true, center:Boolean = false):void {
 			this.name = name;
 			var icon_size:int = TAB_SIZE/2;
 			//image_black = loadImage(image_black, "../src/img/"+name+"_icon_black.png", 0, 0 , icon_size, icon_size, center);
-			image_white = loadImage(image_white, "../src/img/"+name+"_icon_white.png", 0, 0 , icon_size, icon_size, center);
+			var urlString:String = "img://VGHUD.VGHudRight.Src.img." + name + "_icon_white";
+			if(!scaleForm) {
+				urlString = "../src/img/" + name + "_icon_white.png";
+			}
+			image_white = loadImage(image_white, urlString, 0, 0 , icon_size, icon_size, center);
 			//image_white = loadImage(image_white, "../Src/img/"+name+"_icon_white", 0, 0 , icon_size, icon_size, center);
 			
 			//var square:UILoader = new UILoader();
@@ -64,14 +68,14 @@ package com.vrl.utils {
 		private function loadImage(new_mc:Sprite, urlString:String, x:int, y:int, height:int, width:int, center:Boolean ):Sprite {
 			new_mc = new Sprite();
 			var myLoader:Loader = new Loader(); 
-			var url :URLRequest = new URLRequest(urlString);
+			var url:URLRequest = new URLRequest(urlString);
 			var functionOnImageLoaded:Function = onImageLoaded(new_mc, x, y, height, width, center);
 			myLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, functionOnImageLoaded);
-			myLoader.autoLoad = false;
-			myLoader.visible = true;
-			myLoader.source = ("img://VGHUD." + name + "_icon_white");
-			myLoader.scaleContent = false;
-			myLoader.load();
+			//myLoader.autoLoad = false;
+			//myLoader.visible = true;
+			//myLoader.source = ("img://VGHUD.src.img." + name + "_icon_white");
+			//myLoader.scaleContent = false;
+			myLoader.load(url);
 			//myLoader.load(url);
 			addChild(new_mc);
 			//init();

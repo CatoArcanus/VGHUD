@@ -23,11 +23,13 @@ package com.vrl {
 		
 		//vars
 		public var tabName:String;
+		public var scaleForm:Boolean;
 		public var accordian:Boolean;
 		
-		public function TabInfo(tabName:String, accordian:Boolean):void {
+		public function TabInfo(tabName:String, accordian:Boolean, scaleForm:Boolean):void {
 			this.tabName = tabName;
 			this.accordian = accordian;
+			this.scaleForm = scaleForm;
 		}
 	}
 }

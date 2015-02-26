@@ -25,17 +25,16 @@ package com.vrl.utils {
 	 */
 
 	//////////////////////////
-	// RotatingIcon Class //
+	// Cursor Class //
 	//////////////////////////
-	public class RotatingIcon extends Icon {
-		
-		public var maxRotation:Number = 0; 
-		public var minRotation:Number = -90; 
-		public var rotateTo:Number = 0; 
-					
-		public function RotatingIcon(name:String, TAB_SIZE:Number, scaleForm:Boolean = true):void {
-			super(name, TAB_SIZE/2, scaleForm, true);
+	public class Cursor extends Icon {
+							
+		public function Cursor(name:String, TAB_SIZE:Number, scaleForm:Boolean = true):void {
+			super(name, TAB_SIZE/2, scaleForm);
 			
+			this.mouseChildren = false;
+			this.mouseEnabled = false;
+						
 			this.draw();
 			init();
 		}

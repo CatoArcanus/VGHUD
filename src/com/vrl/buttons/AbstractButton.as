@@ -35,12 +35,15 @@ package com.vrl.buttons {
 		public var icon:Icon;
 		public var text:TextField;
 		public var buttonName:String;
+		public var context:String;
 		
 		//We only need a width, because the height is the tab_size
-		public function AbstractButton(buttonName:String, width:int, TAB_SIZE:Number):void {
+		public function AbstractButton(buttonName:String, context:String, width:int, TAB_SIZE:Number):void {
+			this.buttonName = buttonName;
+			this.context = context;
 			this.myWidth = width;
 			this.myHeight = TAB_SIZE;
-			this.buttonName = buttonName;
+			
 			this.easing = .3;
 			this.maxAlpha = 1.0;
 			this.minAlpha = 0.5;

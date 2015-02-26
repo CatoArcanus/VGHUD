@@ -57,7 +57,7 @@ package com.vrl.controls {
 		}
 		
 		private function init():void {
-			addChild(dragHandle);
+			//addChild(dragHandle);
 			draw();
 		}
 		

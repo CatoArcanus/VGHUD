@@ -70,8 +70,8 @@ package com.vrl.controls {
 			draw();
 		}
 		
-		public function addSureLabel(sureTitle:String, sureText:String, TAB_SIZE:Number) {
-			var sureLabel:SureLabel = new SureLabel(sureTitle, sureText, TAB_SIZE);
+		public function addSureLabel(sureTitle:String, sureText:String, onClick:Function, TAB_SIZE:Number) {
+			var sureLabel:SureLabel = new SureLabel(sureTitle, sureText, onClick, TAB_SIZE);
 			sureLabel.x = TAB_SIZE/2;
 			sureLabel.y = nextY;
 			sureLabel.openY = sureLabel.y;

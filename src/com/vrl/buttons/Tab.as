@@ -39,8 +39,8 @@ package com.vrl.buttons {
 		public var shadow;
 		public var accordian:Boolean = false; 
 		
-		public function Tab(buttonName:String, width:int, TAB_SIZE:Number, leftSide:Boolean, accordian:Boolean = false):void {
-			super(buttonName, width, TAB_SIZE);
+		public function Tab(buttonName:String, width:int, TAB_SIZE:Number, leftSide:Boolean, scaleForm:Boolean = true, accordian:Boolean = false):void {
+			super(buttonName, buttonName, width, TAB_SIZE);
 			this.color = 0x000000;
 			this.maxAlpha = 1.0;
 			this.minAlpha = 0.0;
@@ -48,7 +48,7 @@ package com.vrl.buttons {
 			this.fade = currentAlpha;
 			this.accordian = accordian;
 			
-			icon = new Icon(buttonName, TAB_SIZE);
+			icon = new Icon(buttonName, TAB_SIZE, scaleForm);
 			if(leftSide) {
 				icon.x = myWidth - TAB_SIZE*.625;
 			} else {
@@ -79,7 +79,7 @@ package com.vrl.buttons {
 			text.setTextFormat(myFormat);
 			text.selectable = false;
 						
-			rotatingIcon = new RotatingIcon("ArrowLeft", TAB_SIZE);
+			rotatingIcon = new RotatingIcon("ArrowLeft", TAB_SIZE, scaleForm);
 			if(accordian){
 				if(leftSide) {
 					rotatingIcon.x = TAB_SIZE/8;

@@ -5,9 +5,11 @@ package com.vrl.controls {
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.events.KeyboardEvent;
 	import flash.text.*;
 	import flash.events.TimerEvent;	
 	import flash.utils.Timer;
+	import flash.external.ExternalInterface;
 	
 	import com.vrl.UIElement;
 	import com.vrl.buttons.IconButton; 
@@ -32,13 +34,13 @@ package com.vrl.controls {
 	public class ChatWindow extends Window {
 		
 		//Objects
-		var chatBG:Sprite;
-		var chatLog:TextField;
-		var chatLogBG:Sprite;
-		var chatInput:TextField;
-		var chatInputBG:Sprite;
-		var scroller:Scroller;
-		var sendButton:IconButton;
+		public var chatBG:Sprite;
+		public var chatLog:TextField;
+		public var chatLogBG:Sprite;
+		public var chatInput:TextField;
+		public var chatInputBG:Sprite;
+		public var scroller:Scroller;
+		public var sendButton:IconButton;
 			
 		public function ChatWindow(windowName:String, TAB_SIZE:Number, leftSide:Boolean, stageRef:Stage):void {
 			super(windowName, TAB_SIZE*10, TAB_SIZE*7, TAB_SIZE, leftSide, stageRef);
@@ -47,10 +49,12 @@ package com.vrl.controls {
 			var myFormat:TextFormat = new TextFormat();
 			myFormat.size = TAB_SIZE*.30;
 			myFormat.font = "Arial";
-			
+			var myFont = new Arial();
+			myFormat.font = myFont.fontName;
+									
 			//Chat Log BG
 			chatBG = new Sprite();
-			chatBG.graphics.beginFill(0x000000, 0.2); 
+			chatBG.graphics.beginFill(0x000000, 0.1); 
 			chatBG.graphics.drawRect(0, 0, this.myWidth, this.myHeight); 
 			chatBG.graphics.endFill();
 			chatBG.x = 0;
@@ -59,26 +63,27 @@ package com.vrl.controls {
 			//Chat Log Background
 			chatLog = new TextField();
 			chatLogBG = new Sprite();
-			chatLogBG.graphics.beginFill(0x000000, 0.6); 
-			chatLogBG.graphics.drawRect(0, 0, this.width-TAB_SIZE, this.height-TAB_SIZE*2); 
+			chatLogBG.graphics.beginFill(0x000000, 0.5); 
+			chatLogBG.graphics.drawRect(0, 0, this.width-TAB_SIZE, this.height-TAB_SIZE*2.0); 
 			chatLogBG.graphics.endFill();
 			chatLogBG.x = TAB_SIZE*.5;
 			chatLogBG.y = TAB_SIZE*.5;
 			
 			//Chat Log textfield
-			chatLog.height = chatLogBG.height// - TAB_SIZE/2;
+			chatLog.height = chatLogBG.height;// - TAB_SIZE/2;
+			chatLog.width = chatLogBG.width - TAB_SIZE/8;
 			chatLog.x = chatLogBG.x + TAB_SIZE/4;
 			chatLog.y = chatLogBG.y;//TAB_SIZE*.75;
 			chatLog.textColor = 0xFFFFFF; 
 			chatLog.setTextFormat(myFormat); 
 			chatLog.multiline = true;
 			chatLog.wordWrap = true;
-			chatLog.text = "1\n2\n3\n4\n5\n6\n7\n8\n9\n10";
+			chatLog.embedFonts = true;
 			
 			//Chat Input Background
 			chatInput = new TextField();
 			chatInputBG = new Sprite();
-			chatInputBG.graphics.beginFill(0x000000, 0.8); 
+			chatInputBG.graphics.beginFill(0x000000, 0.5); 
 			chatInputBG.graphics.drawRect(0, 0, chatLogBG.width-TAB_SIZE/2, TAB_SIZE/2); 
 			chatInputBG.graphics.endFill();
 			chatInputBG.x = chatLogBG.x;
@@ -92,6 +97,7 @@ package com.vrl.controls {
 			chatInput.type = TextFieldType.INPUT;
 			chatInput.textColor = 0xFFFFFF; 
 			chatInput.setTextFormat(myFormat); 
+			chatInput.embedFonts = true;
 			
 			//Send button			
 			sendButton = new IconButton("send", TAB_SIZE/2);
@@ -103,13 +109,6 @@ package com.vrl.controls {
 			scroller.x = chatLogBG.width;
 			scroller.y = chatLogBG.y;
 			initialize();
-		}
-		
-		private function appendText():void {
-			chatLog.text += "G\n";
-			var myTimer:Timer = new Timer(500, 1); // 2 seconds
-			myTimer.addEventListener(TimerEvent.TIMER, appendText);
-			myTimer.start();
 		}
 		
 		//Add objects to stage
@@ -126,6 +125,49 @@ package com.vrl.controls {
 			var myTimer:Timer = new Timer(500, 1); // 2 seconds
 			myTimer.addEventListener(TimerEvent.TIMER, appendText);
 			//myTimer.start();
+			
+			// sets up a callback for the send button's 'click' event
+			//chatSendBtn.addEventListener(MouseEvent.CLICK, this.submitText);
+
+			// Add keyboard referenced event listener to Input text
+			chatInput.addEventListener( KeyboardEvent.KEY_UP, checkInputKeyForSubmit, false, 0, true);            
  		}
+ 		
+		//Submits the current text of the appropraite TextInput
+		private function submitText( event:Event ):void {	
+			//trace("sendButton clicked");	
+			if (chatInput.text != "") {
+				//this.stage.focus = chatSendBtn;
+				//ExternalInterface.call("asReceiveToggleChatFalse");
+				submitToUDK();	
+			}
+		}
+		        
+		// Checks whether the input key was "Enter". If it was, submit it
+		private function checkInputKeyForSubmit( event:KeyboardEvent ):void {         
+			if ( event.keyCode ==  13 ) {
+				if (chatInput.text != "") {
+					//this.stage.focus = chatSendBtn;
+					//ExternalInterface.call("asReceiveToggleChatFalse");
+					submitToUDK();
+				}
+			}
+		}
+
+		//This updates the scene and sends a message to UDK.
+		private function submitToUDK():void {
+			//US Call to push this message out to others and back to yourself
+			ExternalInterface.call("asReceiveTextMessage", chatInput.text);
+			// Clear the textField for next message
+			chatInput.text = ""; 
+		}
+		
+		private function appendText():void {
+			chatLog.text += "G\n";
+			var myTimer:Timer = new Timer(500, 1); // 2 seconds
+			myTimer.addEventListener(TimerEvent.TIMER, appendText);
+			myTimer.start();
+		}
+		
 	}
 }

@@ -49,7 +49,7 @@ package com.vrl.controls {
 			
 			//Handle
 			handle = new Sprite();
-			handle.graphics.beginFill(0x000000, 0.8); 
+			handle.graphics.beginFill(0x000000, 0.6); 
 			handle.graphics.drawRect(0, 0, TAB_SIZE/2, TAB_SIZE/2); 
 			handle.graphics.endFill();
 			

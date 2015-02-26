@@ -32,7 +32,7 @@ package com.vrl.buttons{
 	public class IconButton extends AbstractButton {
 			
 		public function IconButton(buttonName:String, TAB_SIZE:Number):void {
-			super(buttonName, TAB_SIZE, TAB_SIZE);
+			super(buttonName, buttonName, TAB_SIZE, TAB_SIZE);
 			
 			icon = new Icon(buttonName, TAB_SIZE*1.5);
 			icon.x = TAB_SIZE/8;

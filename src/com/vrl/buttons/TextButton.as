@@ -28,8 +28,8 @@ package com.vrl.buttons {
 	//////////////////////
 	public class TextButton extends AbstractButton {
 			
-		public function TextButton(buttonName:String, TAB_SIZE:Number):void {
-			super(buttonName, TAB_SIZE, TAB_SIZE);
+		public function TextButton(buttonName:String, context:String, TAB_SIZE:Number):void {
+			super(buttonName, context, TAB_SIZE, TAB_SIZE);
 			
 			var myFormat:TextFormat = new TextFormat();
 			myFormat.size = TAB_SIZE/2;

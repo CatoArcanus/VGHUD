@@ -29,16 +29,17 @@ package com.vrl.utils {
 	/////////////////////
 	public class SureLabel extends AbstractLabel {
 		
-		var sureButton:TextButton; 
+		public var sureButton:TextButton; 
 		
 		//Sure Labels can create "are you sure" boxes
 		//TODO: make "are you sure" boxes	
-		public function SureLabel(labelName:String, buttonText:String, TAB_SIZE:Number):void {
+		public function SureLabel(labelName:String, buttonText:String, onClick:Function, TAB_SIZE:Number):void {
 			super(labelName, TAB_SIZE*4, TAB_SIZE);
 			
-			sureButton = new TextButton(buttonText, TAB_SIZE/2); 
+			sureButton = new TextButton(buttonText, labelName, TAB_SIZE/2); 
 			sureButton.x = this.myWidth - sureButton.myWidth - TAB_SIZE/4;
 			sureButton.y = TAB_SIZE/4;
+			sureButton.addEventListener(MouseEvent.CLICK, onClick);
 																						
 			this.draw();
 			initialize();

@@ -42,7 +42,7 @@ package com.vrl.controls {
 			
 		//Objects
 		public var tabs:Array = new Array();
-		var panels:Array = new Array();
+		public var panels:Array = new Array();
 		var panelMasks:Array = new Array();
 						
 		//Menu initializes objects and gives them values
@@ -69,7 +69,7 @@ package com.vrl.controls {
 			for each(var tabInfo:TabInfo in tabInfos) {
 				
 				//A series of tabs is generated based on the list of tab names
-				var tab = new Tab(tabInfo.tabName, width, TAB_SIZE, leftSide, tabInfo.accordian);
+				var tab = new Tab(tabInfo.tabName, width, TAB_SIZE, leftSide, tabInfo.scaleForm, tabInfo.accordian);
 				tab.x = 0;
 				tab.y = tabY;
 				//Assign the proper click trigger based on whether or not the tab is an accordian
@@ -242,31 +242,35 @@ package com.vrl.controls {
 			panels[activePanel].frameCounter++;
 		}
 				
-		public function addToList(labelName:String, panelName:String):void {
+		public function addToList(labelName:String, panelName:String, buttonText:String, onClick:Function):void {
 			if(!panels[panelName].labels.hasOwnProperty(labelName)) {
 				var lastTabNum:int = tabs.length-1;
 				if( panels[panelName].visible == true) {
 					if(!hasEventListener(Event.ENTER_FRAME)) {
 						tabs[lastTabNum].openY = tabs[lastTabNum].y+TAB_SIZE * 5/4;	
 						tabs[lastTabNum].moveY = tabs[lastTabNum].openY;
-						addOne = squish( labelName, panelName, true);
+						addOne = squish( true, labelName, panelName, buttonText, onClick);
 						addEventListener(Event.ENTER_FRAME, addOne);
 					} else {
-						// AS3
-						var tryThatAgain:Function = tryAgain(labelName, panelName, arguments.callee);
+						// Create buffer in the form of a timer that trys to add the element over and over until success
+						var tryThatAgain:Function = tryAgain(arguments.callee, labelName, panelName, buttonText, onClick);
 						var myTimer:Timer = new Timer(100, 1); // .1 second
 						myTimer.addEventListener(TimerEvent.TIMER, tryThatAgain);
 						myTimer.start();
 					}
 				} else {
-					panels[panelName].addSureLabel(labelName, panelName, TAB_SIZE);
+					panels[panelName].addSureLabel(labelName, buttonText, onClick, TAB_SIZE);
 				}
 			}
 		}
 		
-		public function tryAgain(labelName:String, panelName:String, callee:Function):Function {
+		public function tryAgain(callee:Function, labelName:String, panelName:String, buttonText:String = "", onClick:Function =null):Function {
 			return function(e:TimerEvent):void {
-				callee(labelName, panelName);
+				if(onClick != null){
+					callee(labelName, panelName, buttonText, onClick);
+				} else {
+					callee(labelName, panelName);
+				}
 				//addPlayertoPlayerList(labelName, panelName);
 			}
 		}
@@ -280,12 +284,12 @@ package com.vrl.controls {
 					tabs[lastTabNum].openY = tabs[lastTabNum].y-TAB_SIZE * 5/4;	
 					tabs[lastTabNum].moveY = tabs[lastTabNum].openY;
 					if( panels[panelName].visible == true) {
-						deleteOne = squish( labelName, panelName, false);
+						deleteOne = squish( false, labelName, panelName);
 						addEventListener(Event.ENTER_FRAME, deleteOne);	
 					}
 				} else {
 					// AS3
-					var tryThatAgain:Function = tryAgain(labelName, panelName, arguments.callee);
+					var tryThatAgain:Function = tryAgain(arguments.callee, labelName, panelName);
 					var myTimer:Timer = new Timer(100, 1); // .1 second
 					myTimer.addEventListener(TimerEvent.TIMER, tryThatAgain);
 					myTimer.start();
@@ -293,7 +297,7 @@ package com.vrl.controls {
 			}
 		}
 				
-		public function squish(labelName:String, panelName:String, isAdding:Boolean):Function {
+		public function squish(isAdding:Boolean, labelName:String, panelName:String, buttonText:String = "", onClick:Function = null):Function {
 			return function(e:Event):void {
 				//trace(( tabs[tabs.length-1].moveY - tabs[tabs.length-1].y));
 				//My distance = (where I want to go) - where I am
@@ -307,7 +311,7 @@ package com.vrl.controls {
 						//tabs[i].y = tabs[i].openY;
 					}
 					if(isAdding == true) {
-						panels[panelName].addSureLabel(labelName, panelName, TAB_SIZE);
+						panels[panelName].addSureLabel(labelName, buttonText, onClick, TAB_SIZE);
 						removeEventListener(Event.ENTER_FRAME, addOne);
 					} else {
 						removeEventListener(Event.ENTER_FRAME, deleteOne);							
