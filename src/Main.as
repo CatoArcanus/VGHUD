@@ -89,20 +89,28 @@
 			
 		//Main initializes objects and gives them values
 		public function Main() {
+			//Create an enum to arbitrarily store the Tabular position. In this case order matters
+			//This will allow us to change the order of the Tabs on the fly without us having
+			// to modify other code
 			for (var i:int = 0; i < tabNames.length; i++) {
 				TAB_NUM[tabNames[i].tabName] = i;	
 			}
 			
 			//Get menu width
-			var myWidth:int = TAB_SIZE*5//getMaxTextWidth(tabNames) + TAB_SIZE*2;
+			var myWidth:int = TAB_SIZE*5;//getMaxTextWidth(tabNames) + TAB_SIZE*2;
 			
-			//Create menu
+			//Create a menu with Tabs
 			myMenu = new Menu((myWidth), stage.stageHeight, tabNames, TAB_SIZE, leftSide, stage);
 			
+			//Create a Cursor and hide it
 			cursor = new Cursor("Cursor", TAB_SIZE*2, scaleForm);
 			cursor.visible = false;
 			
-			//Create chat window
+			//Create chat window. This is the best place to do this as the chat window
+			//is an important part of the main class.
+			//FIXME: See if we can't find a way to hide the chatwindow's functions in itself.
+			//The idea would be to accept the Unrealscript call in the main, but then divert its tasks 
+			//up the chain through a simple one-line method call with some params.
 			chatWindow = new ChatWindow("chatWindow", TAB_SIZE, leftSide, stage);
 			chatWindow.x = TAB_SIZE/2;
 			chatWindow.y = stage.stageHeight - chatWindow.height - TAB_SIZE/2;
@@ -110,12 +118,14 @@
 			windows[CHAT] = chatWindow;
 			
 			//Create the Avatar Window
+			//FIXME: This need to actually be set up as a panel that folds out and has avatar images
 			avatarWindow = new AvatarWindow("avatarWindow", TAB_SIZE, leftSide, stage);
 			avatarWindow.x = stage.stageWidth/2 - avatarWindow.myWidth/2;
 			avatarWindow.y = stage.stageHeight/2 - avatarWindow.myHeight/2;
 			avatarWindow.visible = false;
 			windows[AVATARS] = avatarWindow;
 			
+			//FIXME: This section needs to go soon, it will eventually serve no purpose.
 			//This section is purely for testing
 			var kickWindow = new Window("KickWindow", TAB_SIZE, 300, 100, leftSide, stage);
 			kickWindow.x = 1200;
@@ -126,15 +136,15 @@
 			var deleteButton:TextButton = new TextButton("deleteKick", "deleteKick", TAB_SIZE/2);
 			deleteButton.x = 100;
 			deleteButton.y = 10;
-			
 			addButton.addEventListener(MouseEvent.CLICK, addJulius);
 			deleteButton.addEventListener(MouseEvent.CLICK, deleteJulius);
-			
 			kickWindow.addChild(addButton);
 			kickWindow.addChild(deleteButton);
 			addChild(kickWindow);
 			//
 			
+			//FIXME: Leftsidedness is depreicated and unsupported so far.
+			//This change would cascade down and is really a nightmare for very little gain.
 			//This puts it on the left or right, depending on what we have decided
 			//if(leftSide) {
 			//	myMenu.x = (0-myWidth)+TAB_SIZE*.75;
@@ -153,41 +163,64 @@
 		
 		//Init Adds resources to stage and sets up initial event listeners
 		private function init():void {
+			//Hide the mouse in flash. Not strictly necessary, but nice for testing.
 			Mouse.hide();
+			
+			//Add our children now that they have been loaded in
 			addChild(myMenu);
 			addChild(chatWindow);
 			addChild(avatarWindow);
 			addChild(cursor);
 			
+			//If we are not in scaleform we want hotkeys to do certain things, otherwise
+			//turn them off 
 			if(!scaleForm) {
 				stage.addEventListener(KeyboardEvent.KEY_DOWN, reportKeyDown);
 			}
+			
+			//FIXME: These variable names are artrocious, lets get some real code in here before someone sees this tripe
 			var tc:Function = tabClick(AVATARS);
 			myMenu.tabs[TAB_NUM[AVATARS]].addEventListener(MouseEvent.CLICK, tc);
 			var tg:Function = tabClick(CHAT);
 			myMenu.tabs[TAB_NUM[CHAT]].addEventListener(MouseEvent.CLICK, tg);
+			//FIXME: MAYBE: Finding an object in a hash twice could be memory intensive. Saving it could save time.
 			myMenu.tabs[TAB_NUM[GHOST]].addEventListener(MouseEvent.CLICK, ghostMode);
 			myMenu.tabs[TAB_NUM[GHOST]].icon.loadOtherImage("human", scaleForm, false);
+			
+			//FIXME: This whole other image crap has to go. We need a solid way to toggle icons. Like a togglable icon class or something.
 			myMenu.tabs[TAB_NUM[GHOST]].icon.other_image.visible = false;
 			//open();
+			
+			//This actually isn't very descriptive, we might want to figure out a better way to do this
 			addEventListener(Event.ENTER_FRAME, onLevelLoaded);
 			addEventListener(Event.ENTER_FRAME, onLoop);
+			
+			//Ok, so here is something really weird. This is explained mored in depth on the level loaded event
 			myMenu.x = stage.stageWidth-TAB_SIZE*.75;
 			myMenu.openX = stage.stageWidth - myMenu.myWidth;
 			myMenu.y = 0;
 			myMenu.closeX = myMenu.x;
 			myMenu.moveX = myMenu.openX;
 			
-			//set up toggle captureinput
+			//set up toggle captureinput for the chatinput. We might be bale to do this in the chat window, 
+			//FIXME: Put this in the chat window if at all possible, let's clean out this gigantor main file
 			chatWindow.chatInput.addEventListener(MouseEvent.MOUSE_UP, toggleChat);
 			chatWindow.chatInput.addEventListener(MouseEvent.MOUSE_OUT, enableToggleChatClickListener);
 			chatWindow.chatInput.addEventListener(MouseEvent.MOUSE_OVER, disableToggleChatClickListener);
 			
+			//If we are in a testing env, but some dummy variables in to test how US will do things
 			if(!scaleForm) {
 				simulateUnrealScriptPolls();
 			}
 		}
 		
+		//I bet you are looking at this code and saying, "Ok, what?" 
+		//well, I wrote it and I am too. Basically, the menu disappears if you don't move it 
+		//around in the first couple frames. So, for a qtr of a second I make sure it is placed in
+		//the right spot. I'm serious, get rid of this code and run a server and join it. The menu will
+		//be gone. I'm not precisely sure why this duct tape works, but it does. This took a while to
+		//figure out anyway. If I ever get the chance I will play around with a more elegant solution,
+		//but for now I'll chalk it up to AS3, US, and Scaleform just being a big ball of shit. 
 		public function onLevelLoaded(e:Event):void {
 			myMenu.x = stage.stageWidth-TAB_SIZE*.75;
 			myMenu.openX = stage.stageWidth - myMenu.myWidth;
@@ -202,15 +235,21 @@
 			}
 			myMenu.frameCounter++;
 		}
-				
+		
+		//Move the cursor around each frame.		
 		private function onLoop (evt:Event):void {
 			cursor.y = mouseY;
 			cursor.x = mouseX;
 		}
 				
-		//Become a Human! and update the UI
+		//Become a Human! and update the Tab. Send a call to US to tell it do it.
 		public function humanMode(external:Boolean = true):void {
+			//This isn't really used yet. We might use it. Lets see if we ever need to poll for this.
 			playerState = HUMAN_MODE;
+			//Now, I can't figure out why initialized formats outside of this function don't apply to
+			//objects affected in this function or why I even have to embed the font every single time
+			//FIXME: Let's look into that good old flex style font embedding some day and see if our 
+			//actionscript woes can ever be solved, or if this will just continue to be hell forever
 			var myFormat:TextFormat = new TextFormat();
 			myFormat = new TextFormat();
 			myFormat.size = TAB_SIZE/2;
@@ -220,18 +259,19 @@
 			text.text = "Human Mode";
 			text.embedFonts = true;
 			text.setTextFormat(myFormat);
-						
-			//chat_window.possessPanel_mc.human_icon.alpha = .25;
+			
+			//Getting these vars multiple times can be slow
+			//FIXME: let's save this var for more readable code and so we don't access a hash multiple times
 			myMenu.tabs[TAB_NUM[GHOST]].removeEventListener(MouseEvent.CLICK, humanMode);
 			myMenu.tabs[TAB_NUM[GHOST]].addEventListener(MouseEvent.CLICK, ghostMode);
 			myMenu.tabs[TAB_NUM[GHOST]].icon.other_image.visible = true;
 			myMenu.tabs[TAB_NUM[GHOST]].icon.image.visible = false;
-			//chat_window.possessPanel_mc.human_icon.removeEventListener(MouseEvent.CLICK, this.humanMode);
 			if(external) {
-				//ExternalInterface.call("asReceiveBecomeHuman");
+				ExternalInterface.call("asReceiveBecomeHuman");
 			}	
 		}
-		//Become a ghost! and update the UI
+		
+		//Become a ghost! This isn't that DRY. To follow this code look above.
 		public function ghostMode(external:Boolean = true):void {
 			playerState = GHOST_MODE;
 			var myFormat:TextFormat = new TextFormat();
@@ -247,28 +287,25 @@
 			myMenu.tabs[TAB_NUM[GHOST]].addEventListener(MouseEvent.CLICK, humanMode);
 			myMenu.tabs[TAB_NUM[GHOST]].icon.other_image.visible = false;
 			myMenu.tabs[TAB_NUM[GHOST]].icon.image.visible = true;
-			//chat_window.possessPanel_mc.ghost_icon.alpha = .25;
-			//chat_window.possessPanel_mc.human_icon.alpha = 1;
-			//chat_window.possessPanel_mc.ghost_icon.removeEventListener(MouseEvent.CLICK, this.ghostMode);
-			//chat_window.possessPanel_mc.human_icon.addEventListener(MouseEvent.CLICK, this.humanMode);
-			//ExternalInterface.call("asReceiveBecomeGhost");
+			ExternalInterface.call("asReceiveBecomeGhost");
 		}
 		
-		//this is for normal toggleable tabs
+		//this is for normal toggle able tabs.
 		private function tabClick(tabName:String):Function {
+			//Return a dynamic way to hide a window in a hash
 			return function(e:MouseEvent):void {
 				windows[tabName].visible = !windows[tabName].visible;
 			};
 		}
 		
-		//This will eventutally be called by unrealscript in a different way
+		//FIXME: This needs to be taken out completely eventually
 		public function addJulius(e:MouseEvent = null):void {
 			var onClick:Function = onButtonSend(US_KICK_PLAYER);
 			myMenu.addToList("Julius 251", KICK, "kick", onClick);
 			myMenu.addToList("Julius 252", KICK, "kick", onClick);
 		}
 		
-		//This will eventutally be called by unrealscript in a different way
+		//FIXME: This needs to be taken out completely eventually
 		public function deleteJulius(e:MouseEvent = null):void {
 			myMenu.deleteFromList("Boop", KICK);
 			//myMenu.deleteFromList("Julius 252", KICK);
@@ -297,7 +334,7 @@
 		}
 				
 		//This handles opening the myMenu frame by frame, until is it done 
-		//This is arbitrary X movement, but could allow for any type of movement
+		//This is arbitrary X movement, but could allow for any type of movement or easing.
 		public function onEase(e:Event):void {
 			utrace(myMenu.frameCounter + " -- " + (myMenu.openX - myMenu.x) * myMenu.easing);
 			utrace("myX is now: " + myMenu.x);
@@ -339,6 +376,8 @@
 		}
 		
 		//This function is only ever called by UnrealScript
+		//It adds text to the chat-log and then format it after the fact, because as3 is a turd
+		//FIXME: hide this crud in the Chat window
 		public function getTextMessage(playerName:String, textMessage:String, bIsMe:Boolean):void {
 			//change format
 			var myFormat:TextFormat = new TextFormat();
@@ -355,7 +394,7 @@
 			var oldLength = chatWindow.chatLog.length;	
 			//Update flash textfield. We might override this later
 			chatWindow.chatLog.appendText( "\n\n" + playerName + ":\n\t" + textMessage );
-			//TODO: Reimplement this
+			//FIXME: Reimplement this
 			/*
 			if(!cursor_mc.visible) {		
 				alertPlayer(playerName);		
@@ -372,55 +411,29 @@
 			chatWindow.chatLog.scrollV = chatWindow.chatLog.maxScrollV;
 		}
 		
-		//This function is only ever called by UnrealScript
-		public function addPlayer(playerID:int, playerName:String, bIsMe:Boolean):void {
-			utrace("AddingPlayer Start");
-			var onClick:Function = onButtonSend(US_KICK_PLAYER);
-			myMenu.addToList( (playerName + playerID), KICK, "kick", onClick);
-			utrace("AddingPlayer End");
-		}
-		
-		//This function is only ever called by UnrealScript
-		public function removePlayer(playerID:int, playerName:String):void {
-			utrace("AddingPlayer Start");
-			myMenu.deleteFromList( "Boop"/*(playerName + playerID)*/, KICK);
-			utrace("AddingPlayer End");
-		}
-		
-		
-		//This function is only ever called by UnrealScript
-		public function addNPC(npcName:String):void {
-			utrace("AddingNPC Start");
-			var onClick:Function = onButtonSend(US_POSSESS_NPC);
-			myMenu.addToList( (npcName),POSSESS, "possess", onClick);
-			utrace("AddingNPC End");
-		}
-		
-		//Trace flash things in unreal
-		public function utrace(s:String) {
-			if(debug){
-				ExternalInterface.call("FlashToUDK", "say " + s);
-			}
-		}
+		//FIXME: hide this crud in the Chat window
 		//When we are outside the textbox
 		public function enableToggleChatClickListener(e:MouseEvent) {
 			utrace("toggle chat enabled");
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, clickToggleChatListener);
 		}
-
+		
+		//FIXME: hide this crud in the Chat window
 		//When we are inside the textbox
 		public function disableToggleChatClickListener(e:MouseEvent) {
 			utrace("toggle chat disabled");
 			stage.removeEventListener(MouseEvent.MOUSE_DOWN, clickToggleChatListener);
 		}
-
+		
+		//FIXME: hide this crud in the Chat window
 		//toggleChat captures keys when you type
 		public function toggleChat(e:MouseEvent) {	
 			chatWindow.chatInput.removeEventListener(MouseEvent.MOUSE_UP, toggleChat);
 			utrace("dissallow input");
 			ExternalInterface.call("asReceiveToggleChatTrue");
 		}
-
+		
+		//FIXME: hide this crud in the Chat window
 		//this is needed for the toggling feature
 		public function clickToggleChatListener(e:MouseEvent = null) {
 			utrace("allow input, except esc");
@@ -429,9 +442,42 @@
 			ExternalInterface.call("asReceiveToggleChatFalse");
 		}
 		
-		//Start screnario stuff
+		//Start Player Stuff
+		//This function is only ever called by UnrealScript
+		//It adds a player to the list of players
+		public function addPlayer(playerID:int, playerName:String, bIsMe:Boolean):void {
+			utrace("AddingPlayer Start");
+			var onClick:Function = onButtonSend(US_KICK_PLAYER);
+			myMenu.addToList( (playerName + playerID), KICK, "kick", onClick);
+			utrace("AddingPlayer End");
+		}
 		
 		//This function is only ever called by UnrealScript
+		//It removes a player from the list of players
+		public function removePlayer(playerID:int, playerName:String):void {
+			utrace("AddingPlayer Start");
+			myMenu.deleteFromList( "Boop"/*(playerName + playerID)*/, KICK);
+			utrace("AddingPlayer End");
+		}
+		//End Player Stuff
+		
+		//Start NPC stuff
+		//This function is only ever called by UnrealScript
+		//It adds an NPC to the possession menu
+		//FIXME: Fix the unrealscript that updates NPCs based on if new NPCS spawn or die
+		public function addNPC(npcName:String):void {
+			utrace("AddingNPC Start");
+			var onClick:Function = onButtonSend(US_POSSESS_NPC);
+			myMenu.addToList( (npcName),POSSESS, "possess", onClick);
+			utrace("AddingNPC End");
+		}
+		
+		//TODO: add a way to remove NPCS from the list by unrealscript	
+		
+		//Start scenario stuff
+		
+		//This function is only ever called by UnrealScript
+		//This adds an item to the scenario menu.
 		public function addScenario(scenarioName:String, isRunning:Boolean):void {
 			utrace("AddingScenario Start");
 			var startOrStop:String = "start";
@@ -442,7 +488,13 @@
 			myMenu.addToList( (scenarioName), SCENARIO, "start", onClick);
 			utrace("AddingScenario End");
 		}
-		
+		//This is only ever called by unrealscript.
+		//this changes the text of Scenario buttons to match their in-game state as they change
+		public function receiveToggleScenarioButton(scenarioName:String, startOrStop:String):void {
+			myMenu.panels[SCENARIO].labels[scenarioName].sureButton.text.text = startOrStop;
+		}
+				
+		//this is a generic function that sends info to US
 		public function onButtonSend(functionName:String):Function {
 			return function(e:MouseEvent):void {
 				var button:TextButton = TextButton(e.currentTarget);
@@ -451,6 +503,7 @@
 			}
 		}
 		
+		//this is a generic function that sends info to US, it is special in that it handles toggleable states
 		public function onButtonSendToggle(functionName:String):Function {
 			return function(e:MouseEvent):void {
 				var button:TextButton = TextButton(e.currentTarget);
@@ -460,11 +513,16 @@
 			}
 		}
 		
-		public function receiveToggleScenarioButton(scenarioName:String, startOrStop:String):void {
-			myMenu.panels[SCENARIO].labels[scenarioName].sureButton.text.text = startOrStop;
+		//Trace flash things in unreal while debugging. If we ever think we have a final final 
+		// release (hah!) we will delete all of the utrace statements
+		public function utrace(s:String) {
+			if(debug){
+				ExternalInterface.call("FlashToUDK", "say " + s);
+			}
 		}
 		
-		
+		//FIXME: We want a Are you sure class that has some buttons that get assigned the real functions
+		//of kicking.
 		/*
 		//Start Kick stuff
 		//Show the "Are you sure?" window
