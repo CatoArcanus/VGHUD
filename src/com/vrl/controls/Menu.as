@@ -78,6 +78,7 @@ package com.vrl.controls {
 				}
 				
 				tabs.push(tab);
+								
 				//Accordians need panels
 				if(tabInfo.accordian) {
 					

@@ -8,6 +8,7 @@ package com.vrl.controls {
 	import flash.text.*;
 	
 	import com.vrl.UIElement;
+	import com.vrl.buttons.AbstractButton;
 
 	/////////////////
 	// Description //
@@ -30,7 +31,7 @@ package com.vrl.controls {
 	
 		var target:Sprite;	
 		var track:Sprite;
-		var handle:Sprite;
+		var handle:AbstractButton;
 		var yOffset:Number;
 		var TAB_SIZE:int; 	
 		var stageRef:Stage;
@@ -48,10 +49,17 @@ package com.vrl.controls {
 			track.graphics.endFill();
 			
 			//Handle
-			handle = new Sprite();
-			handle.graphics.beginFill(0x000000, 0.6); 
-			handle.graphics.drawRect(0, 0, TAB_SIZE/2, TAB_SIZE/2); 
-			handle.graphics.endFill();
+			handle = new AbstractButton("", "", TAB_SIZE, TAB_SIZE);
+			handle.color = 0x000000;
+			handle.maxAlpha = 0.8;
+			handle.minAlpha = 0.6;
+			handle.currentAlpha = handle.minAlpha;
+			handle.myHeight = TAB_SIZE/2;
+			handle.myWidth = TAB_SIZE/2;
+			handle.draw();
+			//handle.graphics.beginFill(0x000000, 0.6); 
+			//handle.graphics.drawRect(0, 0, TAB_SIZE/2, TAB_SIZE/2); 
+			//handle.graphics.endFill();
 			
 			this.addEventListener (Event.ENTER_FRAME, sethandle);
 			handle.addEventListener (MouseEvent.MOUSE_DOWN, startScroll);
@@ -99,11 +107,15 @@ package com.vrl.controls {
 		public function startScroll (e:MouseEvent):void {
 			stageRef.addEventListener (MouseEvent.MOUSE_MOVE, handlemove);
 			yOffset = mouseY - handle.y;
+			handle.minAlpha = .8;
+			handle.highlight();
 			target.removeEventListener (Event.ENTER_FRAME, moveHandle);
 		}
 		
 		public function stopScroll (e:MouseEvent):void {
 			stageRef.removeEventListener (MouseEvent.MOUSE_MOVE, handlemove);
+			handle.minAlpha = .6;
+			handle.unHighlight();
 			target.addEventListener (Event.ENTER_FRAME, moveHandle); 
 		}
 		

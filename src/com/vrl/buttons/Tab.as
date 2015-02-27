@@ -38,6 +38,7 @@ package com.vrl.buttons {
 		public var minCloseY:Number = -100;
 		public var shadow;
 		public var accordian:Boolean = false; 
+		public var myFormat:TextFormat;
 		
 		public function Tab(buttonName:String, width:int, TAB_SIZE:Number, leftSide:Boolean, scaleForm:Boolean = true, accordian:Boolean = false):void {
 			super(buttonName, buttonName, width, TAB_SIZE);
@@ -58,7 +59,7 @@ package com.vrl.buttons {
 			
 			var myFont = new Arial();
 			
-			var myFormat:TextFormat = new TextFormat();
+			myFormat = new TextFormat();
 			myFormat.size = TAB_SIZE/2;
 			//myFormat.font = "Arial";
 			myFormat.font = myFont.fontName;

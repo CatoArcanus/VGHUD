@@ -37,20 +37,22 @@ package com.vrl.utils {
 	////////////////	
 	public class Icon extends Sprite {
 		
-		public var image_black:Sprite;
-		public var image_white:Sprite;
+		public var image:Sprite;
+		public var other_image:Sprite;
 		public var myBitmapData:BitmapData;
+		public var TAB_SIZE:int;
 		
 		public function Icon(name:String, TAB_SIZE:Number, scaleForm:Boolean = true, center:Boolean = false):void {
 			this.name = name;
+			this.TAB_SIZE = TAB_SIZE;
 			var icon_size:int = TAB_SIZE/2;
-			//image_black = loadImage(image_black, "../src/img/"+name+"_icon_black.png", 0, 0 , icon_size, icon_size, center);
+			//other_image = loadImage(other_image, "../src/img/"+name+"_icon_black.png", 0, 0 , icon_size, icon_size, center);
 			var urlString:String = "img://VGHUD.VGHudRight.Src.img." + name + "_icon_white";
 			if(!scaleForm) {
 				urlString = "../src/img/" + name + "_icon_white.png";
 			}
-			image_white = loadImage(image_white, urlString, 0, 0 , icon_size, icon_size, center);
-			//image_white = loadImage(image_white, "../Src/img/"+name+"_icon_white", 0, 0 , icon_size, icon_size, center);
+			image = loadImage(image, urlString, 0, 0 , icon_size, icon_size, center);
+			//image = loadImage(image, "../Src/img/"+name+"_icon_white", 0, 0 , icon_size, icon_size, center);
 			
 			//var square:UILoader = new UILoader();
 			//square.autoLoad = false;
@@ -60,9 +62,18 @@ package com.vrl.utils {
 			//square.load();
 			//addChild(square);
 		}
+		
+		public function loadOtherImage(name:String, scaleForm:Boolean = true, center:Boolean = false) {
+			var icon_size:int = TAB_SIZE/2;
+			var urlString:String = "img://VGHUD.VGHudRight.Src.img." + name + "_icon_white";
+			if(!scaleForm) {
+				urlString = "../src/img/" + name + "_icon_white.png";
+			}
+			other_image = loadImage(image, urlString, 0, 0, icon_size, icon_size, center);
+		}
 			
 		private function init():void {
-			//addChild(image_white);	
+			//addChild(image);	
 		}
 		
 		private function loadImage(new_mc:Sprite, urlString:String, x:int, y:int, height:int, width:int, center:Boolean ):Sprite {
@@ -103,16 +114,16 @@ package com.vrl.utils {
 		}
 		
 		/*
-		public var image_black:Sprite;
-		public var image_white:Sprite;
+		public var other_image:Sprite;
+		public var image:Sprite;
 		public var myBitmapData:BitmapData;
 		
 		public function Icon(name:String, TAB_SIZE:Number, center:Boolean = false):void {
 			this.name = name;
 			var icon_size:int = TAB_SIZE/2;
-			//image_black = loadImage(image_black, "../src/img/"+name+"_icon_black.png", 0, 0 , icon_size, icon_size, center);
-			//image_white = loadImage(image_white, "../src/img/"+name+"_icon_white.png", 0, 0 , icon_size, icon_size, center);
-			//image_white = loadImage(image_white, "../Src/img/"+name+"_icon_white", 0, 0 , icon_size, icon_size, center);
+			//other_image = loadImage(other_image, "../src/img/"+name+"_icon_black.png", 0, 0 , icon_size, icon_size, center);
+			//image = loadImage(image, "../src/img/"+name+"_icon_white.png", 0, 0 , icon_size, icon_size, center);
+			//image = loadImage(image, "../Src/img/"+name+"_icon_white", 0, 0 , icon_size, icon_size, center);
 			
 			var square:UILoader = new UILoader();
 			square.autoLoad = false;
@@ -124,7 +135,7 @@ package com.vrl.utils {
 		}
 			
 		private function init():void {
-			//addChild(image_white);	
+			//addChild(image);	
 		}
 		
 		private function loadImage(new_mc:Sprite, urlString:String, x:int, y:int, height:int, width:int, center:Boolean ):Sprite {

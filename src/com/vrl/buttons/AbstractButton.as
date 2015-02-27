@@ -51,6 +51,7 @@ package com.vrl.buttons {
 			this.fade = currentAlpha;
 			this.buttonMode = true;
 			this.mouseChildren = false;
+			addEventListener(MouseEvent.ROLL_OVER, highlight);
 		}
 		
 		//All buttons should be highlighted when moused over

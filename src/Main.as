@@ -46,6 +46,7 @@
 		//This number actually controls the entire size of the menu.
 		//It is the measure in pixels of the tab width/height
 		var TAB_SIZE:Number = 48;
+		
 		var CHAT:String = "Chat";
 		var GHOST:String = "Ghost";
 		var AVATARS:String = "Avatars";
@@ -53,9 +54,14 @@
 		var KICK:String = "Kick";
 		var SCENARIO:String = "Scenario";
 		
+		var TAB_NUM:Object = new Object();
+				
 		var US_TOGGLE_SCENARIO = "asReceiveToggleScenario";
 		var US_KICK_PLAYER = "asReceiveKickPlayer";
 		var US_POSSESS_NPC = "asReceivePossessByName";
+				
+		var HUMAN_MODE:int = 0;
+		var GHOST_MODE:int = 1;
 		
 		//This places the menu to the left or the right
 		var leftSide:Boolean = false; 
@@ -68,7 +74,8 @@
 		var avatarWindow:AvatarWindow;
 		
 		var windows:Array = new Array();
-		var cursor:Cursor;		
+		var cursor:Cursor;	
+		var playerState:int = HUMAN_MODE; 	
 		
 		//Tabs
 		var tabNames:Array = new Array(
@@ -82,6 +89,10 @@
 			
 		//Main initializes objects and gives them values
 		public function Main() {
+			for (var i:int = 0; i < tabNames.length; i++) {
+				TAB_NUM[tabNames[i].tabName] = i;	
+			}
+			
 			//Get menu width
 			var myWidth:int = TAB_SIZE*5//getMaxTextWidth(tabNames) + TAB_SIZE*2;
 			
@@ -140,21 +151,6 @@
 			init();
 		}
 		
-		public function onLevelLoaded(e:Event):void {
-			myMenu.x = stage.stageWidth-TAB_SIZE*.75;
-			myMenu.openX = stage.stageWidth - myMenu.myWidth;
-			myMenu.y = 0;
-			myMenu.closeX = myMenu.x;
-			myMenu.moveX = myMenu.openX;
-			if(myMenu.frameCounter > 15) {
-				removeEventListener(Event.ENTER_FRAME, onLevelLoaded);
-				myMenu.frameCounter = 0;
-			} else {
-				//utrace(""+myMenu.frameCounter);
-			}
-			myMenu.frameCounter++;
-		}
-		
 		//Init Adds resources to stage and sets up initial event listeners
 		private function init():void {
 			Mouse.hide();
@@ -166,14 +162,13 @@
 			if(!scaleForm) {
 				stage.addEventListener(KeyboardEvent.KEY_DOWN, reportKeyDown);
 			}
-			
-			for (var key:String in myMenu.tabs){
-				//trace(key);
-				if(!myMenu.tabs[key].accordian) {
-					myMenu.tabs[key].addEventListener(MouseEvent.CLICK, tabClick(myMenu.tabs[key].buttonName));
-				}
-				
-			}
+			var tc:Function = tabClick(AVATARS);
+			myMenu.tabs[TAB_NUM[AVATARS]].addEventListener(MouseEvent.CLICK, tc);
+			var tg:Function = tabClick(CHAT);
+			myMenu.tabs[TAB_NUM[CHAT]].addEventListener(MouseEvent.CLICK, tg);
+			myMenu.tabs[TAB_NUM[GHOST]].addEventListener(MouseEvent.CLICK, ghostMode);
+			myMenu.tabs[TAB_NUM[GHOST]].icon.loadOtherImage("human", scaleForm, false);
+			myMenu.tabs[TAB_NUM[GHOST]].icon.other_image.visible = false;
 			//open();
 			addEventListener(Event.ENTER_FRAME, onLevelLoaded);
 			addEventListener(Event.ENTER_FRAME, onLoop);
@@ -193,9 +188,70 @@
 			}
 		}
 		
+		public function onLevelLoaded(e:Event):void {
+			myMenu.x = stage.stageWidth-TAB_SIZE*.75;
+			myMenu.openX = stage.stageWidth - myMenu.myWidth;
+			myMenu.y = 0;
+			myMenu.closeX = myMenu.x;
+			myMenu.moveX = myMenu.openX;
+			if(myMenu.frameCounter > 15) {
+				removeEventListener(Event.ENTER_FRAME, onLevelLoaded);
+				myMenu.frameCounter = 0;
+			} else {
+				//utrace(""+myMenu.frameCounter);
+			}
+			myMenu.frameCounter++;
+		}
+				
 		private function onLoop (evt:Event):void {
 			cursor.y = mouseY;
 			cursor.x = mouseX;
+		}
+				
+		//Become a Human! and update the UI
+		public function humanMode(external:Boolean = true):void {
+			playerState = HUMAN_MODE;
+			var myFormat:TextFormat = new TextFormat();
+			myFormat = new TextFormat();
+			myFormat.size = TAB_SIZE/2;
+			myFormat.font = "Arial";
+				
+			var text:TextField = myMenu.tabs[TAB_NUM[GHOST]].text;
+			text.text = "Human Mode";
+			text.embedFonts = true;
+			text.setTextFormat(myFormat);
+						
+			//chat_window.possessPanel_mc.human_icon.alpha = .25;
+			myMenu.tabs[TAB_NUM[GHOST]].removeEventListener(MouseEvent.CLICK, humanMode);
+			myMenu.tabs[TAB_NUM[GHOST]].addEventListener(MouseEvent.CLICK, ghostMode);
+			myMenu.tabs[TAB_NUM[GHOST]].icon.other_image.visible = true;
+			myMenu.tabs[TAB_NUM[GHOST]].icon.image.visible = false;
+			//chat_window.possessPanel_mc.human_icon.removeEventListener(MouseEvent.CLICK, this.humanMode);
+			if(external) {
+				//ExternalInterface.call("asReceiveBecomeHuman");
+			}	
+		}
+		//Become a ghost! and update the UI
+		public function ghostMode(external:Boolean = true):void {
+			playerState = GHOST_MODE;
+			var myFormat:TextFormat = new TextFormat();
+			myFormat = new TextFormat();
+			myFormat.size = TAB_SIZE/2;
+			myFormat.font = "Arial";
+				
+			var text:TextField = myMenu.tabs[TAB_NUM[GHOST]].text;
+			text.text = "Ghost Mode";
+			text.embedFonts = true;
+			text.setTextFormat(myFormat);
+			myMenu.tabs[TAB_NUM[GHOST]].removeEventListener(MouseEvent.CLICK, ghostMode);
+			myMenu.tabs[TAB_NUM[GHOST]].addEventListener(MouseEvent.CLICK, humanMode);
+			myMenu.tabs[TAB_NUM[GHOST]].icon.other_image.visible = false;
+			myMenu.tabs[TAB_NUM[GHOST]].icon.image.visible = true;
+			//chat_window.possessPanel_mc.ghost_icon.alpha = .25;
+			//chat_window.possessPanel_mc.human_icon.alpha = 1;
+			//chat_window.possessPanel_mc.ghost_icon.removeEventListener(MouseEvent.CLICK, this.ghostMode);
+			//chat_window.possessPanel_mc.human_icon.addEventListener(MouseEvent.CLICK, this.humanMode);
+			//ExternalInterface.call("asReceiveBecomeGhost");
 		}
 		
 		//this is for normal toggleable tabs

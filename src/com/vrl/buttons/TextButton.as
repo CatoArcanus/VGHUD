@@ -60,7 +60,6 @@ package com.vrl.buttons {
 		//Add items to stage
 		private function init():void {
 			this.addChild(text);
-			addEventListener(MouseEvent.ROLL_OVER, highlight);
 		}		
 	}
 }

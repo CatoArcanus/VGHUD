@@ -45,7 +45,6 @@ package com.vrl.buttons{
 		//Add items to stage
 		private function init():void {
 			addChild(icon);
-			addEventListener(MouseEvent.ROLL_OVER, highlight);
 		}
 	}
 }
