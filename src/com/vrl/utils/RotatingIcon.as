@@ -36,7 +36,6 @@ package com.vrl.utils {
 		public function RotatingIcon(name:String, TAB_SIZE:Number, scaleForm:Boolean = true):void {
 			super(name, TAB_SIZE/2, scaleForm, true);
 			
-			this.draw();
 			init();
 		}
 		

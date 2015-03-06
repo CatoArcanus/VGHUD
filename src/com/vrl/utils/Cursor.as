@@ -35,7 +35,6 @@ package com.vrl.utils {
 			this.mouseChildren = false;
 			this.mouseEnabled = false;
 						
-			this.draw();
 			init();
 		}
 		

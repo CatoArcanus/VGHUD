@@ -130,8 +130,24 @@ package com.vrl.controls {
 			//chatSendBtn.addEventListener(MouseEvent.CLICK, this.submitText);
 
 			// Add keyboard referenced event listener to Input text
-			chatInput.addEventListener( KeyboardEvent.KEY_UP, checkInputKeyForSubmit, false, 0, true);            
+			chatInput.addEventListener( KeyboardEvent.KEY_UP, checkInputKeyForSubmit, false, 0, true);
+			addEventListener(MouseEvent.MOUSE_OVER, captureScroll);
  		}
+ 		
+ 		//FIXME, not dry
+ 		//Captures scrolling input
+		private function captureScroll( event:Event ):void {
+			removeEventListener(MouseEvent.MOUSE_OVER, captureScroll);
+			addEventListener(MouseEvent.MOUSE_OUT, removeCaptureScroll);
+			ExternalInterface.call("asReceiveRemoveScroll");
+		}
+ 		
+ 		//Captures scrolling input
+ 		private function removeCaptureScroll( event:Event ):void {
+			addEventListener(MouseEvent.MOUSE_OVER, captureScroll);
+			removeEventListener(MouseEvent.MOUSE_OUT, removeCaptureScroll);
+			ExternalInterface.call("asReceiveAddScroll");
+		}
  		
 		//Submits the current text of the appropraite TextInput
 		private function submitText( event:Event ):void {	

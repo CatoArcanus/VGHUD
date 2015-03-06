@@ -17,6 +17,7 @@
 	import com.vrl.controls.AvatarWindow;
 	import com.vrl.buttons.TextButton;
 	import com.vrl.utils.Cursor;
+	import com.vrl.utils.*;
 	import com.vrl.TabInfo;	
 	
 	/////////////////
@@ -40,7 +41,7 @@
 	public class Main extends Sprite {
 		
 		var debug:Boolean = true;
-		var scaleForm:Boolean = false;
+		var scaleForm:Boolean = true;
 		
 		//Consts
 		//This number actually controls the entire size of the menu.
@@ -67,6 +68,7 @@
 		var leftSide:Boolean = false; 
 		//This lets tabs be acordians or not
 		var accordian:Boolean = true;
+		var peek:Boolean = true;
 		
 		//Stage Objects
 		var myMenu:Menu;
@@ -79,12 +81,12 @@
 		
 		//Tabs
 		var tabNames:Array = new Array(
-			new TabInfo(CHAT, 		!accordian,	scaleForm),
-			new TabInfo(GHOST, 		!accordian,	scaleForm),
-			new TabInfo(AVATARS, 	!accordian,	scaleForm),
-			new TabInfo(POSSESS, 	accordian, 	scaleForm),
-			new TabInfo(KICK, 		accordian, 	scaleForm),
-			new TabInfo(SCENARIO, 	accordian, 	scaleForm)
+			new TabInfo(CHAT, 		!peek,	!accordian,	scaleForm),
+			new TabInfo(GHOST, 		!peek,	!accordian,	scaleForm),
+			new TabInfo(AVATARS, 	peek,	!accordian,	scaleForm),
+			new TabInfo(POSSESS, 	!peek,	accordian, 	scaleForm),
+			new TabInfo(KICK, 		!peek,	accordian, 	scaleForm),
+			new TabInfo(SCENARIO, 	!peek,	accordian, 	scaleForm)
 		);
 			
 		//Main initializes objects and gives them values
@@ -119,12 +121,13 @@
 			
 			//Create the Avatar Window
 			//FIXME: This need to actually be set up as a panel that folds out and has avatar images
+			/*
 			avatarWindow = new AvatarWindow("avatarWindow", TAB_SIZE, leftSide, stage);
 			avatarWindow.x = stage.stageWidth/2 - avatarWindow.myWidth/2;
 			avatarWindow.y = stage.stageHeight/2 - avatarWindow.myHeight/2;
 			avatarWindow.visible = false;
 			windows[AVATARS] = avatarWindow;
-			
+			*/
 			//FIXME: This section needs to go soon, it will eventually serve no purpose.
 			//This section is purely for testing
 			var kickWindow = new Window("KickWindow", TAB_SIZE, 300, 100, leftSide, stage);
@@ -169,7 +172,7 @@
 			//Add our children now that they have been loaded in
 			addChild(myMenu);
 			addChild(chatWindow);
-			addChild(avatarWindow);
+			//addChild(avatarWindow);
 			addChild(cursor);
 			
 			//If we are not in scaleform we want hotkeys to do certain things, otherwise
@@ -179,8 +182,8 @@
 			}
 			
 			//FIXME: These variable names are artrocious, lets get some real code in here before someone sees this tripe
-			var tc:Function = tabClick(AVATARS);
-			myMenu.tabs[TAB_NUM[AVATARS]].addEventListener(MouseEvent.CLICK, tc);
+			//var tc:Function = tabClick(AVATARS);
+			//myMenu.tabs[TAB_NUM[AVATARS]].addEventListener(MouseEvent.CLICK, tc);
 			var tg:Function = tabClick(CHAT);
 			myMenu.tabs[TAB_NUM[CHAT]].addEventListener(MouseEvent.CLICK, tg);
 			//FIXME: MAYBE: Finding an object in a hash twice could be memory intensive. Saving it could save time.
@@ -355,6 +358,7 @@
 		public function simulateUnrealScriptPolls() {
 			var onClick:Function = onButtonSend(US_KICK_PLAYER);
 			var playerNames:Array = new Array("Nope", "Boop", "Pompey253", "Cicero 254", "Publius");
+			CreateAvatarChoiceDisplay(playerNames);
 			for each (var playerName:String in playerNames) {
 				myMenu.addToList(playerName, KICK, "kick", onClick);
 			}
@@ -518,6 +522,38 @@
 		public function utrace(s:String) {
 			if(debug){
 				ExternalInterface.call("FlashToUDK", "say " + s);
+			}
+		}
+		
+		public function CreateAvatarChoiceDisplay(avatarImageStrings:Array) {
+			var i:int = 0;
+			var j:int = 0;
+			for each (var img in avatarImageStrings) {
+				
+				if (i >= 5) {
+					i = 0;
+					j++;
+				}
+			
+				var avatarImage:AvatarImage = new AvatarImage("", TAB_SIZE, (j*5+i));
+				avatarImage.loadAvatarImage(img);
+				trace(i +","+ j);
+				var temp:Sprite = new Sprite();
+				//temp.graphics.beginFill(0xFF0000, 0.8);
+				temp.graphics.lineStyle(2, 0x000000, .75);
+				temp.graphics.moveTo(0, 0); 
+				temp.graphics.lineTo(0, TAB_SIZE*3); 
+				temp.graphics.lineTo(TAB_SIZE*3, TAB_SIZE*3); 
+				temp.graphics.lineTo(TAB_SIZE*3, 0); 
+				//temp.graphics.endFill();
+				//temp.graphics.drawRect(0, 0, 140, 140); 
+				temp.x = i*(TAB_SIZE*3+(TAB_SIZE/4));
+				temp.y = j*(TAB_SIZE*3+(TAB_SIZE/4));
+				avatarImage.x = temp.x;
+				avatarImage.y = temp.y;
+				myMenu.panels[AVATARS].labelContainer.addChild(temp);
+				myMenu.panels[AVATARS].labelContainer.addChild(avatarImage);
+				i++;			
 			}
 		}
 		

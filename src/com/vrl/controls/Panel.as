@@ -8,6 +8,7 @@ package com.vrl.controls {
 	import flash.text.TextField;
 	import flash.text.Font;
 	import flash.text.TextFormat;
+	import flash.external.ExternalInterface;
 	
 	import com.vrl.UIElement;
 	import com.vrl.utils.SureLabel;
@@ -37,9 +38,10 @@ package com.vrl.controls {
 		public var labels:Array = new Array();
 		public var TAB_SIZE:Number;
 		public var labelContainer:Sprite = new Sprite();
+		public var verticalMover:Boolean;
 		var scroller:ScrollerMC;
-		
-		public function Panel(panelName:String, width:int, height:int, TAB_SIZE:Number, leftSide:Boolean, stageRef:Stage, scrollerHeight:Number):void {		
+				
+		public function Panel(panelName:String, width:int, height:int, TAB_SIZE:Number, leftSide:Boolean, verticalMover:Boolean, stageRef:Stage, scrollerHeight:Number):void {		
 			//Variables that are not the default
 			this.easing = .2;
 			this.color = 0x222222;
@@ -49,6 +51,7 @@ package com.vrl.controls {
 			this.myWidth = myWidth;
 			this.myHeight = TAB_SIZE/4;
 			this.panelName = panelName;
+			this.verticalMover = verticalMover;
 			
 			//Text Format
 			var myFormat:TextFormat = new TextFormat();
@@ -67,6 +70,7 @@ package com.vrl.controls {
 		private function init():void {
 			addChild(labelContainer);
 			addChild(scroller);
+			addEventListener(MouseEvent.MOUSE_OVER, captureScroll);
 			draw();
 		}
 		
@@ -114,6 +118,7 @@ package com.vrl.controls {
 				this.y += TAB_SIZE*5/4;
 			}
 		}
+		
 		public function pullUp(belowStrings:Array):Function {
 			trace("inside function BelowStrings.length = " + belowStrings.length);
 			return function (e:Event):void {
@@ -137,5 +142,21 @@ package com.vrl.controls {
 				}
 			}
 		}
+		
+		//FIXME: not DRY, this method is also in chatwindow. Need to fix this.
+		//Captures scrolling input
+		private function captureScroll( event:Event ):void {
+			removeEventListener(MouseEvent.MOUSE_OVER, captureScroll);
+			addEventListener(MouseEvent.MOUSE_OUT, removeCaptureScroll);
+			ExternalInterface.call("asReceiveRemoveScroll");
+		}
+ 		
+ 		//Captures scrolling input
+ 		private function removeCaptureScroll( event:Event ):void {
+			addEventListener(MouseEvent.MOUSE_OVER, captureScroll);
+			removeEventListener(MouseEvent.MOUSE_OUT, removeCaptureScroll);
+			ExternalInterface.call("asReceiveAddScroll");
+		}
+		
 	}
 }

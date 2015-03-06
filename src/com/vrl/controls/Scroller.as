@@ -81,7 +81,7 @@ package com.vrl.controls {
 			} 
 		}
 		
-		//set the height of the handle dynamically on enter frame
+		//set the position of handle dynamically on enter frame
 		public function moveHandle (e:Event):void {
 			var yMin:Number = 0;
 			var yMax:Number = track.height - handle.height;
@@ -97,7 +97,7 @@ package com.vrl.controls {
 				handle.y = yMax;
 			}
 		}
-		
+				
 		public function startScroll (e:MouseEvent):void {
 			stageRef.addEventListener (MouseEvent.MOUSE_MOVE, handlemove);
 			yOffset = mouseY - handle.y;

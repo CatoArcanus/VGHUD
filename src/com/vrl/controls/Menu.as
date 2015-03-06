@@ -56,7 +56,7 @@ package com.vrl.controls {
 			
 			//This variable is used with the menu is on the left or right. 
 			//It isn't very elegant. Maybe we can do away with the Bool all together
-			//TODO: Time permiting, try to make this more elegant 
+			//FIXME: Time permiting, try to make this more elegant 
 			var pos:int = -1;
 			if(leftSide) {
 				pos = 1;
@@ -73,15 +73,15 @@ package com.vrl.controls {
 				tab.x = 0;
 				tab.y = tabY;
 				//Assign the proper click trigger based on whether or not the tab is an accordian
-				if(tabInfo.accordian) {
-					tab.addEventListener(MouseEvent.CLICK, tabAccordian(tabInfo.tabName));
-				}
+			
+			
 				
 				tabs.push(tab);
 								
 				//Accordians need panels
 				if(tabInfo.accordian) {
-					
+					//add event listener for tabs with accordians
+					tab.addEventListener(MouseEvent.CLICK, tabAccordian(tabInfo.tabName));
 					//set up a panel mask
 					var panelMask:Sprite = new Sprite();
 					panelMask.graphics.beginFill(0xffFF00, .5); 
@@ -91,7 +91,7 @@ package com.vrl.controls {
 					panelMask.y = tab.y + tab.myHeight;
 					 
 					//set up a panel
-					var panel = new Panel(tabInfo.tabName, width, TAB_SIZE, TAB_SIZE, leftSide, stageRef, panelMask.height);
+					var panel = new Panel(tabInfo.tabName, width, TAB_SIZE, TAB_SIZE, leftSide, true, stageRef, panelMask.height);
 					panel.x = 0;
 					panel.y = tab.y + tab.myHeight - panel.myHeight;
 					panel.closeY = panel.y;
@@ -100,6 +100,31 @@ package com.vrl.controls {
 					panel.mask = panelMask;
 					panelMasks[tabInfo.tabName] = panelMask;
 					panels[tabInfo.tabName] = panel;
+				}
+				
+				if(tabInfo.peek) {
+					//Add Event Listen
+					tab.addEventListener(MouseEvent.CLICK, tabAccordian(tabInfo.tabName));
+					//A mask for the panels
+					panelMask = new Sprite();
+					panelMask.graphics.beginFill(0xffFF00); 
+					panelMask.graphics.drawRect(0, 0, TAB_SIZE*16, height); 
+					panelMask.graphics.endFill(); 
+					panelMask.x = panelMask.width*(-1);
+					panelMask.y = 0;
+
+					
+					//This creates a series of panels. 				
+					var panel = new AvatarPanel(tabInfo.tabName, TAB_SIZE*16, height, TAB_SIZE, leftSide, false, stageRef, panelMask.height);			
+					panel.x = 0;
+					panel.y = 0;
+					panel.closeX = panel.x;
+					panel.openX = panel.x - panelMask.width;
+					panel.tabNumber = tabNumber;
+					panel.mask = panelMask;
+					panelMasks[tabInfo.tabName] = panelMask;
+					panels[tabInfo.tabName] = panel;
+										
 				}
 				
 				tab.maxOpenY = tab.y+height-TAB_SIZE*tabInfos.length;
@@ -162,12 +187,17 @@ package com.vrl.controls {
 			} else {
 				outPanel = currentPanel;
 				panels[outPanel].moveY = panels[outPanel].closeY;
+				panels[outPanel].moveX = panels[outPanel].closeX;
 				trace("AA");
 				if(!hasEventListener(Event.ENTER_FRAME)) {
 					trace("@@@@");
 					activePanel = outPanel;
-					addEventListener(Event.ENTER_FRAME, onEasePanel);
-					//onEaseOut = onEasePanel(outPanel);
+					if(panels[outPanel].verticalMover) {
+						addEventListener(Event.ENTER_FRAME, onEasePanelY);
+					} else {
+						addEventListener(Event.ENTER_FRAME, onEasePanelX);
+					}
+					//onEaseOut = onEasePanelY(outPanel);
 					//addEventListener(Event.ENTER_FRAME, onEaseOut);
 				}
 				//if the current panel is the one we clicked, close it and set the state to stable
@@ -186,19 +216,24 @@ package com.vrl.controls {
 			//trace("Animate in: " + currentPanel);
 			panels[currentPanel].visible = true;
 			panels[currentPanel].moveY = panels[currentPanel].openY;
+			panels[currentPanel].moveX = panels[currentPanel].openX;
 			trace("AA!");
 			if(!hasEventListener(Event.ENTER_FRAME)) {
 				trace("@@@@!");
 				activePanel = currentPanel;
-				addEventListener(Event.ENTER_FRAME, onEasePanel);
-				//onEaseIn = onEasePanel(currentPanel);
-				//addEventListener(Event.ENTER_FRAME, onEasePanel);
+				if(panels[activePanel].verticalMover) {
+					addEventListener(Event.ENTER_FRAME, onEasePanelY);
+				} else {
+					addEventListener(Event.ENTER_FRAME, onEasePanelX);					
+				}
+				//onEaseIn = onEasePanelY(currentPanel);
+				//addEventListener(Event.ENTER_FRAME, onEasePanelY);
 			}
 		}
 		
 		//This handles closing the Panel frame by frame, until is it done 
-		//This is arbitrary X movement, but could allow for any type of movement
-		public function onEasePanel(e:Event):void {
+		//This is arbitrary Y movement, but could allow for any type of movement
+		public function onEasePanelY(e:Event):void {
 			trace(panels[activePanel].frameCounter + " -- " + (panels[activePanel].moveX - x) * panels[activePanel].easing);
 			//My distance = (where I want to go) - where I am
 			panels[activePanel].dy = ( panels[activePanel].moveY - panels[activePanel].y);
@@ -206,13 +241,13 @@ package com.vrl.controls {
 			//Otherwise move a proportional distance to my target "easing" my way there
 			if(Math.abs(panels[activePanel].dy) < 1) {
 				if(panels[activePanel].dy < 0) {
-					removeEventListener(Event.ENTER_FRAME, onEasePanel);
+					removeEventListener(Event.ENTER_FRAME, onEasePanelY);
 					panels[activePanel].visible = false;
 					if(currentPanel != "") {
 						animateIn();
 					}
 				} else {
-					removeEventListener(Event.ENTER_FRAME, onEasePanel);
+					removeEventListener(Event.ENTER_FRAME, onEasePanelY);
 				}
 				//removeEventListener(Event.ENTER_FRAME, arguments.callee);
 				panels[activePanel].frameCounter = 0;
@@ -239,6 +274,32 @@ package com.vrl.controls {
 						tabs[i].y = limit;
 					}
 				}
+			}
+			panels[activePanel].frameCounter++;
+		}
+		
+		//This handles closing the Panel frame by frame, until is it done 
+		//This is arbitrary Y movement, but could allow for any type of movement
+		public function onEasePanelX(e:Event):void {
+			trace(panels[activePanel].frameCounter + " moveX: " + (panels[activePanel].moveX) + " x: " + (panels[activePanel].x));
+			//My distance = (where I want to go) - where I am
+			panels[activePanel].dx = ( panels[activePanel].moveX - panels[activePanel].x);
+			//If where I want to go is less than 1, I will stay there
+			//Otherwise move a proportional distance to my target "easing" my way there
+			if(Math.abs(panels[activePanel].dx) < 1) {
+				if(panels[activePanel].dx > 0) {
+					removeEventListener(Event.ENTER_FRAME, onEasePanelX);
+					panels[activePanel].visible = false;
+					if(currentPanel != "") {
+						animateIn();
+					}
+				} else {
+					removeEventListener(Event.ENTER_FRAME, onEasePanelX);
+				}
+				//removeEventListener(Event.ENTER_FRAME, arguments.callee);
+				panels[activePanel].frameCounter = 0;
+			} else {
+				panels[activePanel].x += panels[activePanel].dx * panels[activePanel].easing;
 			}
 			panels[activePanel].frameCounter++;
 		}

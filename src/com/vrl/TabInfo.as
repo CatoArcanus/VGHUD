@@ -25,10 +25,12 @@ package com.vrl {
 		public var tabName:String;
 		public var scaleForm:Boolean;
 		public var accordian:Boolean;
+		public var peek:Boolean;
 		
-		public function TabInfo(tabName:String, accordian:Boolean, scaleForm:Boolean):void {
+		public function TabInfo(tabName:String, peek:Boolean, accordian:Boolean, scaleForm:Boolean):void {
 			this.tabName = tabName;
 			this.accordian = accordian;
+			this.peek = peek;
 			this.scaleForm = scaleForm;
 		}
 	}
