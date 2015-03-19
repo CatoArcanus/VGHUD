@@ -40,7 +40,7 @@ package com.vrl.buttons {
 		public var accordian:Boolean = false; 
 		public var myFormat:TextFormat;
 		
-		public function Tab(buttonName:String, width:int, TAB_SIZE:Number, leftSide:Boolean, scaleForm:Boolean = true, accordian:Boolean = false):void {
+		public function Tab(buttonName:String, iconName:String, width:int, TAB_SIZE:Number, leftSide:Boolean, scaleForm:Boolean = true, accordian:Boolean = false):void {
 			super(buttonName, buttonName, width, TAB_SIZE);
 			this.color = 0x000000;
 			this.maxAlpha = 1.0;
@@ -49,7 +49,7 @@ package com.vrl.buttons {
 			this.fade = currentAlpha;
 			this.accordian = accordian;
 			
-			icon = new Icon(buttonName, TAB_SIZE, scaleForm);
+			icon = new Icon(iconName, TAB_SIZE, scaleForm);
 			if(leftSide) {
 				icon.x = myWidth - TAB_SIZE*.625;
 			} else {
@@ -67,6 +67,7 @@ package com.vrl.buttons {
 			text = new TextField();
 			text.text = buttonName;
 			text.textColor = 0xFFFFFF;
+			trace(leftSide);
 			if(leftSide) {
 				text.x = TAB_SIZE*.15625;
 			} else {

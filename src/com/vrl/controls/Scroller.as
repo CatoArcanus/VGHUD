@@ -23,16 +23,16 @@ package com.vrl.controls {
 	 * @version    1.2 (12/29/2014)
 	 */
 
-	/////////////////////
+	////////////////////
 	// Scroller Class //
-	/////////////////////
+	////////////////////
 	public class Scroller extends UIElement {
 	
-		var target:TextField;	
+		var target:TextField;
 		var track:Sprite;
 		var handle:Sprite;
 		var yOffset:Number;
-		var TAB_SIZE:int; 	
+		var TAB_SIZE:int;
 		var stageRef:Stage;
 		
 		public function Scroller(target:TextField, TAB_SIZE:int, stageRef:Stage) {
@@ -83,7 +83,6 @@ package com.vrl.controls {
 		
 		//set the position of handle dynamically on enter frame
 		public function moveHandle (e:Event):void {
-			var yMin:Number = 0;
 			var yMax:Number = track.height - handle.height;
 			var minPos = 0; 
 			if(target.scrollV == 1) {

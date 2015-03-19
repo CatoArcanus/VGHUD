@@ -27,24 +27,25 @@ package com.vrl.controls {
 
 	////////////////
 	// Menu Class //
-	////////////////	
+	////////////////
 	public class Menu extends UIElement {
 		
 		//Properties
-	
+		public var menuPeekX:int; 
+		public var menuPeekY:int;
 		//variables
-		var currentPanel:String = "";
+		public var currentPanel:String = "";
 		var outPanel:String = "";
 		var activePanel:String="";
 		var TAB_SIZE:Number;
 		var addOne:Function;
 		var deleteOne:Function;
-			
+		
 		//Objects
 		public var tabs:Array = new Array();
 		public var panels:Array = new Array();
 		var panelMasks:Array = new Array();
-						
+		
 		//Menu initializes objects and gives them values
 		public function Menu(width:int, height:int, tabInfos:Array, TAB_SIZE:Number, leftSide:Boolean, stageRef:Stage):void {
 			//Set up paramaters that differ from the default
@@ -53,7 +54,7 @@ package com.vrl.controls {
 			this.myHeight = height;
 			this.currentAlpha = .5;
 			this.TAB_SIZE = TAB_SIZE;
-			
+						
 			//This variable is used with the menu is on the left or right. 
 			//It isn't very elegant. Maybe we can do away with the Bool all together
 			//FIXME: Time permiting, try to make this more elegant 
@@ -69,19 +70,16 @@ package com.vrl.controls {
 			for each(var tabInfo:TabInfo in tabInfos) {
 				
 				//A series of tabs is generated based on the list of tab names
-				var tab = new Tab(tabInfo.tabName, width, TAB_SIZE, leftSide, tabInfo.scaleForm, tabInfo.accordian);
+				var tab = new Tab(tabInfo.title, tabInfo.name, width, TAB_SIZE, tabInfo.leftSide, tabInfo.scaleForm, tabInfo.accordian);
 				tab.x = 0;
 				tab.y = tabY;
-				//Assign the proper click trigger based on whether or not the tab is an accordian
-			
-			
 				
 				tabs.push(tab);
-								
+				
 				//Accordians need panels
 				if(tabInfo.accordian) {
 					//add event listener for tabs with accordians
-					tab.addEventListener(MouseEvent.CLICK, tabAccordian(tabInfo.tabName));
+					tab.addEventListener(MouseEvent.CLICK, tabAccordian(tabInfo.name));
 					//set up a panel mask
 					var panelMask:Sprite = new Sprite();
 					panelMask.graphics.beginFill(0xffFF00, .5); 
@@ -91,20 +89,20 @@ package com.vrl.controls {
 					panelMask.y = tab.y + tab.myHeight;
 					 
 					//set up a panel
-					var panel = new Panel(tabInfo.tabName, width, TAB_SIZE, TAB_SIZE, leftSide, true, stageRef, panelMask.height);
+					var panel = new Panel(tabInfo.name, width, TAB_SIZE, TAB_SIZE, tabInfo.leftSide, true, stageRef, panelMask.height);
 					panel.x = 0;
 					panel.y = tab.y + tab.myHeight - panel.myHeight;
 					panel.closeY = panel.y;
 					panel.openY = panel.y + panel.myHeight;
 					panel.tabNumber = tabNumber;
 					panel.mask = panelMask;
-					panelMasks[tabInfo.tabName] = panelMask;
-					panels[tabInfo.tabName] = panel;
+					panelMasks[tabInfo.name] = panelMask;
+					panels[tabInfo.name] = panel;
 				}
 				
 				if(tabInfo.peek) {
 					//Add Event Listen
-					tab.addEventListener(MouseEvent.CLICK, tabAccordian(tabInfo.tabName));
+					tab.addEventListener(MouseEvent.CLICK, tabAccordian(tabInfo.name));
 					//A mask for the panels
 					panelMask = new Sprite();
 					panelMask.graphics.beginFill(0xffFF00); 
@@ -115,16 +113,16 @@ package com.vrl.controls {
 
 					
 					//This creates a series of panels. 				
-					var panel = new AvatarPanel(tabInfo.tabName, TAB_SIZE*16, height, TAB_SIZE, leftSide, false, stageRef, panelMask.height);			
+					var panel = new AvatarPanel(tabInfo.name, TAB_SIZE*16, height, TAB_SIZE, tabInfo.leftSide, false, stageRef, panelMask.height);			
 					panel.x = 0;
 					panel.y = 0;
 					panel.closeX = panel.x;
 					panel.openX = panel.x - panelMask.width;
 					panel.tabNumber = tabNumber;
 					panel.mask = panelMask;
-					panelMasks[tabInfo.tabName] = panelMask;
-					panels[tabInfo.tabName] = panel;
-										
+					panelMasks[tabInfo.name] = panelMask;
+					panels[tabInfo.name] = panel;
+					
 				}
 				
 				tab.maxOpenY = tab.y+height-TAB_SIZE*tabInfos.length;
@@ -178,7 +176,7 @@ package com.vrl.controls {
 				animateOut(panelName);
 			};
 		}
-				
+		
 		public function animateOut(panelName:String):void {
 			//If no current panel, just open the panel and make it the current
 			if(currentPanel == "") {
@@ -303,7 +301,7 @@ package com.vrl.controls {
 			}
 			panels[activePanel].frameCounter++;
 		}
-				
+		
 		public function addToList(labelName:String, panelName:String, buttonText:String, onClick:Function):void {
 			if(!panels[panelName].labels.hasOwnProperty(labelName)) {
 				var lastTabNum:int = tabs.length-1;
@@ -358,7 +356,7 @@ package com.vrl.controls {
 				}
 			}
 		}
-				
+		
 		public function squish(isAdding:Boolean, labelName:String, panelName:String, buttonText:String = "", onClick:Function = null):Function {
 			return function(e:Event):void {
 				//trace(( tabs[tabs.length-1].moveY - tabs[tabs.length-1].y));

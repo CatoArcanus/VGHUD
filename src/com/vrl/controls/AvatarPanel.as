@@ -7,7 +7,7 @@ package com.vrl.controls {
 	import flash.events.MouseEvent;
 	import flash.text.*;
 	
-	import com.vrl.UIElement; 
+	import com.vrl.UIElement;
 
 	/////////////////
 	// Description //
@@ -23,17 +23,17 @@ package com.vrl.controls {
 	 * @version    1.3 (01/13/2015)
 	 */
 
-	//////////////////////
+	///////////////////////
 	// AvatarPanel Class //
-	//////////////////////
+	///////////////////////
 	public class AvatarPanel extends Panel {
 		
 		//Objects
 		var bg:Sprite;
-							
+		
 		public function AvatarPanel(panelName:String, width:int, height:int, TAB_SIZE:Number, leftSide:Boolean, verticalMover:Boolean, stageRef:Stage, scrollerHeight:Number):void {
 			super(panelName, width, height, TAB_SIZE, leftSide, verticalMover, stageRef, scrollerHeight);
-						
+			
 			//Format for text
 			var myFormat:TextFormat = new TextFormat();
 			myFormat.size = TAB_SIZE*.30;
@@ -46,9 +46,9 @@ package com.vrl.controls {
 			bg.graphics.endFill();
 			bg.x = 0;
 			bg.y = 0;
-												
+
 			//debugAvatarMC();
-						
+			
 			//Scroller
 			initialize();
 		}

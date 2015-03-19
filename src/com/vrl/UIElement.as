@@ -28,7 +28,7 @@ package com.vrl {
 		
 		// Default Variables //
 		public var frameCounter:int = 0;
-		var debug:Boolean = false;		
+		var debug:Boolean = false;
 		
 		//Stuff for easing
 		public var easing:Number = 0.25;
@@ -66,7 +66,7 @@ package com.vrl {
 				graphics.lineTo(myWidth, myHeight); 
 				graphics.lineTo(myWidth, 0); 
 				graphics.lineTo(0, 0); 
-			}			
+			}
 			graphics.endFill();
 		}
 	}

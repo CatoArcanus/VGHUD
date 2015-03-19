@@ -29,11 +29,11 @@ package com.vrl.controls {
 	/////////////////////
 	public class ScrollerMC extends UIElement {
 	
-		var target:Sprite;	
+		var target:Sprite;
 		var track:Sprite;
 		var handle:AbstractButton;
 		var yOffset:Number;
-		var TAB_SIZE:int; 	
+		var TAB_SIZE:int;
 		var stageRef:Stage;
 		var scrollMax:int;
 		var scrollIncrement:Number;
@@ -70,7 +70,7 @@ package com.vrl.controls {
 			stageRef.addEventListener (MouseEvent.MOUSE_UP, stopScroll);
 			addEventListener (Event.ENTER_FRAME, moveHandle);
 			init();
-		}		
+		}
 		
 		public function init() {
 			addChild(track);

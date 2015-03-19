@@ -30,6 +30,7 @@ package com.vrl.utils {
 	public class SureLabel extends AbstractLabel {
 		
 		public var sureButton:TextButton; 
+		public var icon:Icon; 
 		
 		//Sure Labels can create "are you sure" boxes
 		//TODO: make "are you sure" boxes	
@@ -40,7 +41,7 @@ package com.vrl.utils {
 			sureButton.x = this.myWidth - sureButton.myWidth - TAB_SIZE/4;
 			sureButton.y = TAB_SIZE/4;
 			sureButton.addEventListener(MouseEvent.CLICK, onClick);
-																						
+																									
 			this.draw();
 			initialize();
 		}
