@@ -9,28 +9,20 @@ package com.vrl.utils {
 	
 	import com.vrl.UIElement;
 	import com.vrl.buttons.AbstractButton;
-	
-	/////////////////
-	// Description //
-	/////////////////
-	/**
-	 * The Icon is one of many objects in a menu
-	 *
-	 * @category   root.menu.z
-	 * @package    src
-	 * @author     Monte Nichols (Original Author) <monte.nichols.ii@gmail.com>
-	 * @copyright  Virtual Reality Labs at the Center for Brainhealth
-	 * @version    1.0 (12/23/2014)
-	 */
 
-	////////////////
-	// Icon Class //
-	////////////////	
+	///////////////////////
+	// AvatarImage Class //
+	///////////////////////	
 	public class AvatarImage extends Icon {
 				
 		public var arrayVal:int;
 		public var sprite:AbstractButton;
-				
+		
+		/**
+		* Avatar image is a special kind of icon that is loaded from a package in Unreal
+		* these images are loaded in and then dynamically resized. They have their own hover
+		* and click effects seperate from normal icons.
+		*/		 		
 		public function AvatarImage(name:String, TAB_SIZE:Number, arrayVal:int, scaleForm:Boolean = true, center:Boolean = false):void {
 			super(name, TAB_SIZE);
 			this.arrayVal = arrayVal;
@@ -38,10 +30,12 @@ package com.vrl.utils {
 			this.addEventListener(MouseEvent.MOUSE_OVER, handleIsOver);
 		}
 		
+		//Call Unrealscript to change to the avatar by index
 		private function onClick(e:Event):void {
 			ExternalInterface.call("asReceiveClickedProfileImage", arrayVal);
 		}
 		
+		//Change the transparency of the avatar on gover
 		private function handleIsOver( event:MouseEvent ):void {
 			//FIXME: Can't put this in init for some reason
 			//var sprite:Sprite = Sprite(event.currentTarget);
@@ -60,6 +54,7 @@ package com.vrl.utils {
 			//this.addEventListener(MouseEvent.MOUSE_OUT, handleIsOut);		
 		}
 
+		//Change the transparency of the avatar on gover
 		private function handleIsOut( event:MouseEvent ):void {
 			//var sprite:Sprite = Sprite(event.currentTarget);
 			this.filters = [];
@@ -67,6 +62,7 @@ package com.vrl.utils {
 			this.addEventListener(MouseEvent.MOUSE_OUT, handleIsOver);		
 		}
 		
+		//This loads a specific image from a Unreal package.
 		public function loadAvatarImage(name:String, scaleForm:Boolean = true, center:Boolean = false) {
 			var icon_size:int = TAB_SIZE*3;
 			var urlString:String = "img://" + name;

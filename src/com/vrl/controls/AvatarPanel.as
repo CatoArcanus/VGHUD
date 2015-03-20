@@ -9,20 +9,6 @@ package com.vrl.controls {
 	
 	import com.vrl.UIElement;
 
-	/////////////////
-	// Description //
-	/////////////////
-	/**
-	 * The AvatarPanel is extended from the Window class and is very specific in its
-	 * implementation
-	 *
-	 * @category   root.menu.panel
-	 * @package    src
-	 * @author     Monte Nichols (Original Author) <monte.nichols.ii@gmail.com>
-	 * @copyright  Virtual Reality Labs at the Center for Brainhealth
-	 * @version    1.3 (01/13/2015)
-	 */
-
 	///////////////////////
 	// AvatarPanel Class //
 	///////////////////////
@@ -31,6 +17,11 @@ package com.vrl.controls {
 		//Objects
 		var bg:Sprite;
 		
+		/**
+		* The Avatar panel is a panel like most panels. It is unique in that it needs a bg.
+		* FIXME: Get Bg to dynamically change size based on the number of avatars, so that
+		* when you scroll the psaces inbetween will register.
+		*/
 		public function AvatarPanel(panelName:String, width:int, height:int, TAB_SIZE:Number, leftSide:Boolean, verticalMover:Boolean, stageRef:Stage, scrollerHeight:Number):void {
 			super(panelName, width, height, TAB_SIZE, leftSide, verticalMover, stageRef, scrollerHeight);
 			
@@ -59,6 +50,8 @@ package com.vrl.controls {
 			this.draw();
 		}
 		
+		//Largely for testing
+		//FIXME: Delete this function		
 		private function debugAvatarMC() {
 			//labelContainer = new Sprite();
 			for(var i:int = 0; i < 5; i++) {

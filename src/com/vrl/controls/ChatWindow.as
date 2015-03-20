@@ -14,20 +14,7 @@ package com.vrl.controls {
 	import com.vrl.UIElement;
 	import com.vrl.buttons.IconButton; 
 
-	/////////////////
-	// Description //
-	/////////////////
-	/**
-	 * The ChatWindow is extended from the Window class and is very specific in its
-	 * implementation
-	 *
-	 * @category   root.menu.panel
-	 * @package    src
-	 * @author     Monte Nichols (Original Author) <monte.nichols.ii@gmail.com>
-	 * @copyright  Virtual Reality Labs at the Center for Brainhealth
-	 * @version    1.3 (01/13/2015)
-	 */
-
+	
 	//////////////////////
 	// ChatWindow Class //
 	//////////////////////
@@ -42,6 +29,10 @@ package com.vrl.controls {
 		public var scroller:Scroller;
 		public var sendButton:IconButton;
 			
+		/**
+		* Chat windows are very specific in their functionality and are layed out based on the 
+		* TAB_SIZE variable
+		*/
 		public function ChatWindow(windowName:String, TAB_SIZE:Number, leftSide:Boolean, stageRef:Stage):void {
 			super(windowName, TAB_SIZE*10, TAB_SIZE*7, TAB_SIZE, leftSide, stageRef);
 			
@@ -178,6 +169,8 @@ package com.vrl.controls {
 			chatInput.text = ""; 
 		}
 		
+		//This is a slow method for testing
+		//FIXME: delete this code
 		private function appendText():void {
 			chatLog.text += "G\n";
 			var myTimer:Timer = new Timer(500, 1); // 2 seconds

@@ -21,27 +21,20 @@
 	import com.vrl.utils.*;
 	import com.vrl.TabInfo;	
 	
-	/////////////////
-	// Description //
-	/////////////////
-	/**
-	 * The Main Class is the Document Class
-	 *
-	 * Note: This Class is considered "root" by Unrealscipt
-	 *
-	 * @category   root
-	 * @package    src
-	 * @author     Monte Nichols (Original Author) <monte.nichols.ii@gmail.com>
-	 * @copyright  Virtual Reality Labs at the Center for Brainhealth
-	 * @version    1.7 (01/16/2015)
-	 */
-
 	////////////////
 	// Main Class //
-	////////////////	
+	////////////////
+	/**
+	* The Main class is also known as the Document class and the root path.
+	* All unrelascript calls must be routed through this file, so it can get
+	* a little bloated. We will try to designate as much responsibility to 
+	* component classes, but this class will usually still be large.	
+	*/	
 	public class Main extends Sprite {
 		
-		var debug:Boolean = true;
+		//set to true if you want debug output
+		var debug:Boolean = false;
+		//set to true if pushing live to scaleform, false if testing in the launcher
 		var scaleForm:Boolean = true;
 		
 		//Consts
@@ -49,6 +42,7 @@
 		//It is the measure in pixels of the tab width/height
 		var TAB_SIZE:Number = 48;
 		
+		//FIXME: We could have this designated through a config file at some point
 		var CHAT:String = "Chat";
 		var GHOST:String = "Ghost";
 		var AVATARS:String = "Avatars";
@@ -110,9 +104,7 @@
 			//Create a Cursor and hide it
 			cursor = new Cursor("Cursor", TAB_SIZE*2, scaleForm);
 			cursor.visible = false;
-			
-			//Create chat window. This is the best place to do this as the chat window
-			//is an important part of the main class.
+						
 			//FIXME: See if we can't find a way to hide the chatwindow's functions in itself.
 			//The idea would be to accept the Unrealscript call in the main, but then divert its tasks 
 			//up the chain through a simple one-line method call with some params.
@@ -121,50 +113,7 @@
 			chatWindow.y = stage.stageHeight - chatWindow.height - TAB_SIZE/2;
 			chatWindow.visible = false;
 			windows[CHAT] = chatWindow;
-			
-			//Create the Avatar Window
-			//FIXME: This need to actually be set up as a panel that folds out and has avatar images
-			/*
-			avatarWindow = new AvatarWindow("avatarWindow", TAB_SIZE, leftSide, stage);
-			avatarWindow.x = stage.stageWidth/2 - avatarWindow.myWidth/2;
-			avatarWindow.y = stage.stageHeight/2 - avatarWindow.myHeight/2;
-			avatarWindow.visible = false;
-			windows[AVATARS] = avatarWindow;
-			*/
-			//FIXME: This section needs to go soon, it will eventually serve no purpose.
-			//This section is purely for testing
-			/*
-			var kickWindow = new Window("KickWindow", TAB_SIZE, 300, 100, leftSide, stage);
-			kickWindow.x = 1200;
-			kickWindow.y = 10;
-			var addButton:TextButton = new TextButton("addKick", "addKick", TAB_SIZE/2);
-			addButton.x = 10;
-			addButton.y = 10;
-			var deleteButton:TextButton = new TextButton("deleteKick", "deleteKick", TAB_SIZE/2);
-			deleteButton.x = 100;
-			deleteButton.y = 10;
-			addButton.addEventListener(MouseEvent.CLICK, addJulius);
-			deleteButton.addEventListener(MouseEvent.CLICK, deleteJulius);
-			kickWindow.addChild(addButton);
-			kickWindow.addChild(deleteButton);
-			addChild(kickWindow);
-			*/
-			//
-			
-			//FIXME: Leftsidedness is depreicated and unsupported so far.
-			//This change would cascade down and is really a nightmare for very little gain.
-			//This puts it on the left or right, depending on what we have decided
-			//if(leftSide) {
-			//	myMenu.x = (0-myWidth)+TAB_SIZE*.75;
-			//	myMenu.openX = 0;
-			//} else {
-			//	myMenu.x = stage.stageWidth-TAB_SIZE*.75;
-			//	myMenu.openX = stage.stageWidth - myMenu.myWidth;
-			//}
-			//myMenu.y = 0;
-			//myMenu.closeX = myMenu.x;
-			//myMenu.moveX = myMenu.openX;
-			
+						
 			//Call init 
 			init();
 		}
@@ -177,7 +126,6 @@
 			//Add our children now that they have been loaded in
 			addChild(myMenu);
 			addChild(chatWindow);
-			//addChild(avatarWindow);
 			addChild(cursor);
 			
 			//If we are not in scaleform we want hotkeys to do certain things, otherwise
@@ -198,17 +146,11 @@
 			
 			//This actually isn't very descriptive, we might want to figure out a better way to do this
 			addEventListener(Event.ENTER_FRAME, onLevelLoaded);
+			//FIXME: Have the cursor class do this instead.
 			addEventListener(Event.ENTER_FRAME, onLoop);
-			
-			//Ok, so here is something really weird. This is explained mored in depth on the level loaded event
-			//myMenu.x = stage.stageWidth;//-TAB_SIZE*.75;
-			//myMenu.openX = stage.stageWidth - myMenu.myWidth;
-			//myMenu.y = 0;
-			//myMenu.closeX = myMenu.x;
-			//myMenu.moveX = myMenu.closeX;
-			
+						
 			//set up toggle captureinput for the chatinput. We might be bale to do this in the chat window, 
-			//FIXME: Put this in the chat window if at all possible, let's clean out this gigantor main file
+			//FIXME: Put this in the chat window if at all possible, let's clean out this main file
 			chatWindow.chatInput.addEventListener(MouseEvent.MOUSE_UP, toggleChat);
 			chatWindow.chatInput.addEventListener(MouseEvent.MOUSE_OUT, enableToggleChatClickListener);
 			chatWindow.chatInput.addEventListener(MouseEvent.MOUSE_OVER, disableToggleChatClickListener);
@@ -218,32 +160,8 @@
 				simulateUnrealScriptPolls();
 			}
 		}
-		
-		public function setUpGhostButton() {
-			var iconButton:IconButton = new IconButton("ghost", TAB_SIZE*2);
-			iconButton.x = myMenu.myWidth/2 - iconButton.myWidth/2;//TAB_SIZE;
-			iconButton.y = myMenu.panels[GHOST].nextY;
-			iconButton.openY = iconButton.y;
-			iconButton.addEventListener(MouseEvent.CLICK, ghostMode);
-			iconButton.icon.loadOtherImage("human", scaleForm, false);
-			//FIXME: This whole other image crap has to go. We need a solid way to toggle icons. Like a togglable icon class or something.
-			iconButton.icon.other_image.visible = false;
-			myMenu.panels[GHOST].nextY = iconButton.y + iconButton.myHeight + TAB_SIZE/4;
-			myMenu.panels[GHOST].myHeight += iconButton.myHeight + TAB_SIZE/4;//TAB_SIZE*5/4;
-			myMenu.panels[GHOST].closeY -= iconButton.myHeight + TAB_SIZE/4;
-			myMenu.panels[GHOST].y -= iconButton.myHeight + TAB_SIZE/4;
-			myMenu.panels[GHOST].labels[GHOST] = iconButton;
-			myMenu.panels[GHOST].labelContainer.addChild(iconButton);
-			
-		}
-		
-		//I bet you are looking at this code and saying, "Ok, what?" 
-		//well, I wrote it and I am too. Basically, the menu disappears if you don't move it 
-		//around in the first couple frames. So, for a qtr of a second I make sure it is placed in
-		//the right spot. I'm serious, get rid of this code and run a server and join it. The menu will
-		//be gone. I'm not precisely sure why this duct tape works, but it does. This took a while to
-		//figure out anyway. If I ever get the chance I will play around with a more elegant solution,
-		//but for now I'll chalk it up to AS3, US, and Scaleform just being a big ball of shit. 
+				
+		//This is some duct tape used, because the video disapears if we don't do stuff with it.
 		public function onLevelLoaded(e:Event):void {
 			myMenu.x = stage.stageWidth;//-TAB_SIZE*.75;
 			myMenu.openX = stage.stageWidth - myMenu.myWidth;
@@ -269,22 +187,7 @@
 		public function humanMode(external:Boolean = true):void {
 			//This isn't really used yet. We might use it. Lets see if we ever need to poll for this.
 			playerState = HUMAN_MODE;
-			//Now, I can't figure out why initialized formats outside of this function don't apply to
-			//objects affected in this function or why I even have to embed the font every single time
-			//FIXME: Let's look into that good old flex style font embedding some day and see if our 
-			//actionscript woes can ever be solved, or if this will just continue to be hell forever
-			/*
-			var myFormat:TextFormat = new TextFormat();
-			myFormat = new TextFormat();
-			myFormat.size = TAB_SIZE/2;
-			myFormat.font = "Arial";
-			
-			var text:TextField = myMenu.tabs[TAB_NUM[GHOST]].text;
-			text.text = "Ghost Mode";
-			text.embedFonts = true;
-			text.setTextFormat(myFormat);
-			*/
-			//Getting these vars multiple times can be slow
+
 			//FIXME: let's save this var for more readable code and so we don't access a hash multiple times
 			myMenu.panels[GHOST].labels[GHOST].removeEventListener(MouseEvent.CLICK, humanMode);
 			myMenu.panels[GHOST].labels[GHOST].addEventListener(MouseEvent.CLICK, ghostMode);
@@ -298,17 +201,8 @@
 		//Become a ghost! This isn't that DRY. To follow this code look above.
 		public function ghostMode(external:Boolean = true):void {
 			playerState = GHOST_MODE;
-			/*
-			var myFormat:TextFormat = new TextFormat();
-			myFormat = new TextFormat();
-			myFormat.size = TAB_SIZE/2;
-			myFormat.font = "Arial";
-			
-			var text:TextField = myMenu.tabs[TAB_NUM[GHOST]].text;
-			text.text = "Human Mode";
-			text.embedFonts = true;
-			text.setTextFormat(myFormat);
-			*/
+
+			//FIXME: let's save this var for more readable code and so we don't access a hash multiple times
 			myMenu.panels[GHOST].labels[GHOST].removeEventListener(MouseEvent.CLICK, ghostMode);
 			myMenu.panels[GHOST].labels[GHOST].addEventListener(MouseEvent.CLICK, humanMode);
 			myMenu.panels[GHOST].labels[GHOST].icon.other_image.visible = true;
@@ -316,7 +210,28 @@
 			ExternalInterface.call("asReceiveBecomeGhost");
 		}
 		
-		//this is for normal toggle able tabs.
+		//Called by init to set up the ghost buttons. this happens once when the video loads
+		//and is a static panel
+		public function setUpGhostButton() {
+			var iconButton:IconButton = new IconButton("ghost", TAB_SIZE*2);
+			iconButton.x = myMenu.myWidth/2 - iconButton.myWidth/2;//TAB_SIZE;
+			iconButton.y = myMenu.panels[GHOST].nextY;
+			iconButton.openY = iconButton.y;
+			iconButton.addEventListener(MouseEvent.CLICK, ghostMode);
+			iconButton.icon.loadOtherImage("human", scaleForm, false);
+			//FIXME: This whole other image crap has to go. We need a solid way to toggle icons. Like a togglable icon class or something.
+			iconButton.icon.other_image.visible = false;
+			//FIXME: let's save this var for more readable code and so we don't access a hash multiple times
+			myMenu.panels[GHOST].nextY = iconButton.y + iconButton.myHeight + TAB_SIZE/4;
+			myMenu.panels[GHOST].myHeight += iconButton.myHeight + TAB_SIZE/4;//TAB_SIZE*5/4;
+			myMenu.panels[GHOST].closeY -= iconButton.myHeight + TAB_SIZE/4;
+			myMenu.panels[GHOST].y -= iconButton.myHeight + TAB_SIZE/4;
+			myMenu.panels[GHOST].labels[GHOST] = iconButton;
+			myMenu.panels[GHOST].labelContainer.addChild(iconButton);			
+		}
+		
+		//this is for toggleable tabs.
+		//FIXME: this will go away. Everything will be a panel in the future. It is more consisitent
 		private function tabClick(tabName:String):Function {
 			//Return a dynamic way to hide a window in a hash
 			return function(e:MouseEvent):void {
@@ -337,7 +252,7 @@
 			//myMenu.deleteFromList("Julius 252", KICK);
 		}
 		
-		//This is primarily for debugging
+		//This is primarily for debugging when not in UDK
 		private	function reportKeyDown(event:KeyboardEvent):void { 
 			trace("Key Pressed: " + String.fromCharCode(event.charCode) + " (character code: " + event.charCode + ")"); 
 			if (event.charCode == 111/*o*/) open(); 
@@ -353,7 +268,6 @@
 			else if (event.charCode == 57/*9*/) showTab(9);
 		}
 		
-		//The myMenu handles its own opening and closing, but the Main decides when and how this happens
 		//This is a function to be called by unrealscript in order to open the myMenu
 		public function open(e:MouseEvent = null):void {
 			myMenu.moveX = myMenu.openX;
@@ -369,6 +283,7 @@
 			myMenu.animateOut(myMenu.currentPanel);
 		}
 		
+		//Unrealscript asks this to see if the menu is open or not.
 		public function isOpen():int {
 			if (myMenu.moveX == myMenu.openX) {
 				//open
@@ -379,6 +294,7 @@
 			}
 		}
 		
+		//This shows a tab based on a number
 		public function showTab(option:int) {
 			//Create an enum to arbitrarily store the Tabular position. In this case order matters
 			//This will allow us to change the order of the Tabs on the fly without us having

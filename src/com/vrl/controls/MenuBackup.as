@@ -8,20 +8,7 @@ package com.vrl.controls {
 	import flash.events.MouseEvent;
 	
 	import com.vrl.UIElement;
-		
-	/////////////////
-	// Description //
-	/////////////////
-	/**
-	 * The Menu is the main window that is loaded for the HuD
-	 *
-	 * @namespace  root.menu
-	 * @package    src
-	 * @author     Monte Nichols (Original Author) <monte.nichols.ii@gmail.com>
-	 * @copyright  Virtual Reality Labs at the Center for Brainhealth
-	 * @version    1.2 (12/29/2014)
-	 */
-
+	
 	////////////////
 	// Menu Class //
 	////////////////	
@@ -37,6 +24,10 @@ package com.vrl.controls {
 		var tabs:Array = new Array();
 		var panels:Array = new Array();
 		var panelMasks:Array = new Array();
+		
+		/**
+		* This is a big class that holds all of our tabs and panels.
+		*/
 		
 		//Menu initializes objects and gives them values
 		public function Menu(width:int, height:int, tabNames:Array, TAB_SIZE:Number, leftSide:Boolean):void {
@@ -138,6 +129,8 @@ package com.vrl.controls {
 			init();
 		}
 		
+		//This doesn't work as expected right now for some reason. I'm working on figuring out what's up
+		//FIXME: get this working.
 		private function tabClick(panelName:String):Function {
 			return function(e:MouseEvent):void {
 				for each(var tab:Tab in tabs) {

@@ -9,20 +9,6 @@ package com.vrl.controls {
 	
 	import com.vrl.UIElement; 
 
-	/////////////////
-	// Description //
-	/////////////////
-	/**
-	 * The ChatPanel is extended from the Panel class and is very specific in its
-	 * implementation
-	 *
-	 * @category   root.menu.panel
-	 * @package    src
-	 * @author     Monte Nichols (Original Author) <monte.nichols.ii@gmail.com>
-	 * @copyright  Virtual Reality Labs at the Center for Brainhealth
-	 * @version    1.2 (12/29/2014)
-	 */
-
 	////////////////////
 	// Scroller Class //
 	////////////////////
@@ -35,6 +21,10 @@ package com.vrl.controls {
 		var TAB_SIZE:int;
 		var stageRef:Stage;
 		
+		/**
+		* This class is actually just a text scroller. 
+		* FIXME: We should abstract this class with MCScroller to make them more more DRY
+		*/		
 		public function Scroller(target:TextField, TAB_SIZE:int, stageRef:Stage) {
 			
 			this.target = target;

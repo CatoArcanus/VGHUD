@@ -10,19 +10,6 @@ package com.vrl.utils {
 	
 	import com.vrl.UIElement;
 	import com.vrl.buttons.TextButton;
-	
-	/////////////////
-	// Description //
-	/////////////////
-	/**
-	 * The Icon Button is a variable size and has a single icon in the middle
-	 *
-	 * @namespace  root.menu.button
-	 * @package    src
-	 * @author     Monte Nichols (Original Author) <monte.nichols.ii@gmail.com>
-	 * @copyright  Virtual Reality Labs at the Center for Brainhealth
-	 * @version    1.0 (01/06/2015)
-	 */
 
 	/////////////////////
 	// SureLabel Class //
@@ -32,8 +19,10 @@ package com.vrl.utils {
 		public var sureButton:TextButton; 
 		public var icon:Icon; 
 		
-		//Sure Labels can create "are you sure" boxes
-		//TODO: make "are you sure" boxes	
+		/**
+		* Sure Labels can create "are you sure" boxes
+		* FIXME: make "are you sure" boxes	
+		*/		
 		public function SureLabel(labelName:String, buttonText:String, onClick:Function, TAB_SIZE:Number):void {
 			super(labelName, TAB_SIZE*4, TAB_SIZE);
 			

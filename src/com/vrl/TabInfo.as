@@ -1,21 +1,5 @@
 package com.vrl {
 
-	/////////////////
-	// Description //
-	/////////////////
-	/**
-	 * The TabInfo Class is a helper class that holds information about different
-	 * types of tabs
-	 *
-	 * Note: This Class is not a Sprite. It just holds information.
-	 *
-	 * @category   root
-	 * @package    src
-	 * @author     Monte Nichols (Original Author) <monte.nichols.ii@gmail.com>
-	 * @copyright  Virtual Reality Labs at the Center for Brainhealth
-	 * @version    1.0 (01/07/2014)
-	 */
-
 	///////////////////
 	// TabInfo Class //
 	///////////////////
@@ -29,6 +13,9 @@ package com.vrl {
 		public var peek:Boolean;
 		public var leftSide:Boolean;
 		
+		/*
+		* This is just a quick "struct" to hold some info related to tabs
+		*/
 		public function TabInfo(name:String, title:String, peek:Boolean, accordian:Boolean, scaleForm:Boolean, leftSide:Boolean):void {
 			this.name = name;
 			this.title = title;

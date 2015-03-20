@@ -19,19 +19,6 @@ package com.vrl.utils {
 	
 	import com.vrl.UIElement;
 	
-	/////////////////
-	// Description //
-	/////////////////
-	/**
-	 * The Icon is one of many objects in a menu
-	 *
-	 * @category   root.menu.z
-	 * @package    src
-	 * @author     Monte Nichols (Original Author) <monte.nichols.ii@gmail.com>
-	 * @copyright  Virtual Reality Labs at the Center for Brainhealth
-	 * @version    1.0 (12/23/2014)
-	 */
-
 	////////////////
 	// Icon Class //
 	////////////////	
@@ -42,6 +29,11 @@ package com.vrl.utils {
 		public var myBitmapData:BitmapData;
 		public var TAB_SIZE:int;
 		
+		/**
+		* The Icon class can hold 2 images, a default image and another image it can toggle to
+		* FIXME: Make a toggle function, so we don't have to call visibility checks outside 
+		* this class
+		*/
 		public function Icon(name:String, TAB_SIZE:Number, scaleForm:Boolean = true, center:Boolean = false):void {
 			this.name = name;
 			this.TAB_SIZE = TAB_SIZE;
@@ -54,15 +46,7 @@ package com.vrl.utils {
 			image = loadImage(image, urlString, 0, 0, icon_size, icon_size, center);
 		}
 		
-		public function loadOtherImage(name:String, scaleForm:Boolean = true, center:Boolean = false) {
-			var icon_size:int = TAB_SIZE/2;
-			var urlString:String = "img://VGHUD.VGHudRight.Src.img." + name + "_icon_white";
-			if(!scaleForm) {
-				urlString = "../src/img/" + name + "_icon_white.png";
-			}
-			other_image = loadImage(image, urlString, 0, 0, icon_size, icon_size, center);
-		}			
-			
+		// this loads an image internally
 		protected function loadImage(new_mc:Sprite, urlString:String, x:int, y:int, height:int, width:int, center:Boolean ):Sprite {
 			new_mc = new Sprite();
 			var myLoader:Loader = new Loader(); 
@@ -74,8 +58,18 @@ package com.vrl.utils {
 			return new_mc;
 		}
 		
+		//This loads ina second image externally, if needed
+		public function loadOtherImage(name:String, scaleForm:Boolean = true, center:Boolean = false) {
+			var icon_size:int = TAB_SIZE/2;
+			var urlString:String = "img://VGHUD.VGHudRight.Src.img." + name + "_icon_white";
+			if(!scaleForm) {
+				urlString = "../src/img/" + name + "_icon_white.png";
+			}
+			other_image = loadImage(image, urlString, 0, 0, icon_size, icon_size, center);
+		}			
+		
+		// this resizes any image after loaded
 		protected function onImageLoaded(new_mc:Sprite, x:int, y:int, height:int, width:int, center:Boolean):Function {
-			trace("imageLoaded");
 			return function(e:Event):void {
 				myBitmapData = e.target.content.bitmapData;
 				var bitmap = new Bitmap(myBitmapData);

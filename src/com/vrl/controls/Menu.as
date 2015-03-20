@@ -12,19 +12,7 @@ package com.vrl.controls {
 	import com.vrl.UIElement;
 	import com.vrl.TabInfo;	
 	import com.vrl.buttons.Tab;	
-	/////////////////
-	// Description //
-	/////////////////
-	/**
-	 * The Menu is the main window that is loaded for the HuD
-	 *
-	 * @namespace  root.menu
-	 * @package    src
-	 * @author     Monte Nichols (Original Author) <monte.nichols.ii@gmail.com>
-	 * @copyright  Virtual Reality Labs at the Center for Brainhealth
-	 * @version    1.3 (01/08/2015)
-	 */
-
+	
 	////////////////
 	// Menu Class //
 	////////////////
@@ -302,6 +290,7 @@ package com.vrl.controls {
 			panels[activePanel].frameCounter++;
 		}
 		
+		//This adds a label to a panel
 		public function addToList(labelName:String, panelName:String, buttonText:String, onClick:Function):void {
 			if(!panels[panelName].labels.hasOwnProperty(labelName)) {
 				var lastTabNum:int = tabs.length-1;
@@ -324,6 +313,8 @@ package com.vrl.controls {
 			}
 		}
 		
+		//This is a buffer that tries to run a function over and over again until 
+		//there is not an enterframe anymore
 		public function tryAgain(callee:Function, labelName:String, panelName:String, buttonText:String = "", onClick:Function =null):Function {
 			return function(e:TimerEvent):void {
 				if(onClick != null){
@@ -335,6 +326,7 @@ package com.vrl.controls {
 			}
 		}
 		
+		//This removes a label from a list
 		public function deleteFromList(labelName:String, panelName:String):void {
 			//trace("panels[panelName].labels.hasOwnProperty(labelName): " + panels[panelName].labels.hasOwnProperty(labelName));
 			if(panels[panelName].labels.hasOwnProperty(labelName)) {
@@ -357,6 +349,7 @@ package com.vrl.controls {
 			}
 		}
 		
+		//This squishes tabs up or down based on the neighbor tabs.
 		public function squish(isAdding:Boolean, labelName:String, panelName:String, buttonText:String = "", onClick:Function = null):Function {
 			return function(e:Event):void {
 				//trace(( tabs[tabs.length-1].moveY - tabs[tabs.length-1].y));

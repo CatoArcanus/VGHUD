@@ -13,20 +13,6 @@ package com.vrl.controls {
 	import com.vrl.UIElement;
 	import com.vrl.utils.SureLabel;
 	
-	
-	/////////////////
-	// Description //
-	/////////////////
-	/**
-	 * The Panel is one of many objects in a menu
-	 *
-	 * @category   root.menu.panel[]
-	 * @package    src
-	 * @author     Monte Nichols (Original Author) <monte.nichols.ii@gmail.com>
-	 * @copyright  Virtual Reality Labs at the Center for Brainhealth
-	 * @version    1.2 (12/29/2014)
-	 */
-
 	/////////////////
 	// Panel Class //
 	/////////////////
@@ -40,7 +26,11 @@ package com.vrl.controls {
 		public var labelContainer:Sprite = new Sprite();
 		public var verticalMover:Boolean;
 		var scroller:ScrollerMC;
-				
+		
+		/**
+		* A panel is a container for buttons, labels, and icons.
+		* Panels always have a mask that they may hide behind in order to leave view.
+		*/				
 		public function Panel(panelName:String, width:int, height:int, TAB_SIZE:Number, leftSide:Boolean, verticalMover:Boolean, stageRef:Stage, scrollerHeight:Number):void {		
 			//Variables that are not the default
 			this.easing = .2;
@@ -67,6 +57,7 @@ package com.vrl.controls {
 			init();
 		}
 		
+		//add event listeners and children
 		private function init():void {
 			addChild(labelContainer);
 			addChild(scroller);
@@ -74,6 +65,8 @@ package com.vrl.controls {
 			draw();
 		}
 		
+		//This is a versatle function that adds a new surelabel based on the context.
+		//We will have already made tabualr space for it if the panel is open
 		public function addSureLabel(sureTitle:String, sureText:String, onClick:Function, TAB_SIZE:Number) {
 			var sureLabel:SureLabel = new SureLabel(sureTitle, sureText, onClick, TAB_SIZE);
 			sureLabel.x = TAB_SIZE/2;
@@ -92,6 +85,7 @@ package com.vrl.controls {
 			}
 		}
 		
+		//This will remove a surelabel, and then pull up if the menu is open
 		public function removeSureLabel(sureTitle:String) {
 			labelContainer.removeChild(labels[sureTitle]);
 			nextY -= TAB_SIZE*5/4;
@@ -119,6 +113,8 @@ package com.vrl.controls {
 			}
 		}
 		
+		//This pulls all of the labels below it up, a more responsive way to order objects 
+		//in a list without holes.
 		public function pullUp(belowStrings:Array):Function {
 			trace("inside function BelowStrings.length = " + belowStrings.length);
 			return function (e:Event):void {
@@ -156,7 +152,6 @@ package com.vrl.controls {
 			addEventListener(MouseEvent.MOUSE_OVER, captureScroll);
 			removeEventListener(MouseEvent.MOUSE_OUT, removeCaptureScroll);
 			ExternalInterface.call("asReceiveAddScroll");
-		}
-		
+		}		
 	}
 }

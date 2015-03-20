@@ -6,24 +6,17 @@ package com.vrl {
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.events.KeyboardEvent;
-	
-	/////////////////
-	// Description //
-	/////////////////
-	/**
-	 * This is an "abstract" class that holds similar variables for 
-	 * sprites that are UI elements.
-	 *
-	 * @category   root
-	 * @package    src
-	 * @author     Monte Nichols (Original Author) <monte.nichols.ii@gmail.com>
-	 * @copyright  Virtual Reality Labs at the Center for Brainhealth
-	 * @version    1.5 (01/06/2015)
-	 */
 
-	////////////////
-	// Main Class //
-	////////////////	
+	/////////////////////
+	// UIElement Class //
+	/////////////////////
+	/*
+	* This is our custom souped up sprite. Notice it uses the default constructor.
+	* Almost all elements are derived from this instead of sprite, brecause almost 
+	* all elements are easable. It might have been better to make an easable interface
+	* but this works pretty well and is more readable in my opinion. Keep your layers 
+	* thick.
+	*/	
 	public class UIElement extends Sprite {
 		
 		// Default Variables //

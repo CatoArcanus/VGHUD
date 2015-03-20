@@ -11,19 +11,6 @@ package com.vrl.controls {
 	
 	import com.vrl.UIElement;
 	import com.vrl.buttons.IconButton;
-		
-	/////////////////
-	// Description //
-	/////////////////
-	/**
-	 * The Window is one of many objects in a menu
-	 *
-	 * @category   root.menu.panel[]
-	 * @package    src
-	 * @author     Monte Nichols (Original Author) <monte.nichols.ii@gmail.com>
-	 * @copyright  Virtual Reality Labs at the Center for Brainhealth
-	 * @version    1.2 (12/29/2014)
-	 */
 
 	//////////////////
 	// Window Class //
@@ -36,6 +23,12 @@ package com.vrl.controls {
 		var yOffset:Number;
 		var xOffset:Number;
 		var stageRef:Stage;
+		
+		/*
+		* A Generic window for holding objects, it can be opened, closed, and moved around
+		* with a handle.
+		*
+		*/
 			
 		public function Window(windowName:String, width:int, height:int, TAB_SIZE:Number, leftSide:Boolean, stageRef:Stage):void {		
 			this.myWidth = width;
@@ -61,6 +54,7 @@ package com.vrl.controls {
 			draw();
 		}
 		
+		//This lets you drag the window around by its handle
 		function mouseDownHandler(e:MouseEvent):void
 		{
 			this.startDrag();

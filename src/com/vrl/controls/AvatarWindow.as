@@ -8,24 +8,16 @@ package com.vrl.controls {
 	import flash.text.*;
 	
 	import com.vrl.UIElement; 
-
-	/////////////////
-	// Description //
-	/////////////////
+	
 	/**
-	 * The AvatarWindow is extended from the Window class and is very specific in its
-	 * implementation
-	 *
-	 * @category   root.menu.panel
-	 * @package    src
-	 * @author     Monte Nichols (Original Author) <monte.nichols.ii@gmail.com>
-	 * @copyright  Virtual Reality Labs at the Center for Brainhealth
-	 * @version    1.3 (01/13/2015)
-	 */
-
-	//////////////////////
+	* NOTE -- THIS CLASS IS UNUSED
+	* We will keep it around just in case, but it should eventaully be deleted
+	* FIXME: Delete me.
+	*/
+	
+	////////////////////////
 	// AvatarWindow Class //
-	//////////////////////
+	////////////////////////
 	public class AvatarWindow extends Window {
 		
 		//Objects

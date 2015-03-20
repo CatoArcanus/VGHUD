@@ -6,27 +6,14 @@ package com.vrl.utils {
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	
-	
-	
-	/////////////////
-	// Description //
-	/////////////////
-	/**
-	 * The Rotating Button is a variable size and has a single icon in the middle
-	 * It eases through a rotation animation when clicked and toggles its state
-	 * this is usually used for arrows that rotate in and out as they are clicked
-	 *
-	 * @namespace  root.menu.button
-	 * @package    src
-	 * @author     Monte Nichols (Original Author) <monte.nichols.ii@gmail.com>
-	 * @copyright  Virtual Reality Labs at the Center for Brainhealth
-	 * @version    1.0 (12/31/2014)
-	 */
 
-	//////////////////////////
+	////////////////////////
 	// RotatingIcon Class //
-	//////////////////////////
+	////////////////////////
+	
+	/**
+	* FIXME: This should have a rotating icon, but it doesn't for some reason.
+	*/
 	public class RotatingIcon extends Icon {
 		
 		public var maxRotation:Number = 0; 

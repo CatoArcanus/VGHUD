@@ -11,19 +11,6 @@ package com.vrl.utils {
 	import flash.text.TextFormat;
 	
 	import com.vrl.UIElement;
-	
-	/////////////////
-	// Description //
-	/////////////////
-	/**
-	 * The AbstractLabel is one of many objects in a menu
-	 *
-	 * @namespace  root.menu.tab
-	 * @package    src
-	 * @author     Monte Nichols (Original Author) <monte.nichols.ii@gmail.com>
-	 * @copyright  Virtual Reality Labs at the Center for Brainhealth
-	 * @version    1.0 (01/06/2015)
-	 */
 
 	/////////////////////////
 	// AbstractLabel Class //
@@ -33,8 +20,10 @@ package com.vrl.utils {
 		public var text:TextField;
 		public var labelName:String;
 		
-		//Labels are just text on something. They can have an arbitrary amount of 
-		//elements based on the specific implementation of the child label 
+		/* 
+		* Labels are just text on something. They can have an arbitrary amount of 
+		* elements based on the specific implementation of the child label 
+		*/
 		public function AbstractLabel(labelName:String, width:int, TAB_SIZE:Number):void {
 			this.myWidth = width;
 			this.myHeight = TAB_SIZE;
