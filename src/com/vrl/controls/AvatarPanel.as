@@ -23,6 +23,8 @@ package com.vrl.controls {
 		* when you scroll the psaces inbetween will register.
 		*/
 		public function AvatarPanel(panelName:String, width:int, height:int, TAB_SIZE:Number, leftSide:Boolean, verticalMover:Boolean, stageRef:Stage, scrollerHeight:Number):void {
+			bg = new Sprite();
+			addChild(bg);
 			super(panelName, width, height, TAB_SIZE, leftSide, verticalMover, stageRef, scrollerHeight);
 			
 			//Format for text
@@ -31,8 +33,7 @@ package com.vrl.controls {
 			myFormat.font = "Arial";
 			
 			//BG
-			bg = new Sprite();
-			bg.graphics.beginFill(0x000000, 0.2); 
+			bg.graphics.beginFill(0x000000, 0.8); 
 			bg.graphics.drawRect(0, 0, this.myWidth, this.myHeight); 
 			bg.graphics.endFill();
 			bg.x = 0;
@@ -46,7 +47,6 @@ package com.vrl.controls {
 		
 		//Add objects to stage
 		private function initialize():void {
-			addChild(bg);
 			this.draw();
 		}
 		

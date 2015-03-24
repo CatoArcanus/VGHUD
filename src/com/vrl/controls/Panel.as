@@ -23,7 +23,7 @@ package com.vrl.controls {
 		public var tabNumber:Number = 0;
 		public var labels:Array = new Array();
 		public var TAB_SIZE:Number;
-		public var labelContainer:Sprite = new Sprite();
+		public var labelContainer:UIElement;// = new Sprite();
 		public var verticalMover:Boolean;
 		var scroller:ScrollerMC;
 		
@@ -48,6 +48,12 @@ package com.vrl.controls {
 			myFormat.size = TAB_SIZE/2;
 			myFormat.font = "Arial";
 			nextY = TAB_SIZE/4;
+			//labelContainer
+			labelContainer = new UIElement;//Sprite();
+			labelContainer.x = TAB_SIZE/2;
+			labelContainer.y = 0;
+			labelContainer.myHeight = 0;
+			labelContainer.myWidth = 0;
 									
 			//Scroller
 			scroller = new ScrollerMC(labelContainer, TAB_SIZE, stageRef, scrollerHeight);
@@ -69,10 +75,12 @@ package com.vrl.controls {
 		//We will have already made tabualr space for it if the panel is open
 		public function addSureLabel(sureTitle:String, sureText:String, onClick:Function, TAB_SIZE:Number) {
 			var sureLabel:SureLabel = new SureLabel(sureTitle, sureText, onClick, TAB_SIZE);
-			sureLabel.x = TAB_SIZE/2;
+			sureLabel.x = 0;//TAB_SIZE/2;
 			sureLabel.y = nextY;
 			sureLabel.openY = sureLabel.y;
 			nextY = sureLabel.y + sureLabel.myHeight + TAB_SIZE/4;
+			labelContainer.myWidth = sureLabel.width;
+			labelContainer.myHeight += TAB_SIZE*5/4;
 			labelContainer.addChild(sureLabel);
 			myHeight +=	TAB_SIZE*5/4;
 			this.closeY -= TAB_SIZE*5/4;
@@ -80,7 +88,11 @@ package com.vrl.controls {
 				this.y -= TAB_SIZE*5/4;
 			}
 			labels[sureTitle] = sureLabel;
-			if(this.mask.height < this.myHeight) {
+			if(labelContainer.height < scroller.height ) {
+				this.mask.height = labelContainer.height-TAB_SIZE;
+			}
+			if(this.scroller.height < this.myHeight) {
+				this.mask.height = this.scroller.height;//labelContainer.height-TAB_SIZE;
 				scroller.visible = true;
 			}
 		}

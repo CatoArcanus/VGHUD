@@ -59,16 +59,16 @@ package com.vrl.buttons {
 			//trace("highlight " + buttonName);
 			fade = maxAlpha;
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
-			addEventListener(MouseEvent.MOUSE_OUT, unHighlight);
-			removeEventListener(MouseEvent.MOUSE_OVER, highlight);
+			addEventListener(MouseEvent.ROLL_OUT, unHighlight);
+			removeEventListener(MouseEvent.ROLL_OVER, highlight);
 		}
 		
 		//All buttons should be unhighlighted when moused out
 		public function unHighlight(e:MouseEvent = null):void {
 			//trace("unhighlight " + buttonName);
 			fade = minAlpha;
-			removeEventListener(MouseEvent.MOUSE_OUT, unHighlight);
-			addEventListener(MouseEvent.MOUSE_OVER, highlight);
+			removeEventListener(MouseEvent.ROLL_OUT, unHighlight);
+			addEventListener(MouseEvent.ROLL_OVER, highlight);
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
 		

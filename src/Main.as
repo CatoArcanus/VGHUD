@@ -35,7 +35,7 @@
 		//set to true if you want debug output
 		var debug:Boolean = false;
 		//set to true if pushing live to scaleform, false if testing in the launcher
-		var scaleForm:Boolean = true;
+		var scaleForm:Boolean = false;
 		
 		//Consts
 		//This number actually controls the entire size of the menu.
@@ -183,6 +183,28 @@
 			cursor.x = mouseX;
 		}
 		
+		//Called by init to set up the ghost buttons. this happens once when the video loads
+		//and is a static panel
+		public function setUpGhostButton() {
+			var iconButton:IconButton = new IconButton("ghost", TAB_SIZE*2);
+			iconButton.x = myMenu.myWidth/2 - iconButton.myWidth/2 - myMenu.panels[GHOST].labelContainer.x;//TAB_SIZE;
+			iconButton.y = myMenu.panels[GHOST].nextY;
+			iconButton.openY = iconButton.y;
+			iconButton.addEventListener(MouseEvent.CLICK, ghostMode);
+			iconButton.icon.loadOtherImage("human", scaleForm, false);
+			//FIXME: This whole other image crap has to go. We need a solid way to toggle icons. Like a togglable icon class or something.
+			iconButton.icon.other_image.visible = false;
+			//FIXME: let's save this var for more readable code and so we don't access a hash multiple times
+			myMenu.panels[GHOST].nextY = iconButton.y + iconButton.myHeight + TAB_SIZE/4;
+			myMenu.panels[GHOST].myHeight += iconButton.myHeight + TAB_SIZE/4;//TAB_SIZE*5/4;
+			myMenu.panels[GHOST].closeY -= iconButton.myHeight + TAB_SIZE/4;
+			myMenu.panels[GHOST].y -= iconButton.myHeight + TAB_SIZE/4;
+			myMenu.panels[GHOST].labels[GHOST] = iconButton;
+			myMenu.panels[GHOST].labelContainer.addChild(iconButton);			
+			myMenu.panels[GHOST].labelContainer.addChild(iconButton);
+			myMenu.panels[GHOST].mask.height += iconButton.height;//= myMenu.panels[GHOST].labelContainer.height-TAB_SIZE;			
+		}
+		
 		//Become a Human! and update the Tab. Send a call to US to tell it do it.
 		public function humanMode(external:Boolean = true):void {
 			//This isn't really used yet. We might use it. Lets see if we ever need to poll for this.
@@ -209,27 +231,7 @@
 			myMenu.panels[GHOST].labels[GHOST].icon.image.visible = false;
 			ExternalInterface.call("asReceiveBecomeGhost");
 		}
-		
-		//Called by init to set up the ghost buttons. this happens once when the video loads
-		//and is a static panel
-		public function setUpGhostButton() {
-			var iconButton:IconButton = new IconButton("ghost", TAB_SIZE*2);
-			iconButton.x = myMenu.myWidth/2 - iconButton.myWidth/2;//TAB_SIZE;
-			iconButton.y = myMenu.panels[GHOST].nextY;
-			iconButton.openY = iconButton.y;
-			iconButton.addEventListener(MouseEvent.CLICK, ghostMode);
-			iconButton.icon.loadOtherImage("human", scaleForm, false);
-			//FIXME: This whole other image crap has to go. We need a solid way to toggle icons. Like a togglable icon class or something.
-			iconButton.icon.other_image.visible = false;
-			//FIXME: let's save this var for more readable code and so we don't access a hash multiple times
-			myMenu.panels[GHOST].nextY = iconButton.y + iconButton.myHeight + TAB_SIZE/4;
-			myMenu.panels[GHOST].myHeight += iconButton.myHeight + TAB_SIZE/4;//TAB_SIZE*5/4;
-			myMenu.panels[GHOST].closeY -= iconButton.myHeight + TAB_SIZE/4;
-			myMenu.panels[GHOST].y -= iconButton.myHeight + TAB_SIZE/4;
-			myMenu.panels[GHOST].labels[GHOST] = iconButton;
-			myMenu.panels[GHOST].labelContainer.addChild(iconButton);			
-		}
-		
+				
 		//this is for toggleable tabs.
 		//FIXME: this will go away. Everything will be a panel in the future. It is more consisitent
 		private function tabClick(tabName:String):Function {
@@ -494,13 +496,6 @@
 			}
 		}
 		
-		//Trace flash things in unreal while debugging. If we ever think we have a final final 
-		// release (hah!) we will delete all of the utrace statements
-		public function utrace(s:String) {
-			if(debug){
-				ExternalInterface.call("FlashToUDK", "say " + s);
-			}
-		}
 		
 		public function CreateAvatarChoiceDisplay(avatarImageStrings:Array) {
 			var i:int = 0;
@@ -514,24 +509,12 @@
 			
 				var avatarImage:AvatarImage = new AvatarImage("", TAB_SIZE, (j*5+i));
 				avatarImage.loadAvatarImage(img);
-				trace(i +","+ j);
-				var temp:Sprite = new Sprite();
-				//temp.graphics.beginFill(0xFF0000, 0.8);
-				temp.graphics.lineStyle(2, 0x000000, .75);
-				temp.graphics.moveTo(0, 0); 
-				temp.graphics.lineTo(0, TAB_SIZE*3); 
-				temp.graphics.lineTo(TAB_SIZE*3, TAB_SIZE*3); 
-				temp.graphics.lineTo(TAB_SIZE*3, 0); 
-				//temp.graphics.endFill();
-				//temp.graphics.drawRect(0, 0, 140, 140); 
-				temp.x = i*(TAB_SIZE*3+(TAB_SIZE/4));
-				temp.y = j*(TAB_SIZE*3+(TAB_SIZE/4));
-				avatarImage.x = temp.x;
-				avatarImage.y = temp.y;
-				myMenu.panels[AVATARS].labelContainer.addChild(temp);
+				avatarImage.x = i*(TAB_SIZE*3+(TAB_SIZE/4));
+				avatarImage.y = j*(TAB_SIZE*3+(TAB_SIZE/4));
 				myMenu.panels[AVATARS].labelContainer.addChild(avatarImage);
 				i++;
 			}
+			myMenu.panels[AVATARS].bg = myMenu.panels[AVATARS].labelContainer.height;
 		}
 		
 		public function changePlayerFaces(playerName:String, playerID:int, faceshiftIsTracking:Boolean) {
@@ -554,6 +537,14 @@
 		
 		public function showPauseMenu(e:MouseEvent): void {
 			ExternalInterface.call("AsReceiveShowPauseMenu");
+		}
+		
+		//Trace flash things in unreal while debugging. If we ever think we have a final final 
+		// release (hah!) we will delete all of the utrace statements
+		public function utrace(s:String) {
+			if(debug){
+				ExternalInterface.call("FlashToUDK", "say " + s);
+			}
 		}
 		
 		//FIXME: We want a Are you sure class that has some buttons that get assigned the real functions

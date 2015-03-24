@@ -45,13 +45,14 @@ package com.vrl {
 		public var currentAlpha:Number = 0.0;
 		public var color:uint = 0x000000;
 		public var da:Number;
-		
+				
 		//A draw function for all UI elements
 		public function draw():void {
 			graphics.clear();
 			//trace("I'm drawing, the currentAlpha is :" + currentAlpha);
 			graphics.beginFill(color, currentAlpha);
 			graphics.drawRect(0, 0, myWidth, myHeight); 
+			graphics.endFill();
 			if (debug) {
 				graphics.lineStyle(1, 0x990000, .75);
 				graphics.moveTo(0, 0); 
@@ -59,8 +60,7 @@ package com.vrl {
 				graphics.lineTo(myWidth, myHeight); 
 				graphics.lineTo(myWidth, 0); 
 				graphics.lineTo(0, 0); 
-			}
-			graphics.endFill();
+			}			
 		}
 	}
 }

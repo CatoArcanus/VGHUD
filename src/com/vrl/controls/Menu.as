@@ -70,20 +70,22 @@ package com.vrl.controls {
 					tab.addEventListener(MouseEvent.CLICK, tabAccordian(tabInfo.name));
 					//set up a panel mask
 					var panelMask:Sprite = new Sprite();
-					panelMask.graphics.beginFill(0xffFF00, .5); 
-					panelMask.graphics.drawRect(0, 0, width, height-TAB_SIZE*tabInfos.length); 
+					panelMask.graphics.beginFill(0xffFF00, .2); 
+					panelMask.graphics.drawRect(0, 0, width, TAB_SIZE);//height-TAB_SIZE*tabInfos.length); 
 					panelMask.graphics.endFill(); 
 					panelMask.x = 0;
 					panelMask.y = tab.y + tab.myHeight;
-					 
+										 
 					//set up a panel
-					var panel = new Panel(tabInfo.name, width, TAB_SIZE, TAB_SIZE, tabInfo.leftSide, true, stageRef, panelMask.height);
+					var panel = new Panel(tabInfo.name, width, TAB_SIZE, TAB_SIZE, tabInfo.leftSide, true, stageRef, height-TAB_SIZE*(tabInfos.length));
 					panel.x = 0;
 					panel.y = tab.y + tab.myHeight - panel.myHeight;
 					panel.closeY = panel.y;
 					panel.openY = panel.y + panel.myHeight;
 					panel.tabNumber = tabNumber;
+					
 					panel.mask = panelMask;
+					
 					panelMasks[tabInfo.name] = panelMask;
 					panels[tabInfo.name] = panel;
 				}
@@ -94,14 +96,14 @@ package com.vrl.controls {
 					//A mask for the panels
 					panelMask = new Sprite();
 					panelMask.graphics.beginFill(0xffFF00); 
-					panelMask.graphics.drawRect(0, 0, TAB_SIZE*16, height); 
+					panelMask.graphics.drawRect(0, 0, TAB_SIZE*17, height); 
 					panelMask.graphics.endFill(); 
 					panelMask.x = panelMask.width*(-1);
 					panelMask.y = 0;
 
 					
 					//This creates a series of panels. 				
-					var panel = new AvatarPanel(tabInfo.name, TAB_SIZE*16, height, TAB_SIZE, tabInfo.leftSide, false, stageRef, panelMask.height);			
+					var panel = new AvatarPanel(tabInfo.name, TAB_SIZE*17, height, TAB_SIZE, tabInfo.leftSide, false, stageRef, panelMask.height);			
 					panel.x = 0;
 					panel.y = 0;
 					panel.closeX = panel.x;
@@ -233,6 +235,21 @@ package com.vrl.controls {
 						animateIn();
 					}
 				} else {
+					/*
+					panels[activePanel].graphics.lineStyle(1, 0x00FF00, .75);
+					panels[activePanel].graphics.moveTo(panels[activePanel].labelContainer.x, 			panels[activePanel].labelContainer.y); 
+					panels[activePanel].graphics.lineTo(panels[activePanel].labelContainer.width, 	panels[activePanel].labelContainer.y); 
+					panels[activePanel].graphics.lineTo(panels[activePanel].labelContainer.width, 	panels[activePanel].labelContainer.height); 
+					panels[activePanel].graphics.lineTo(panels[activePanel].labelContainer.x, 			panels[activePanel].labelContainer.height); 
+					panels[activePanel].graphics.lineTo(panels[activePanel].labelContainer.x, panels[activePanel].labelContainer.y); panels[activePanel].graphics.lineStyle(1, 0x00FF00, .75);
+					
+					panels[activePanel].graphics.lineStyle(1, 0xFFFF00, .75);
+					panels[activePanel].graphics.moveTo(panels[activePanel].mask.x, 			panels[activePanel].mask.y); 
+					panels[activePanel].graphics.lineTo(panels[activePanel].mask.width, 	panels[activePanel].mask.y); 
+					panels[activePanel].graphics.lineTo(panels[activePanel].mask.width, 	panels[activePanel].mask.height); 
+					panels[activePanel].graphics.lineTo(panels[activePanel].mask.x, 			panels[activePanel].mask.height); 
+					panels[activePanel].graphics.lineTo(panels[activePanel].mask.x, panels[activePanel].mask.y); 
+					*/
 					removeEventListener(Event.ENTER_FRAME, onEasePanelY);
 				}
 				//removeEventListener(Event.ENTER_FRAME, arguments.callee);
