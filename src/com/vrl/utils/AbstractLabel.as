@@ -19,7 +19,7 @@ package com.vrl.utils {
 		
 		public var text:TextField;
 		public var labelName:String;
-		
+		public var TAB_SIZE:int;
 		/* 
 		* Labels are just text on something. They can have an arbitrary amount of 
 		* elements based on the specific implementation of the child label 
@@ -34,6 +34,7 @@ package com.vrl.utils {
 			this.fade = currentAlpha;
 			this.buttonMode = false;
 			this.mouseChildren = true;
+			this.TAB_SIZE = TAB_SIZE;
 			
 			var myFormat:TextFormat = new TextFormat();
 			myFormat.size = TAB_SIZE/4;
@@ -52,6 +53,28 @@ package com.vrl.utils {
 		}
 		private function init()	{
 			addChild(text);
+		}
+		
+		public function changeLabelName(labelName:String) {
+			this.labelName = labelName;
+			if(text != null ) { 
+				trace("blarg");
+				removeChild(text);
+			}
+			var myFormat:TextFormat = new TextFormat();
+			myFormat.size = TAB_SIZE/4;
+			myFormat.font = "Arial";
+			
+			text = new TextField();
+			text.text = labelName;
+			text.textColor = 0xFFFFFF;
+			text.x = TAB_SIZE*.15625;
+			text.y = TAB_SIZE*.25;
+			text.width = width-text.x;
+			text.embedFonts = true;  
+			text.setTextFormat(myFormat);
+			text.selectable = false;
+			init();
 		}	
 	}
 }

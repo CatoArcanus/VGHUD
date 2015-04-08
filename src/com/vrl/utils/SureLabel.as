@@ -1,3 +1,5 @@
+//FIXME: DELETE ME
+
 package com.vrl.utils {
 	
 	import flash.display.Sprite;
@@ -11,33 +13,33 @@ package com.vrl.utils {
 	import com.vrl.UIElement;
 	import com.vrl.buttons.TextButton;
 
-	/////////////////////
+	///////////////////////
 	// SureLabel Class //
-	/////////////////////
-	public class SureLabel extends AbstractLabel {
+	///////////////////////
+	public class SureLabel extends ButtonLabel {
 		
-		public var sureButton:TextButton; 
-		public var icon:Icon; 
-		
+		var sureWindow:SureWindow;
+						
 		/**
-		* Sure Labels can create "are you sure" boxes
-		* FIXME: make "are you sure" boxes	
-		*/		
-		public function SureLabel(labelName:String, buttonText:String, onClick:Function, TAB_SIZE:Number):void {
-			super(labelName, TAB_SIZE*4, TAB_SIZE);
+		* Sure Labels can create "are you sure" boxes	
+		*/
+		public function SureLabel(labelName:String, buttonText:String, onClick:Function, TAB_SIZE:Number, sureWindow:SureWindow):void {
 			
-			sureButton = new TextButton(buttonText, labelName, TAB_SIZE/2); 
-			sureButton.x = this.myWidth - sureButton.myWidth - TAB_SIZE/4;
-			sureButton.y = TAB_SIZE/4;
-			sureButton.addEventListener(MouseEvent.CLICK, onClick);
-																									
-			this.draw();
-			initialize();
+			//var takeOverSureWindow:Function = injectFunction(onClick, sureWindow);
+			
+			super(labelName, buttonText, onClick, TAB_SIZE);			
 		}
 		
-		//Add items to stage
-		private function initialize():void {
-			this.addChild(sureButton);
-		}		
+		//The function to create a new sureWindow.
+		/*
+		private function injectFunction(onClick:Function, sureWindow:SureWindow):Function {
+			return function(e:MouseEvent):void {
+				var button:TextButton = TextButton(e.currentTarget);
+				var label:String = button.context;//label;
+				sureWindow.yesButton.addEventListener(MouseEvent.CLICK, onClick);
+				sureWindow.show();
+			}
+		}
+		*/
 	}
 }

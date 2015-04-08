@@ -21,13 +21,13 @@ package com.vrl.controls {
 	public class ChatWindow extends Window {
 		
 		//Objects
-		public var chatBG:Sprite;
 		public var chatLog:TextField;
 		public var chatLogBG:Sprite;
 		public var chatInput:TextField;
 		public var chatInputBG:Sprite;
 		public var scroller:Scroller;
 		public var sendButton:IconButton;
+		public var stageRef:Stage;
 			
 		/**
 		* Chat windows are very specific in their functionality and are layed out based on the 
@@ -35,6 +35,7 @@ package com.vrl.controls {
 		*/
 		public function ChatWindow(windowName:String, TAB_SIZE:Number, leftSide:Boolean, stageRef:Stage):void {
 			super(windowName, TAB_SIZE*10, TAB_SIZE*7, TAB_SIZE, leftSide, stageRef);
+			this.stageRef = stageRef;
 			
 			//Format for text
 			var myFormat:TextFormat = new TextFormat();
@@ -42,14 +43,6 @@ package com.vrl.controls {
 			myFormat.font = "Arial";
 			var myFont = new Arial();
 			myFormat.font = myFont.fontName;
-									
-			//Chat Log BG
-			chatBG = new Sprite();
-			chatBG.graphics.beginFill(0x000000, 0.1); 
-			chatBG.graphics.drawRect(0, 0, this.myWidth, this.myHeight); 
-			chatBG.graphics.endFill();
-			chatBG.x = 0;
-			chatBG.y = 0;
 			
 			//Chat Log Background
 			chatLog = new TextField();
@@ -96,7 +89,7 @@ package com.vrl.controls {
 			sendButton.x = chatInputBG.width+TAB_SIZE/2;
 						
 			//Scroller
-			scroller = new Scroller(chatLog, TAB_SIZE, stageRef);
+			scroller = new Scroller(chatLog, TAB_SIZE, this.stageRef);
 			scroller.x = chatLogBG.width;
 			scroller.y = chatLogBG.y;
 			initialize();
@@ -104,7 +97,6 @@ package com.vrl.controls {
 		
 		//Add objects to stage
 		private function initialize():void {
-			addChild(chatBG);
 			addChild(chatLogBG);
 			addChild(chatLog);
 			addChild(chatInputBG);

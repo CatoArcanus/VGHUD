@@ -23,24 +23,13 @@ package com.vrl.controls {
 		* when you scroll the psaces inbetween will register.
 		*/
 		public function AvatarPanel(panelName:String, width:int, height:int, TAB_SIZE:Number, leftSide:Boolean, verticalMover:Boolean, stageRef:Stage, scrollerHeight:Number):void {
-			bg = new Sprite();
-			addChild(bg);
 			super(panelName, width, height, TAB_SIZE, leftSide, verticalMover, stageRef, scrollerHeight);
 			
 			//Format for text
 			var myFormat:TextFormat = new TextFormat();
 			myFormat.size = TAB_SIZE*.30;
 			myFormat.font = "Arial";
-			
-			//BG
-			bg.graphics.beginFill(0x000000, 0.8); 
-			bg.graphics.drawRect(0, 0, this.myWidth, this.myHeight); 
-			bg.graphics.endFill();
-			bg.x = 0;
-			bg.y = 0;
-
-			//debugAvatarMC();
-			
+						
 			//Scroller
 			initialize();
 		}

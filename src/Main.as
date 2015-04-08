@@ -14,12 +14,13 @@
 	import com.vrl.controls.Menu;
 	import com.vrl.controls.Window;
 	import com.vrl.controls.ChatWindow;
-	import com.vrl.controls.AvatarWindow;
+	import com.vrl.controls.SureWindow;
 	import com.vrl.buttons.TextButton;
 	import com.vrl.buttons.IconButton;
 	import com.vrl.utils.Cursor;
 	import com.vrl.utils.*;
-	import com.vrl.TabInfo;	
+	import com.vrl.TabInfo;
+	import com.vrl.UIElement;
 	
 	////////////////
 	// Main Class //
@@ -44,6 +45,7 @@
 		
 		//FIXME: We could have this designated through a config file at some point
 		var CHAT:String = "Chat";
+		var SURE:String = "Sure";
 		var GHOST:String = "Ghost";
 		var AVATARS:String = "Avatars";
 		var POSSESS:String = "Possess";
@@ -69,8 +71,8 @@
 		//Stage Objects
 		var myMenu:Menu;
 		var chatWindow:ChatWindow;
-		var avatarWindow:AvatarWindow;
-		
+		var sureWindow:SureWindow;
+				
 		var windows:Array = new Array();
 		var cursor:Cursor;	
 		var playerState:int = HUMAN_MODE;
@@ -96,15 +98,16 @@
 			}
 			
 			//Get menu width
-			var myWidth:int = TAB_SIZE*5;//getMaxTextWidth(tabNames) + TAB_SIZE*2;
+			var myWidth:int = TAB_SIZE*8;//getMaxTextWidth(tabNames) + TAB_SIZE*2;
 			
 			//Create a menu with Tabs
 			myMenu = new Menu((myWidth), stage.stageHeight, tabNames, TAB_SIZE, leftSide, stage);
+			myMenu.visible = false;
 			
 			//Create a Cursor and hide it
 			cursor = new Cursor("Cursor", TAB_SIZE*2, scaleForm);
 			cursor.visible = false;
-						
+			
 			//FIXME: See if we can't find a way to hide the chatwindow's functions in itself.
 			//The idea would be to accept the Unrealscript call in the main, but then divert its tasks 
 			//up the chain through a simple one-line method call with some params.
@@ -113,7 +116,21 @@
 			chatWindow.y = stage.stageHeight - chatWindow.height - TAB_SIZE/2;
 			chatWindow.visible = false;
 			windows[CHAT] = chatWindow;
-						
+			sureWindow = new SureWindow("sureWindow", TAB_SIZE, leftSide, stage);
+			sureWindow.x = 0;//stage.stageWidth/2 - sureWindow.width/2;
+			sureWindow.y = 0;//stage.stageHeight/2 - sureWindow.height/2;
+			//sureWindow.visible = false;
+			windows[SURE] = sureWindow;
+			/*
+			var testButton:Sprite = new Sprite();
+			testButton.graphics.beginFill(0x000000, 0.8);
+			testButton.graphics.drawRect(0, 0, 300, 100); 
+			testButton.graphics.endFill();
+			testButton.x = stage.stageWidth/2;
+			testButton.y = stage.stageHeight/2;
+			testButton.addEventListener(MouseEvent.CLICK, testMessage);
+			addChild(testButton);			
+			*/
 			//Call init 
 			init();
 		}
@@ -126,6 +143,7 @@
 			//Add our children now that they have been loaded in
 			addChild(myMenu);
 			addChild(chatWindow);
+			addChild(sureWindow);
 			addChild(cursor);
 			
 			//If we are not in scaleform we want hotkeys to do certain things, otherwise
@@ -148,7 +166,7 @@
 			addEventListener(Event.ENTER_FRAME, onLevelLoaded);
 			//FIXME: Have the cursor class do this instead.
 			addEventListener(Event.ENTER_FRAME, onLoop);
-						
+			
 			//set up toggle captureinput for the chatinput. We might be bale to do this in the chat window, 
 			//FIXME: Put this in the chat window if at all possible, let's clean out this main file
 			chatWindow.chatInput.addEventListener(MouseEvent.MOUSE_UP, toggleChat);
@@ -160,7 +178,7 @@
 				simulateUnrealScriptPolls();
 			}
 		}
-				
+		
 		//This is some duct tape used, because the video disapears if we don't do stuff with it.
 		public function onLevelLoaded(e:Event):void {
 			myMenu.x = stage.stageWidth;//-TAB_SIZE*.75;
@@ -170,6 +188,7 @@
 			myMenu.moveX = myMenu.closeX;
 			if(myMenu.frameCounter > 15) {
 				removeEventListener(Event.ENTER_FRAME, onLevelLoaded);
+				myMenu.visible = true;
 				myMenu.frameCounter = 0;
 			} else {
 				//utrace(""+myMenu.frameCounter);
@@ -207,31 +226,34 @@
 		
 		//Become a Human! and update the Tab. Send a call to US to tell it do it.
 		public function humanMode(external:Boolean = true):void {
-			//This isn't really used yet. We might use it. Lets see if we ever need to poll for this.
-			playerState = HUMAN_MODE;
+			if(playerState != HUMAN_MODE) {
+				playerState = HUMAN_MODE;
 
-			//FIXME: let's save this var for more readable code and so we don't access a hash multiple times
-			myMenu.panels[GHOST].labels[GHOST].removeEventListener(MouseEvent.CLICK, humanMode);
-			myMenu.panels[GHOST].labels[GHOST].addEventListener(MouseEvent.CLICK, ghostMode);
-			myMenu.panels[GHOST].labels[GHOST].icon.other_image.visible = false;
-			myMenu.panels[GHOST].labels[GHOST].icon.image.visible = true;
-			if(external) {
-				ExternalInterface.call("asReceiveBecomeHuman");
+				//FIXME: let's save this var for more readable code and so we don't access a hash multiple times
+				myMenu.panels[GHOST].labels[GHOST].removeEventListener(MouseEvent.CLICK, humanMode);
+				myMenu.panels[GHOST].labels[GHOST].addEventListener(MouseEvent.CLICK, ghostMode);
+				myMenu.panels[GHOST].labels[GHOST].icon.other_image.visible = false;
+				myMenu.panels[GHOST].labels[GHOST].icon.image.visible = true;
+				if(external) {
+					ExternalInterface.call("asReceiveBecomeHuman");
+				}
 			}
 		}
 		
 		//Become a ghost! This isn't that DRY. To follow this code look above.
 		public function ghostMode(external:Boolean = true):void {
-			playerState = GHOST_MODE;
+			if(playerState != GHOST_MODE) {
+				playerState = GHOST_MODE;
 
-			//FIXME: let's save this var for more readable code and so we don't access a hash multiple times
-			myMenu.panels[GHOST].labels[GHOST].removeEventListener(MouseEvent.CLICK, ghostMode);
-			myMenu.panels[GHOST].labels[GHOST].addEventListener(MouseEvent.CLICK, humanMode);
-			myMenu.panels[GHOST].labels[GHOST].icon.other_image.visible = true;
-			myMenu.panels[GHOST].labels[GHOST].icon.image.visible = false;
-			ExternalInterface.call("asReceiveBecomeGhost");
+				//FIXME: let's save this var for more readable code and so we don't access a hash multiple times
+				myMenu.panels[GHOST].labels[GHOST].removeEventListener(MouseEvent.CLICK, ghostMode);
+				myMenu.panels[GHOST].labels[GHOST].addEventListener(MouseEvent.CLICK, humanMode);
+				myMenu.panels[GHOST].labels[GHOST].icon.other_image.visible = true;
+				myMenu.panels[GHOST].labels[GHOST].icon.image.visible = false;
+				ExternalInterface.call("asReceiveBecomeGhost");
+			}
 		}
-				
+		
 		//this is for toggleable tabs.
 		//FIXME: this will go away. Everything will be a panel in the future. It is more consisitent
 		private function tabClick(tabName:String):Function {
@@ -244,13 +266,13 @@
 		//FIXME: This needs to be taken out completely eventually
 		public function addJulius(e:MouseEvent = null):void {
 			var onClick:Function = onButtonSend(US_KICK_PLAYER);
-			myMenu.addToList("Julius 251", KICK, "kick", onClick);
-			myMenu.addToList("Julius 252", KICK, "kick", onClick);
+			myMenu.addToList("251", "Julius 251", KICK, "kick", onClick);
+			myMenu.addToList("252", "Julius 252", KICK, "kick", onClick);
 		}
 		
 		//FIXME: This needs to be taken out completely eventually
 		public function deleteJulius(e:MouseEvent = null):void {
-			myMenu.deleteFromList("Boop", KICK);
+			myMenu.deleteFromList("Boop", "Boop", KICK);
 			//myMenu.deleteFromList("Julius 252", KICK);
 		}
 		
@@ -297,14 +319,19 @@
 		}
 		
 		//This shows a tab based on a number
-		public function showTab(option:int) {
+		public function showTab(option:int):void {
 			//Create an enum to arbitrarily store the Tabular position. In this case order matters
 			//This will allow us to change the order of the Tabs on the fly without us having
 			// to modify other code
 			//an index, so decrement;
 			option--;
-			if(!isOpen() && !windows.hasOwnProperty([tabNames[option].name])) {
-				open();
+			//if(!isOpen() && !windows.hasOwnProperty([tabNames[option].name])) {
+			for (var key:String in windows){
+   				//This says
+   					//if closed AND the key is not a window
+   				if( !isOpen() && !(key == tabNames[option].name) ) {
+					open();
+				}
 			}
 			//spoof a click
 			myMenu.tabs[option].dispatchEvent(new MouseEvent(MouseEvent.CLICK));
@@ -313,8 +340,8 @@
 		//This handles opening the myMenu frame by frame, until is it done 
 		//This is arbitrary X movement, but could allow for any type of movement or easing.
 		public function onEase(e:Event):void {
-			utrace(myMenu.frameCounter + " -- " + (myMenu.openX - myMenu.x) * myMenu.easing);
-			utrace("myX is now: " + myMenu.x);
+			//utrace(myMenu.frameCounter + " -- " + (myMenu.openX - myMenu.x) * myMenu.easing);
+			//utrace("myX is now: " + myMenu.x);
 			//My distance = (where I want to go) - where I am
 			myMenu.dx = ( myMenu.moveX - myMenu.x);
 			//If where I want to go is less than 1, I will stay there
@@ -331,22 +358,24 @@
 		//This is primarily for testing
 		public function simulateUnrealScriptPolls() {
 			var onClick:Function = onButtonSend(US_KICK_PLAYER);
-			var playerNames:Array = new Array("Nope", "Boop", "Pompey253", "Cicero 254", "Publius255");
-			//CreateAvatarChoiceDisplay(playerNames);
+			var playerID:int = 250;//s:Array = new Array(251, 252, 253, 254, 255);
+			var playerNames:Array = new Array("Nope", "Boop", "Pompey", "Cicero", "Publius");
 			for each (var playerName:String in playerNames) {
-				myMenu.addToList(playerName, KICK, "kick", onClick);
+				myMenu.addToList(""+playerID, playerName+" "+playerID, KICK, "kick", onClick);
+				playerID++;
 			}
 			
 			onClick = onButtonSend(US_POSSESS_NPC);
 			var NPCNames:Array = new Array("Kirk", "Spock", "McCoy", "Chapel", "Scotty", "Sulu", "Chekov", "Uhura", "Red Shirt", "Khan", "Evil Spock", "Computer", "Hadley", "Brent", "Q", "Picard", "Riker", "Deanna", "Data");
+			//CreateAvatarChoiceDisplay(NPCNames);
 			for each (var NPCName:String in NPCNames) {
-				myMenu.addToList(NPCName,POSSESS, "posses", onClick);
+				myMenu.addToList(NPCName, NPCName, POSSESS, "posses", onClick);
 			}
 			
 			onClick = onButtonSendToggle(US_TOGGLE_SCENARIO);
 			var scenarioNames:Array = new Array("BasketBall", "Coffee Shop");
 			for each (var ScenarioName:String in scenarioNames) {
-				myMenu.addToList(ScenarioName, SCENARIO, "start", onClick);
+				myMenu.addToList(ScenarioName, ScenarioName, SCENARIO, "start", onClick);
 			}
 			getTextMessage("me", "Hello", true);
 			getTextMessage("you", "World", false);
@@ -356,6 +385,19 @@
 			changePlayerFaces("Publius", 255, true);
 			changePlayerFaces("Publius", 255, false);
 			changePlayerFaces("Pompey", 255, true);
+			//changeNameOfPlayer(251, "changed_stack");
+			//changeNameOfPlayer(251, "changed_stack");
+			//changeNameOfPlayer(251, "changed_stack");
+			removePlayer(253, "Cicero");
+			removePlayer(251, "Boop");
+			changeNameOfPlayer(252, "changed_1");
+			//removePlayer(254, "Publius");
+			//removePlayer(250, "Nope");
+			changeNameOfPlayer(252, "changed_1");
+			//changeNameOfPlayer(253, "changed_2");
+			//changeNameOfPlayer(252, "changed_love");
+			//changeNameOfPlayer(252, "changed_love_to_wrong");
+			changeNameOfPlayer(256, "changed_new_insert");
 		}
 		
 		//This function is only ever called by UnrealScript
@@ -379,10 +421,13 @@
 			chatWindow.chatLog.appendText( "\n\n" + playerName + ":\n\t" + textMessage );
 			//FIXME: Reimplement this
 			/*
-			if(!cursor_mc.visible) {
 				alertPlayer(playerName);
-			}
 			*/
+			if(!isOpen() && !bIsMe) {
+				var alertLabel:AlertLabel = new AlertLabel("You received a message", ("From: " + playerName), TAB_SIZE);
+				myMenu.addChild(alertLabel);
+				alertLabel.intro(0, TAB_SIZE*2);
+			}
 			
 			//get the new length
 			var newLength = chatWindow.chatLog.length;
@@ -428,19 +473,43 @@
 		//Start Player Stuff
 		//This function is only ever called by UnrealScript
 		//It adds a player to the list of players
-		public function addPlayer(playerID:int, playerName:String, faceshiftIsTracking:Boolean):void {
-			utrace("AddingPlayer Start");
-			var onClick:Function = onButtonSend(US_KICK_PLAYER);
-			myMenu.addToList( (playerName + playerID), KICK, "kick", onClick);
-			utrace("AddingPlayer End");
+		public function addPlayer(playerID:int, playerName:String):void {
+			trace("AddingPlayer Start");
+			if( (playerID != 0) ) {
+				var onClick:Function = onSureClick(US_KICK_PLAYER);//onButtonSend(US_KICK_PLAYER);
+				myMenu.addToList( (""+playerID), (playerName + " " + playerID), KICK, "kick", onClick);
+			}
+			trace("AddingPlayer End");
 		}
 		
 		//This function is only ever called by UnrealScript
 		//It removes a player from the list of players
 		public function removePlayer(playerID:int, playerName:String):void {
-			utrace("AddingPlayer Start");
-			myMenu.deleteFromList( "Boop"/*(playerName + playerID)*/, KICK);
-			utrace("AddingPlayer End");
+			trace("RemovingPlayer Start");
+			myMenu.deleteFromList( playerID.toString(), (playerName + " " + playerID), KICK);
+			trace("RemovingPlayer End");
+		}
+		
+		public function addMe(playerID:int, playerName:String):void {
+			trace("AddingPlayer Start");
+			if( (playerID != 0) ) {
+				myMenu.addToList( (""+playerID), (playerName + " " + playerID), KICK, "", null);
+			}
+			trace("AddingPlayer End");
+		}
+		
+		//This function is only ever called by UnrealScript
+		//It removes a player from the list of players
+		public function changeNameOfPlayer(playerID:int, playerName:String):void {
+			utrace("ChangingPlayer Start");
+			var playerThere:Boolean = myMenu.isInList( (""+playerID), (playerName + " " + playerID), KICK);
+			if(!playerThere) {
+				addPlayer(playerID, playerName);
+			} else {
+				removePlayer(playerID, playerName + " " + playerID);
+				addPlayer(playerID, playerName);
+			}
+			utrace("ChangingPlayer End");
 		}
 		//End Player Stuff
 		
@@ -451,7 +520,7 @@
 		public function addNPC(npcName:String):void {
 			utrace("AddingNPC Start");
 			var onClick:Function = onButtonSend(US_POSSESS_NPC);
-			myMenu.addToList( (npcName),POSSESS, "possess", onClick);
+			myMenu.addToList( (npcName), (npcName), POSSESS, "possess", onClick);
 			utrace("AddingNPC End");
 		}
 		
@@ -468,13 +537,13 @@
 				startOrStop = "stop";
 			}
 			var onClick:Function = onButtonSendToggle(US_TOGGLE_SCENARIO);
-			myMenu.addToList( (scenarioName), SCENARIO, "start", onClick);
+			myMenu.addToList( scenarioName, (scenarioName), SCENARIO, "start", onClick);
 			utrace("AddingScenario End");
 		}
 		//This is only ever called by unrealscript.
 		//this changes the text of Scenario buttons to match their in-game state as they change
 		public function receiveToggleScenarioButton(scenarioName:String, startOrStop:String):void {
-			myMenu.panels[SCENARIO].labels[scenarioName].sureButton.text.text = startOrStop;
+			myMenu.panels[SCENARIO].labels[scenarioName].button.text.text = startOrStop;
 		}
 		
 		//this is a generic function that sends info to US
@@ -496,12 +565,22 @@
 			}
 		}
 		
+		//this is a generic function that sends info to US
+		public function onSureClick(functionName:String):Function {
+			return function(e:MouseEvent):void {
+				var button:TextButton = TextButton(e.currentTarget);
+				var label:String = button.context;//label;
+				var action:String = button.text.text;//action
+				var onClick:Function = onButtonSend(functionName);
+				sureWindow.show(onClick, label, action);
+			}
+		}		
 		
 		public function CreateAvatarChoiceDisplay(avatarImageStrings:Array) {
 			var i:int = 0;
 			var j:int = 0;
 			for each (var img in avatarImageStrings) {
-				
+				trace( i + "," + j);
 				if (i >= 5) {
 					i = 0;
 					j++;
@@ -514,23 +593,39 @@
 				myMenu.panels[AVATARS].labelContainer.addChild(avatarImage);
 				i++;
 			}
-			myMenu.panels[AVATARS].bg = myMenu.panels[AVATARS].labelContainer.height;
+			j++;
+			
+			var bg:UIElement = new UIElement();
+			bg.color = 0x000000;
+			bg.alpha = 0.0;
+			bg.x = 0;
+			bg.y = 0;
+			bg.myWidth = myMenu.panels[AVATARS].myWidth; 
+			bg.myHeight = j*(TAB_SIZE*3+(TAB_SIZE/4));
+			trace(bg.myWidth + "," + bg.myHeight);
+			bg.draw();
+			//myMenu.panels[AVATARS].bg = bg;
+			myMenu.panels[AVATARS].labelContainer.addChildAt(bg, 0);
 		}
 		
 		public function changePlayerFaces(playerName:String, playerID:int, faceshiftIsTracking:Boolean) {
 			utrace("Changing Player Face");
-			if(myMenu.panels[KICK].labels.hasOwnProperty(playerName + playerID)) {
-				utrace("Player found");
-				if(myMenu.panels[KICK].labels[playerName + playerID].sureButton.icon == null) {
-					utrace("Icon created");
-					myMenu.panels[KICK].labels[playerName + playerID].sureButton.icon = new Icon("smileFace", TAB_SIZE, scaleForm);
-					myMenu.panels[KICK].labels[playerName + playerID].sureButton.icon.x = -TAB_SIZE;
-					myMenu.panels[KICK].labels[playerName + playerID].sureButton.icon.loadOtherImage("frownFace", scaleForm);
-					myMenu.panels[KICK].labels[playerName + playerID].sureButton.addChild(myMenu.panels[KICK].labels[playerName + playerID].sureButton.icon);
+			var playerIDString:String = ""+playerID;
+			var playerInfo:String = playerName + " " + playerID;
+			for (var key:String in myMenu.panels[KICK].labels) {
+				if(key == playerIDString) {
+					utrace("Player found");
+					if(myMenu.panels[KICK].labels[playerIDString].button.icon == null) {
+						utrace("Icon created");
+						myMenu.panels[KICK].labels[playerIDString].button.icon = new Icon("smileFace", TAB_SIZE, scaleForm);
+						myMenu.panels[KICK].labels[playerIDString].button.icon.x = -TAB_SIZE;
+						myMenu.panels[KICK].labels[playerIDString].button.icon.loadOtherImage("frownFace", scaleForm);
+						myMenu.panels[KICK].labels[playerIDString].button.addChild(myMenu.panels[KICK].labels[playerIDString].button.icon);
+					}
+					myMenu.panels[KICK].labels[playerIDString].button.icon.other_image.visible = faceshiftIsTracking;
+					myMenu.panels[KICK].labels[playerIDString].button.icon.image.visible = !faceshiftIsTracking;
+					utrace("Icon toggled");
 				}
-				myMenu.panels[KICK].labels[playerName + playerID].sureButton.icon.other_image.visible = faceshiftIsTracking;
-				myMenu.panels[KICK].labels[playerName + playerID].sureButton.icon.image.visible = !faceshiftIsTracking;
-				utrace("Icon toggled");
 			}
 			utrace("Changing Player FaceEnd");
 		}

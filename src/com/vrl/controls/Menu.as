@@ -32,6 +32,7 @@ package com.vrl.controls {
 		//Objects
 		public var tabs:Array = new Array();
 		public var panels:Array = new Array();
+		public var buffer:Array = new Array();
 		var panelMasks:Array = new Array();
 		
 		//Menu initializes objects and gives them values
@@ -308,67 +309,81 @@ package com.vrl.controls {
 		}
 		
 		//This adds a label to a panel
-		public function addToList(labelName:String, panelName:String, buttonText:String, onClick:Function):void {
-			if(!panels[panelName].labels.hasOwnProperty(labelName)) {
+		public function addToList(id:String, labelName:String, panelName:String, buttonText:String, onClick:Function):void {
+			//if(!panels[panelName].labels.hasOwnProperty(labelName)) {
 				var lastTabNum:int = tabs.length-1;
 				if( panels[panelName].visible == true) {
 					if(!hasEventListener(Event.ENTER_FRAME)) {
+						panels[panelName].addButtonLabel(id, labelName, buttonText, onClick, TAB_SIZE);
 						tabs[lastTabNum].openY = tabs[lastTabNum].y+TAB_SIZE * 5/4;	
 						tabs[lastTabNum].moveY = tabs[lastTabNum].openY;
-						addOne = squish( true, labelName, panelName, buttonText, onClick);
+						addOne = squish( true, id, panelName);
 						addEventListener(Event.ENTER_FRAME, addOne);
 					} else {
-						// Create buffer in the form of a timer that trys to add the element over and over until success
-						var tryThatAgain:Function = tryAgain(arguments.callee, labelName, panelName, buttonText, onClick);
-						var myTimer:Timer = new Timer(100, 1); // .1 second
-						myTimer.addEventListener(TimerEvent.TIMER, tryThatAgain);
-						myTimer.start();
+						var tryThatAgain:Function = tryAgain(arguments.callee, id, labelName, panelName, buttonText, onClick);
+						buffer.push(tryThatAgain);
 					}
 				} else {
-					panels[panelName].addSureLabel(labelName, buttonText, onClick, TAB_SIZE);
+					panels[panelName].addButtonLabel(id, labelName, buttonText, onClick, TAB_SIZE);
 				}
-			}
+			//}
 		}
 		
 		//This is a buffer that tries to run a function over and over again until 
 		//there is not an enterframe anymore
-		public function tryAgain(callee:Function, labelName:String, panelName:String, buttonText:String = "", onClick:Function =null):Function {
-			return function(e:TimerEvent):void {
+		public function tryAgain(callee:Function, id:String, labelName:String, panelName:String, buttonText:String = "", onClick:Function = null):Function {
+			return function(/*e:TimerEvent*/):void {
 				if(onClick != null){
-					callee(labelName, panelName, buttonText, onClick);
+					callee(id, labelName, panelName, buttonText, onClick);
 				} else {
-					callee(labelName, panelName);
+					callee(id, labelName, panelName);
 				}
 				//addPlayertoPlayerList(labelName, panelName);
 			}
 		}
 		
 		//This removes a label from a list
-		public function deleteFromList(labelName:String, panelName:String):void {
+		public function deleteFromList(id:String, labelName:String, panelName:String):void {
 			//trace("panels[panelName].labels.hasOwnProperty(labelName): " + panels[panelName].labels.hasOwnProperty(labelName));
-			if(panels[panelName].labels.hasOwnProperty(labelName)) {
-				var lastTabNum:int = tabs.length-1;
-				if(!hasEventListener(Event.ENTER_FRAME)) {
-					panels[panelName].removeSureLabel(labelName);
-					tabs[lastTabNum].openY = tabs[lastTabNum].y-TAB_SIZE * 5/4;	
-					tabs[lastTabNum].moveY = tabs[lastTabNum].openY;
-					if( panels[panelName].visible == true) {
-						deleteOne = squish( false, labelName, panelName);
-						addEventListener(Event.ENTER_FRAME, deleteOne);	
+			for (var key:String in panels[panelName].labels){
+				if(key == id) {
+					var lastTabNum:int = tabs.length-1;
+					if(!hasEventListener(Event.ENTER_FRAME)) {
+						panels[panelName].removeButtonLabel(id);
+						tabs[lastTabNum].openY = tabs[lastTabNum].y-TAB_SIZE * 5/4;	
+						tabs[lastTabNum].moveY = tabs[lastTabNum].openY;
+						if( panels[panelName].visible == true) {
+							deleteOne = squish( false, id, panelName);
+							addEventListener(Event.ENTER_FRAME, deleteOne);
+						}
+					} else {
+						// AS3
+						var tryThatAgain:Function = tryAgain(arguments.callee, id, labelName, panelName);
+						buffer.push(tryThatAgain);
+						//var myTimer:Timer = new Timer(100, 1); // .1 second
+						//myTimer.addEventListener(TimerEvent.TIMER, tryThatAgain);
+						//myTimer.start();
 					}
-				} else {
-					// AS3
-					var tryThatAgain:Function = tryAgain(arguments.callee, labelName, panelName);
-					var myTimer:Timer = new Timer(100, 1); // .1 second
-					myTimer.addEventListener(TimerEvent.TIMER, tryThatAgain);
-					myTimer.start();
 				}
 			}
 		}
 		
+		//This removes a label from a list
+		public function isInList(id:String, labelName:String, panelName:String):Boolean {
+			//trace("panels[panelName].labels.hasOwnProperty(labelName): " + panels[panelName].labels.hasOwnProperty(labelName));
+			trace(id);
+			for (var key:String in panels[panelName].labels){
+				if(key == id) {
+					//trace("yes");
+					return true;
+				}
+			}
+			return false;
+		}
+				
 		//This squishes tabs up or down based on the neighbor tabs.
-		public function squish(isAdding:Boolean, labelName:String, panelName:String, buttonText:String = "", onClick:Function = null):Function {
-			return function(e:Event):void {
+		public function squish(isAdding:Boolean, id:String, panelName:String):Function {
+			return function():void {
 				//trace(( tabs[tabs.length-1].moveY - tabs[tabs.length-1].y));
 				//My distance = (where I want to go) - where I am
 				var lastTabNum:int = tabs.length-1;
@@ -381,10 +396,15 @@ package com.vrl.controls {
 						//tabs[i].y = tabs[i].openY;
 					}
 					if(isAdding == true) {
-						panels[panelName].addSureLabel(labelName, buttonText, onClick, TAB_SIZE);
+						panels[panelName].labels[id].visible = true;
 						removeEventListener(Event.ENTER_FRAME, addOne);
+						
 					} else {
 						removeEventListener(Event.ENTER_FRAME, deleteOne);							
+					}
+					if(buffer.length != 0){
+						buffer[0]();
+						buffer.shift();	
 					}
 				} else {
 					//panels[currentPanel].y += panels[currentPanel].dy * panels[currentPanel].easing;

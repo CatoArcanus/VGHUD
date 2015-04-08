@@ -11,7 +11,7 @@ package com.vrl.controls {
 	import flash.external.ExternalInterface;
 	
 	import com.vrl.UIElement;
-	import com.vrl.utils.SureLabel;
+	import com.vrl.utils.ButtonLabel;
 	
 	/////////////////
 	// Panel Class //
@@ -38,8 +38,9 @@ package com.vrl.controls {
 			this.currentAlpha = .5;
 			this.visible = false;
 			this.TAB_SIZE = TAB_SIZE;
-			this.myWidth = myWidth;
+			this.myWidth = width;
 			this.myHeight = TAB_SIZE/4;
+			this.currentAlpha = 0;
 			this.panelName = panelName;
 			this.verticalMover = verticalMover;
 			
@@ -71,23 +72,30 @@ package com.vrl.controls {
 			draw();
 		}
 		
-		//This is a versatle function that adds a new surelabel based on the context.
+		//This is a versatle function that adds a new buttonlabel based on the context.
 		//We will have already made tabualr space for it if the panel is open
-		public function addSureLabel(sureTitle:String, sureText:String, onClick:Function, TAB_SIZE:Number) {
-			var sureLabel:SureLabel = new SureLabel(sureTitle, sureText, onClick, TAB_SIZE);
-			sureLabel.x = 0;//TAB_SIZE/2;
-			sureLabel.y = nextY;
-			sureLabel.openY = sureLabel.y;
-			nextY = sureLabel.y + sureLabel.myHeight + TAB_SIZE/4;
-			labelContainer.myWidth = sureLabel.width;
+		public function addButtonLabel(id:String, labelName:String, buttonText:String, onClick:Function, TAB_SIZE:Number) {
+			//var label:ButtonLabel;
+			//if(sureWindow != null) {
+			//	label = new SureLabel(labelName, buttonText, onClick, TAB_SIZE, sureWindow);
+			//} else {
+				//label = new ButtonLabel(labelName, buttonText, onClick, TAB_SIZE);
+			//}
+			var label:ButtonLabel = new ButtonLabel(labelName, buttonText, onClick, myWidth-TAB_SIZE, TAB_SIZE);
+			label.x = 0;//TAB_SIZE/2;
+			label.y = nextY;
+			//label.visible = false;
+			label.openY = label.y;
+			nextY = label.y + label.myHeight + TAB_SIZE/4;
+			labelContainer.myWidth = label.width;
 			labelContainer.myHeight += TAB_SIZE*5/4;
-			labelContainer.addChild(sureLabel);
+			labelContainer.addChild(label);
 			myHeight +=	TAB_SIZE*5/4;
 			this.closeY -= TAB_SIZE*5/4;
 			if(!visible){
 				this.y -= TAB_SIZE*5/4;
 			}
-			labels[sureTitle] = sureLabel;
+			labels[id] = label;
 			if(labelContainer.height < scroller.height ) {
 				this.mask.height = labelContainer.height-TAB_SIZE;
 			}
@@ -95,15 +103,15 @@ package com.vrl.controls {
 				this.mask.height = this.scroller.height;//labelContainer.height-TAB_SIZE;
 				scroller.visible = true;
 			}
-		}
+		}	
 		
-		//This will remove a surelabel, and then pull up if the menu is open
-		public function removeSureLabel(sureTitle:String) {
-			labelContainer.removeChild(labels[sureTitle]);
+		//This will remove a buttonlabel, and then pull up if the menu is open
+		public function removeButtonLabel(id:String) {
+			labelContainer.removeChild(labels[id]);
 			nextY -= TAB_SIZE*5/4;
-			var thisY:Number = labels[sureTitle].y;
+			var thisY:Number = labels[id].y;
 			var belowStrings:Array = new Array();
-			delete labels[sureTitle];
+			delete labels[id];
 			for (var key:String in labels) {
 				trace(key);
 				if(labels[key].y > thisY) {
@@ -115,8 +123,17 @@ package com.vrl.controls {
 			if(belowStrings.length > 0) {
 				labels[belowStrings[0]].openY -= TAB_SIZE*5/4;//-TAB_SIZE * 5/4;
 				labels[belowStrings[0]].moveY = labels[belowStrings[0]].openY;
-				var returnPullUp:Function = pullUp(belowStrings);
-				addEventListener(Event.ENTER_FRAME, returnPullUp);
+				if(visible){
+					//FIXME: Problem when this is called multiple times as things are affectign the same thin
+					//need to make a state buffer for this similar to the timer buffer in Menu
+					var returnPullUp:Function = pullUp(belowStrings);
+					addEventListener(Event.ENTER_FRAME, returnPullUp);
+				} else {
+					for(var i:int = 0; i < belowStrings.length; i++) {
+						trace("move label " + belowStrings[i])
+						labels[belowStrings[i]].y -= TAB_SIZE*5/4;
+					}
+				}
 			}
 			this.closeY += TAB_SIZE*5/4;
 			myHeight -=	TAB_SIZE*5/4;
@@ -132,10 +149,13 @@ package com.vrl.controls {
 			return function (e:Event):void {
 				//My distance = (where I want to go) - where I am
 				trace("@@inside this function BelowStrings.length = " + belowStrings.length);
-				if(!labels.hasOwnProperty(belowStrings[0])){
-					removeEventListener(Event.ENTER_FRAME, arguments.callee);
-					return;
-				}
+				//FIXME: Change the way this works. HasOwnProperty does not work in ScaleForm
+				//Test This
+				//if(belowStrings.length == 1) {
+					//removeEventListener(Event.ENTER_FRAME, arguments.callee);
+					//I'm returning
+					//return;
+				//}
 				labels[belowStrings[0]].dy = ( labels[belowStrings[0]].moveY - labels[belowStrings[0]].y);
 				//If where I want to go is less than 1, I will stay there
 				//Otherwise move a proportional distance to my target "easing" my way there

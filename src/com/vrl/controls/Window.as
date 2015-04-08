@@ -22,7 +22,7 @@ package com.vrl.controls {
 		var closeButton:IconButton;
 		var yOffset:Number;
 		var xOffset:Number;
-		var stageRef:Stage;
+		var bg:Sprite;
 		
 		/*
 		* A Generic window for holding objects, it can be opened, closed, and moved around
@@ -34,7 +34,14 @@ package com.vrl.controls {
 			this.myWidth = width;
 			this.myHeight = height+TAB_SIZE/4;
 			this.windowName = windowName;
-			this.stageRef = stageRef;
+			
+			//BG
+			bg = new Sprite();
+			bg.graphics.beginFill(0x000000, 0.2); 
+			bg.graphics.drawRect(0, 0, this.myWidth, this.myHeight); 
+			bg.graphics.endFill();
+			bg.x = 0;
+			bg.y = 0;
 			
 			//Drag Handle
 			dragHandle = new Sprite();
@@ -50,6 +57,7 @@ package com.vrl.controls {
 		}
 		
 		private function init():void {
+			addChild(bg);
 			//addChild(dragHandle);
 			draw();
 		}
