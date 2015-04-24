@@ -1,4 +1,4 @@
-package com.vrl.utils {
+package com.vrl.labels {
 	
 	import flash.display.Sprite;
 	import flash.display.MovieClip;
@@ -6,12 +6,12 @@ package com.vrl.utils {
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;	
+	import flash.utils.Timer;
 	import flash.text.*;
 	
 	import com.vrl.UIElement;
 	import com.vrl.buttons.TextButton;
-	import flash.events.TimerEvent;	
-	import flash.utils.Timer;
 
 	//////////////////////
 	// AlertLabel Class //
@@ -121,7 +121,7 @@ package com.vrl.utils {
 				removeEventListener(Event.ENTER_FRAME, onEase);
 				this.frameCounter = 0;
 				if(Math.abs(this.openX - this.moveX) < 1) {
-					var myLifeTimer:Timer = new Timer(4000, 1); // 3 seconds
+					var myLifeTimer:Timer = new Timer(3000, 1); // 3 seconds
 					myLifeTimer.addEventListener(TimerEvent.TIMER, closeAndKill);
 					myLifeTimer.start();
 				} else {

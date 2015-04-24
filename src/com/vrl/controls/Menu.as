@@ -12,6 +12,8 @@ package com.vrl.controls {
 	import com.vrl.UIElement;
 	import com.vrl.TabInfo;	
 	import com.vrl.buttons.Tab;	
+	import com.vrl.panels.Panel;	
+	import com.vrl.panels.AvatarPanel;	
 	
 	////////////////
 	// Menu Class //
@@ -59,7 +61,7 @@ package com.vrl.controls {
 			for each(var tabInfo:TabInfo in tabInfos) {
 				
 				//A series of tabs is generated based on the list of tab names
-				var tab = new Tab(tabInfo.title, tabInfo.name, width, TAB_SIZE, tabInfo.leftSide, tabInfo.scaleForm, tabInfo.accordian);
+				var tab = new Tab(tabInfo.name, tabInfo.title, tabInfo.name, width, TAB_SIZE, tabInfo.leftSide, tabInfo.scaleForm, tabInfo.accordian);
 				tab.x = 0;
 				tab.y = tabY;
 				
@@ -84,9 +86,7 @@ package com.vrl.controls {
 					panel.closeY = panel.y;
 					panel.openY = panel.y + panel.myHeight;
 					panel.tabNumber = tabNumber;
-					
 					panel.mask = panelMask;
-					
 					panelMasks[tabInfo.name] = panelMask;
 					panels[tabInfo.name] = panel;
 				}
@@ -101,7 +101,6 @@ package com.vrl.controls {
 					panelMask.graphics.endFill(); 
 					panelMask.x = panelMask.width*(-1);
 					panelMask.y = 0;
-
 					
 					//This creates a series of panels. 				
 					var panel = new AvatarPanel(tabInfo.name, TAB_SIZE*17, height, TAB_SIZE, tabInfo.leftSide, false, stageRef, panelMask.height);			
@@ -145,14 +144,14 @@ package com.vrl.controls {
 			return function(e:MouseEvent):void {
 				for each(var tab:Tab in tabs) {
 					//If the tab -> currentPanel, we close it
-					if(tab.buttonName == currentPanel) {
+					if(tab.id == currentPanel) {
 						tab.minAlpha = 0.0;
 						//tab.setShadow = true;
 						tab.unHighlight();
 						tab.rotateIconUp();
 					}
 					//If the tab -> is our panel, let's open the panel
-					if(tab.buttonName == panelName) {
+					if(tab.id == panelName) {
 						tab.minAlpha = 0.5;
 						tab.rotateIconDown();
 					}
@@ -177,9 +176,7 @@ package com.vrl.controls {
 				outPanel = currentPanel;
 				panels[outPanel].moveY = panels[outPanel].closeY;
 				panels[outPanel].moveX = panels[outPanel].closeX;
-				trace("AA");
 				if(!hasEventListener(Event.ENTER_FRAME)) {
-					trace("@@@@");
 					activePanel = outPanel;
 					if(panels[outPanel].verticalMover) {
 						addEventListener(Event.ENTER_FRAME, onEasePanelY);
@@ -206,9 +203,7 @@ package com.vrl.controls {
 			panels[currentPanel].visible = true;
 			panels[currentPanel].moveY = panels[currentPanel].openY;
 			panels[currentPanel].moveX = panels[currentPanel].openX;
-			trace("AA!");
 			if(!hasEventListener(Event.ENTER_FRAME)) {
-				trace("@@@@!");
 				activePanel = currentPanel;
 				if(panels[activePanel].verticalMover) {
 					addEventListener(Event.ENTER_FRAME, onEasePanelY);
@@ -285,7 +280,7 @@ package com.vrl.controls {
 		//This handles closing the Panel frame by frame, until is it done 
 		//This is arbitrary Y movement, but could allow for any type of movement
 		public function onEasePanelX(e:Event):void {
-			trace(panels[activePanel].frameCounter + " moveX: " + (panels[activePanel].moveX) + " x: " + (panels[activePanel].x));
+			//trace(panels[activePanel].frameCounter + " moveX: " + (panels[activePanel].moveX) + " x: " + (panels[activePanel].x));
 			//My distance = (where I want to go) - where I am
 			panels[activePanel].dx = ( panels[activePanel].moveX - panels[activePanel].x);
 			//If where I want to go is less than 1, I will stay there

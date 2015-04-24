@@ -1,4 +1,4 @@
-﻿package {
+package {
 	
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -12,13 +12,15 @@
 	import flash.ui.Mouse;
 	
 	import com.vrl.controls.Menu;
-	import com.vrl.controls.Window;
-	import com.vrl.controls.ChatWindow;
-	import com.vrl.controls.SureWindow;
+	import com.vrl.labels.AlertLabel;
 	import com.vrl.buttons.TextButton;
 	import com.vrl.buttons.IconButton;
 	import com.vrl.utils.Cursor;
-	import com.vrl.utils.*;
+	import com.vrl.utils.AvatarImage;
+	import com.vrl.utils.Icon;
+	import com.vrl.windows.SureWindow;
+	import com.vrl.windows.Window;
+	import com.vrl.windows.ChatWindow;
 	import com.vrl.TabInfo;
 	import com.vrl.UIElement;
 	
@@ -36,7 +38,7 @@
 		//set to true if you want debug output
 		var debug:Boolean = false;
 		//set to true if pushing live to scaleform, false if testing in the launcher
-		var scaleForm:Boolean = false;
+		var scaleForm:Boolean = true;
 		
 		//Consts
 		//This number actually controls the entire size of the menu.
@@ -79,7 +81,7 @@
 		
 		//Tabs
 		var tabNames:Array = new Array(
-			new TabInfo(CHAT, 		CHAT,			!peek,	!accordian,	scaleForm, leftSide),
+			new TabInfo(CHAT, 		CHAT,			!peek,	accordian,	scaleForm, leftSide),
 			new TabInfo(GHOST, 		"Ghost Menu",	!peek,	accordian,	scaleForm, leftSide),
 			new TabInfo(AVATARS, 	AVATARS,		peek,	!accordian,	scaleForm, leftSide),
 			new TabInfo(POSSESS, 	"NPCs",			!peek,	accordian, 	scaleForm, leftSide),
@@ -90,6 +92,7 @@
 		
 		//Main initializes objects and gives them values
 		public function Main() {
+			//Font.registerFont("Arial");
 			//Create an enum to arbitrarily store the Tabular position. In this case order matters
 			//This will allow us to change the order of the Tabs on the fly without us having
 			// to modify other code
@@ -119,7 +122,7 @@
 			sureWindow = new SureWindow("sureWindow", TAB_SIZE, leftSide, stage);
 			sureWindow.x = 0;//stage.stageWidth/2 - sureWindow.width/2;
 			sureWindow.y = 0;//stage.stageHeight/2 - sureWindow.height/2;
-			//sureWindow.visible = false;
+			sureWindow.visible = false;
 			windows[SURE] = sureWindow;
 			/*
 			var testButton:Sprite = new Sprite();
@@ -140,6 +143,9 @@
 			//Hide the mouse in flash. Not strictly necessary, but nice for testing.
 			Mouse.hide();
 			
+			//This lets fonts get loaded
+			stage.focus = this;
+			
 			//Add our children now that they have been loaded in
 			addChild(myMenu);
 			addChild(chatWindow);
@@ -149,16 +155,17 @@
 			//If we are not in scaleform we want hotkeys to do certain things, otherwise
 			//turn them off 
 			if(!scaleForm) {
-				stage.addEventListener(KeyboardEvent.KEY_DOWN, reportKeyDown);
+				stage.addEventListener(KeyboardEvent.KEY_UP, reportKeyUp);
 			}
 			
 			//FIXME: These variable names are artrocious, lets get some real code in here before someone sees this tripe
 			//var tc:Function = tabClick(AVATARS);
 			//myMenu.tabs[TAB_NUM[AVATARS]].addEventListener(MouseEvent.CLICK, tc);
-			var tg:Function = tabClick(CHAT);
-			myMenu.tabs[TAB_NUM[CHAT]].addEventListener(MouseEvent.CLICK, tg);
+			//var tg:Function = tabClick(CHAT);
+			//myMenu.tabs[TAB_NUM[CHAT]].addEventListener(MouseEvent.CLICK, tg);
 			//FIXME: MAYBE: Finding an object in a hash twice could be memory intensive. Saving it could save time.
 			setUpGhostButton();
+			setUpChatButton();
 			myMenu.tabs[TAB_NUM[EXIT]].addEventListener(MouseEvent.CLICK, showPauseMenu);
 			//open();
 			
@@ -172,10 +179,12 @@
 			chatWindow.chatInput.addEventListener(MouseEvent.MOUSE_UP, toggleChat);
 			chatWindow.chatInput.addEventListener(MouseEvent.MOUSE_OUT, enableToggleChatClickListener);
 			chatWindow.chatInput.addEventListener(MouseEvent.MOUSE_OVER, disableToggleChatClickListener);
-			
+						
 			//If we are in a testing env, put some dummy variables in to test how US will do things
 			if(!scaleForm) {
 				simulateUnrealScriptPolls();
+			} else {
+				ExternalInterface.call("asReceiveData");
 			}
 		}
 		
@@ -220,8 +229,27 @@
 			myMenu.panels[GHOST].y -= iconButton.myHeight + TAB_SIZE/4;
 			myMenu.panels[GHOST].labels[GHOST] = iconButton;
 			myMenu.panels[GHOST].labelContainer.addChild(iconButton);			
-			myMenu.panels[GHOST].labelContainer.addChild(iconButton);
 			myMenu.panels[GHOST].mask.height += iconButton.height;//= myMenu.panels[GHOST].labelContainer.height-TAB_SIZE;			
+		}
+		
+		//Called by init to set up the ghost buttons. this happens once when the video loads
+		//and is a static panel
+		//FIXME: This and setUpGhostButton should be merged to be more DRY
+		public function setUpChatButton() {
+			var iconButton:IconButton = new IconButton("chat", TAB_SIZE*2);
+			iconButton.x = myMenu.myWidth/2 - iconButton.myWidth/2 - myMenu.panels[GHOST].labelContainer.x;//TAB_SIZE;
+			iconButton.y = myMenu.panels[CHAT].nextY;
+			iconButton.openY = iconButton.y;
+			var tg:Function = tabClick(CHAT);
+			iconButton.addEventListener(MouseEvent.CLICK, tg);
+			//FIXME: let's save this var for more readable code and so we don't access a hash multiple times
+			myMenu.panels[CHAT].nextY = iconButton.y + iconButton.myHeight + TAB_SIZE/4;
+			myMenu.panels[CHAT].myHeight += iconButton.myHeight + TAB_SIZE/4;//TAB_SIZE*5/4;
+			myMenu.panels[CHAT].closeY -= iconButton.myHeight + TAB_SIZE/4;
+			myMenu.panels[CHAT].y -= iconButton.myHeight + TAB_SIZE/4;
+			myMenu.panels[CHAT].labels[CHAT] = iconButton;
+			myMenu.panels[CHAT].labelContainer.addChild(iconButton);			
+			myMenu.panels[CHAT].mask.height += iconButton.height;//= myMenu.panels[GHOST].labelContainer.height-TAB_SIZE;			
 		}
 		
 		//Become a Human! and update the Tab. Send a call to US to tell it do it.
@@ -263,6 +291,27 @@
 			};
 		}
 		
+		public function chatBeginTalk():void {
+			if(!windows[CHAT].visible) {
+				windows[CHAT].visible = !windows[CHAT].visible;
+			}
+			var myFormat:TextFormat = new TextFormat();
+			myFormat.size = TAB_SIZE*.30;
+			myFormat.font = "Arial";
+			var myFont = new Arial();
+			myFormat.font = myFont.fontName;
+			windows[CHAT].chatInput.setTextFormat(myFormat); 
+			windows[CHAT].chatInput.embedFonts = true;
+			stage.addEventListener(KeyboardEvent.KEY_UP, changeFocus);
+			windows[CHAT].chatInput.dispatchEvent(new MouseEvent(MouseEvent.CLICK));
+		}
+		
+		public function changeFocus(e:KeyboardEvent= null):void {
+			stage.focus = windows[CHAT].chatInput;
+			stage.removeEventListener(KeyboardEvent.KEY_UP, changeFocus);
+			ExternalInterface.call("asReceiveToggleChatTrue");
+		}
+		
 		//FIXME: This needs to be taken out completely eventually
 		public function addJulius(e:MouseEvent = null):void {
 			var onClick:Function = onButtonSend(US_KICK_PLAYER);
@@ -277,13 +326,14 @@
 		}
 		
 		//This is primarily for debugging when not in UDK
-		private	function reportKeyDown(event:KeyboardEvent):void { 
+		private	function reportKeyUp(event:KeyboardEvent):void { 
 			trace("Key Pressed: " + String.fromCharCode(event.charCode) + " (character code: " + event.charCode + ")"); 
 			if (event.charCode == 111/*o*/) open(); 
 			else if (event.charCode == 99/*c*/) close(); 
+			else if (event.charCode == 116/*t*/) chatBeginTalk(); 
 			else if (event.charCode == 49/*1*/) showTab(1);
-			else if (event.charCode == 50/*2*/) showTab(2);
 			else if (event.charCode == 51/*3*/) showTab(3);
+			else if (event.charCode == 50/*2*/) showTab(2);
 			else if (event.charCode == 52/*4*/) showTab(4);
 			else if (event.charCode == 53/*5*/) showTab(5);
 			else if (event.charCode == 54/*6*/) showTab(6);
@@ -310,6 +360,17 @@
 		//Unrealscript asks this to see if the menu is open or not.
 		public function isOpen():int {
 			if (myMenu.moveX == myMenu.openX) {
+				//open
+				return 1;
+			} else {
+				//closed
+				return 0;
+			}
+		}
+		
+		//Unrealscript asks this to see if the chatpanel is open or not.
+		public function isChatWindowOpen():int {
+			if (stage.focus == chatWindow.chatInput) {
 				//open
 				return 1;
 			} else {
@@ -358,10 +419,10 @@
 		//This is primarily for testing
 		public function simulateUnrealScriptPolls() {
 			var onClick:Function = onButtonSend(US_KICK_PLAYER);
-			var playerID:int = 250;//s:Array = new Array(251, 252, 253, 254, 255);
-			var playerNames:Array = new Array("Nope", "Boop", "Pompey", "Cicero", "Publius");
+			var playerID:int = 251;//s:Array = new Array(251, 252, 253, 254, 255);
+			var playerNames:Array = new Array("Me");//, "Boop", "Pompey", "Cicero", "Publius");
 			for each (var playerName:String in playerNames) {
-				myMenu.addToList(""+playerID, playerName+" "+playerID, KICK, "kick", onClick);
+				addMe(playerID, playerName+" "+playerID);
 				playerID++;
 			}
 			
@@ -380,24 +441,25 @@
 			getTextMessage("me", "Hello", true);
 			getTextMessage("you", "World", false);
 			receiveToggleScenarioButton("BasketBall", "stop");
-			changePlayerFaces("Pompey", 253, true);
-			changePlayerFaces("Cicero ", 254, false);
-			changePlayerFaces("Publius", 255, true);
-			changePlayerFaces("Publius", 255, false);
-			changePlayerFaces("Pompey", 255, true);
-			//changeNameOfPlayer(251, "changed_stack");
-			//changeNameOfPlayer(251, "changed_stack");
-			//changeNameOfPlayer(251, "changed_stack");
-			removePlayer(253, "Cicero");
-			removePlayer(251, "Boop");
-			changeNameOfPlayer(252, "changed_1");
+			changePlayerFaces(251, true);
+			//changePlayerFaces(254, "Cicero ", false);
+			//changePlayerFaces(255, "Publius", true);
+			//changePlayerFaces(255, "Publius", false);
+			//changePlayerFaces(255, "Pompey", true);
+			changeNameOfPlayer(0, "player1");
+			changeNameOfPlayer(252, "changed_once");
+			changeNameOfPlayer(252, "changed_twice");
+			changeNameOfPlayer(252, "changed_thrice");
+			//removePlayer(253, "Cicero");
+			//removePlayer(251, "Boop");
+			//changeNameOfPlayer(252, "changed_1");
 			//removePlayer(254, "Publius");
 			//removePlayer(250, "Nope");
-			changeNameOfPlayer(252, "changed_1");
+			//changeNameOfPlayer(252, "changed_1");
 			//changeNameOfPlayer(253, "changed_2");
 			//changeNameOfPlayer(252, "changed_love");
 			//changeNameOfPlayer(252, "changed_love_to_wrong");
-			changeNameOfPlayer(256, "changed_new_insert");
+			//changeNameOfPlayer(256, "changed_new_insert");
 		}
 		
 		//This function is only ever called by UnrealScript
@@ -464,12 +526,14 @@
 		//FIXME: hide this crud in the Chat window
 		//this is needed for the toggling feature
 		public function clickToggleChatListener(e:MouseEvent = null) {
-			utrace("allow input, except esc");
-			chatWindow.chatInput.addEventListener(MouseEvent.MOUSE_UP, toggleChat);
+			utrace("allow input, capture esc");
+			if(e != null) {
+				chatWindow.chatInput.addEventListener(MouseEvent.MOUSE_UP, toggleChat);
+			}
 			stage.focus = stage;
 			ExternalInterface.call("asReceiveToggleChatFalse");
 		}
-		
+								
 		//Start Player Stuff
 		//This function is only ever called by UnrealScript
 		//It adds a player to the list of players
@@ -608,22 +672,22 @@
 			myMenu.panels[AVATARS].labelContainer.addChildAt(bg, 0);
 		}
 		
-		public function changePlayerFaces(playerName:String, playerID:int, faceshiftIsTracking:Boolean) {
+		public function changePlayerFaces(playerID:int, faceshiftIsTracking:Boolean) {
 			utrace("Changing Player Face");
 			var playerIDString:String = ""+playerID;
-			var playerInfo:String = playerName + " " + playerID;
 			for (var key:String in myMenu.panels[KICK].labels) {
 				if(key == playerIDString) {
 					utrace("Player found");
-					if(myMenu.panels[KICK].labels[playerIDString].button.icon == null) {
+					if(myMenu.panels[KICK].labels[playerIDString].icon == null) {
 						utrace("Icon created");
-						myMenu.panels[KICK].labels[playerIDString].button.icon = new Icon("smileFace", TAB_SIZE, scaleForm);
-						myMenu.panels[KICK].labels[playerIDString].button.icon.x = -TAB_SIZE;
-						myMenu.panels[KICK].labels[playerIDString].button.icon.loadOtherImage("frownFace", scaleForm);
-						myMenu.panels[KICK].labels[playerIDString].button.addChild(myMenu.panels[KICK].labels[playerIDString].button.icon);
+						myMenu.panels[KICK].labels[playerIDString].icon = new Icon("smileFace", TAB_SIZE, scaleForm);
+						myMenu.panels[KICK].labels[playerIDString].icon.x = TAB_SIZE*4;
+						myMenu.panels[KICK].labels[playerIDString].icon.y = TAB_SIZE*.25;
+						myMenu.panels[KICK].labels[playerIDString].icon.loadOtherImage("frownFace", scaleForm);
+						myMenu.panels[KICK].labels[playerIDString].addChild(myMenu.panels[KICK].labels[playerIDString].icon);
 					}
-					myMenu.panels[KICK].labels[playerIDString].button.icon.other_image.visible = faceshiftIsTracking;
-					myMenu.panels[KICK].labels[playerIDString].button.icon.image.visible = !faceshiftIsTracking;
+					myMenu.panels[KICK].labels[playerIDString].icon.other_image.visible = !faceshiftIsTracking;
+					myMenu.panels[KICK].labels[playerIDString].icon.image.visible = faceshiftIsTracking;
 					utrace("Icon toggled");
 				}
 			}

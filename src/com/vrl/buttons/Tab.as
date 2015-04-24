@@ -39,9 +39,11 @@ package com.vrl.buttons {
 		public var shadow;
 		public var accordian:Boolean = false; 
 		public var myFormat:TextFormat;
+		public var id:String;
 		
-		public function Tab(buttonName:String, iconName:String, width:int, TAB_SIZE:Number, leftSide:Boolean, scaleForm:Boolean = true, accordian:Boolean = false):void {
+		public function Tab(id:String, buttonName:String, iconName:String, width:int, TAB_SIZE:Number, leftSide:Boolean, scaleForm:Boolean = true, accordian:Boolean = false):void {
 			super(buttonName, buttonName, width, TAB_SIZE);
+			this.id = id;
 			this.color = 0x000000;
 			this.maxAlpha = 1.0;
 			this.minAlpha = 0.0;
@@ -110,13 +112,13 @@ package com.vrl.buttons {
 		}
 		
 		public function rotateIconDown(e:MouseEvent = null):void {
-			//trace("highlight");
+			trace("rotateIconDown");
 			rotatingIcon.rotateTo = rotatingIcon.minRotation;
 			addEventListener(Event.ENTER_FRAME, onRotate);
 		}
 		
 		public function rotateIconUp(e:MouseEvent = null):void {
-			//trace("highlight");
+			trace("rotateIconUp");
 			rotatingIcon.rotateTo = rotatingIcon.maxRotation;
 			addEventListener(Event.ENTER_FRAME, onRotate);
 		}

@@ -1,4 +1,4 @@
-package com.vrl.controls {
+package com.vrl.windows {
 	
 	import flash.display.Sprite;
 	import flash.display.Shape;
@@ -14,7 +14,7 @@ package com.vrl.controls {
 	import com.vrl.UIElement;
 	import com.vrl.buttons.IconButton; 
 	import com.vrl.buttons.TextButton; 
-
+	import com.vrl.utils.Scroller;
 	
 	//////////////////////
 	// ChatWindow Class //

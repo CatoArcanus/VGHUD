@@ -1,4 +1,4 @@
-package com.vrl.controls {
+package com.vrl.windows {
 	
 	import flash.display.Sprite;
 	import flash.display.Shape;

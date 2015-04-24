@@ -1,4 +1,4 @@
-package com.vrl.utils {
+package com.vrl.labels {
 	
 	import flash.display.Sprite;
 	import flash.display.MovieClip;
@@ -10,6 +10,7 @@ package com.vrl.utils {
 	
 	import com.vrl.UIElement;
 	import com.vrl.buttons.TextButton;
+	import com.vrl.utils.Icon;
 
 	///////////////////////
 	// ButtonLabel Class //
