@@ -152,7 +152,10 @@ package com.vrl.controls {
 					}
 					//If the tab -> is our panel, let's open the panel
 					if(tab.id == panelName) {
-						tab.minAlpha = 0.5;
+						if(tab.minAlpha < 0.5) {
+							tab.minAlpha = 0.5;
+							tab.unHighlight();
+						}
 						tab.rotateIconDown();
 					}
 					//If we have another tab open, let's unhighlight it.

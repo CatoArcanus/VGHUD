@@ -354,7 +354,8 @@ package {
 			myMenu.moveX = myMenu.closeX;
 			addEventListener(Event.ENTER_FRAME, onEase);
 			cursor.visible = false;
-			myMenu.animateOut(myMenu.currentPanel);
+			//myMenu.animateOut(myMenu.currentPanel);
+			myMenu.tabs[TAB_NUM[myMenu.currentPanel]].dispatchEvent(new MouseEvent(MouseEvent.CLICK));
 		}
 		
 		//Unrealscript asks this to see if the menu is open or not.
@@ -393,7 +394,7 @@ package {
    				if( !isOpen() && !(key == tabNames[option].name) ) {
 					open();
 				}
-			}
+			}			
 			//spoof a click
 			myMenu.tabs[option].dispatchEvent(new MouseEvent(MouseEvent.CLICK));
 		}
