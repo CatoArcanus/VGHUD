@@ -59,7 +59,7 @@ package com.vrl.buttons {
 			}
 			icon.y = TAB_SIZE/4;
 			
-			var myFont = new Arial();
+			var myFont = new Museo();
 			
 			myFormat = new TextFormat();
 			myFormat.size = TAB_SIZE/2;

@@ -45,6 +45,7 @@ package com.vrl.controls {
 			this.myHeight = height;
 			this.currentAlpha = .5;
 			this.TAB_SIZE = TAB_SIZE;
+			this.tabChildren = false;
 						
 			//This variable is used with the menu is on the left or right. 
 			//It isn't very elegant. Maybe we can do away with the Bool all together

@@ -35,6 +35,8 @@ package com.vrl.windows {
 			this.myHeight = height+TAB_SIZE/4;
 			this.windowName = windowName;
 			
+			this.tabChildren = false;
+			
 			//BG
 			bg = new Sprite();
 			bg.graphics.beginFill(0x000000, 0.2); 

@@ -30,6 +30,8 @@ package com.vrl.windows {
 		public var sendButton:IconButton;
 		public var xButton:TextButton;
 		public var stageRef:Stage;
+
+		private var focusChange:Boolean = true;
 			
 		/**
 		* Chat windows are very specific in their functionality and are layed out based on the 
@@ -156,7 +158,9 @@ package com.vrl.windows {
 		private function checkInputKeyForSubmit( event:KeyboardEvent ):void {         
 			if ( event.keyCode ==  13 ) {
 				if (chatInput.text != "") {
-					//this.stage.focus = chatSendBtn;
+					if(focusChange) {
+						this.stageRef.focus = stageRef;
+					}
 					//ExternalInterface.call("asReceiveToggleChatFalse");
 					submitToUDK();
 				}

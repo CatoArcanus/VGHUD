@@ -38,7 +38,7 @@ package {
 		//set to true if you want debug output
 		var debug:Boolean = false;
 		//set to true if pushing live to scaleform, false if testing in the launcher
-		var scaleForm:Boolean = true;
+		var scaleForm:Boolean = false;
 		
 		//Consts
 		//This number actually controls the entire size of the menu.
@@ -53,7 +53,7 @@ package {
 		var POSSESS:String = "Possess";
 		var KICK:String = "Kick";
 		var SCENARIO:String = "Scenario";
-		var EXIT:String = "Exit";
+		var CLOSE:String = "exit";
 		
 		var TAB_NUM:Object = new Object();
 		
@@ -74,7 +74,7 @@ package {
 		var myMenu:Menu;
 		var chatWindow:ChatWindow;
 		var sureWindow:SureWindow;
-				
+						
 		var windows:Array = new Array();
 		var cursor:Cursor;	
 		var playerState:int = HUMAN_MODE;
@@ -87,7 +87,7 @@ package {
 			new TabInfo(POSSESS, 	"NPCs",			!peek,	accordian, 	scaleForm, leftSide),
 			new TabInfo(KICK, 		"Players",		!peek,	accordian, 	scaleForm, leftSide),
 			new TabInfo(SCENARIO, 	"Scenarios",	!peek,	accordian, 	scaleForm, leftSide),
-			new TabInfo(EXIT,	 	EXIT,			!peek,	!accordian,	scaleForm, !leftSide)
+			new TabInfo(CLOSE,	 	"Close",			!peek,	!accordian,	scaleForm, leftSide)
 		);
 		
 		//Main initializes objects and gives them values
@@ -166,7 +166,7 @@ package {
 			//FIXME: MAYBE: Finding an object in a hash twice could be memory intensive. Saving it could save time.
 			setUpGhostButton();
 			setUpChatButton();
-			myMenu.tabs[TAB_NUM[EXIT]].addEventListener(MouseEvent.CLICK, showPauseMenu);
+			myMenu.tabs[TAB_NUM[CLOSE]].addEventListener(MouseEvent.CLICK, close);
 			//open();
 			
 			//This actually isn't very descriptive, we might want to figure out a better way to do this
@@ -190,8 +190,8 @@ package {
 		
 		//This is some duct tape used, because the video disapears if we don't do stuff with it.
 		public function onLevelLoaded(e:Event):void {
-			myMenu.x = stage.stageWidth;//-TAB_SIZE*.75;
-			myMenu.openX = stage.stageWidth - myMenu.myWidth;
+			myMenu.x = stage.stageWidth-TAB_SIZE*.75;
+			myMenu.openX = (stage.stageWidth - myMenu.x) + (stage.stageWidth - myMenu.myWidth);
 			myMenu.y = 0;
 			myMenu.closeX = myMenu.x;
 			myMenu.moveX = myMenu.closeX;
@@ -388,15 +388,29 @@ package {
 			//an index, so decrement;
 			option--;
 			//if(!isOpen() && !windows.hasOwnProperty([tabNames[option].name])) {
+			/*
 			for (var key:String in windows){
    				//This says
    					//if closed AND the key is not a window
    				if( !isOpen() && !(key == tabNames[option].name) ) {
 					open();
+				} else {
+
 				}
-			}			
+			}*/
+			/*	
+			*/
+			if(!isOpen()) {
+				open();
+				myMenu.tabs[option].dispatchEvent(new MouseEvent(MouseEvent.CLICK));
+			} else {
+				if(tabNames[option].name == myMenu.currentPanel) {
+					close();
+				} else {
+					myMenu.tabs[option].dispatchEvent(new MouseEvent(MouseEvent.CLICK));
+				}				
+			}
 			//spoof a click
-			myMenu.tabs[option].dispatchEvent(new MouseEvent(MouseEvent.CLICK));
 		}
 		
 		//This handles opening the myMenu frame by frame, until is it done 
