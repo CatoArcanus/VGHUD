@@ -32,7 +32,7 @@ package com.vrl.panels {
 		* A panel is a container for buttons, labels, and icons.
 		* Panels always have a mask that they may hide behind in order to leave view.
 		*/				
-		public function Panel(panelName:String, width:int, height:int, TAB_SIZE:Number, leftSide:Boolean, verticalMover:Boolean, stageRef:Stage, scrollerHeight:Number):void {		
+		public function Panel(panelName:String, width:int, height:int, TAB_SIZE:Number, leftSide:Boolean, verticalMover:Boolean, stageRef:Stage, maxHeight:Number):void {		
 			//Variables that are not the default
 			this.easing = .2;
 			this.color = 0x222222;
@@ -58,7 +58,7 @@ package com.vrl.panels {
 			labelContainer.myWidth = 0;
 									
 			//Scroller
-			scroller = new ScrollerMC(labelContainer, TAB_SIZE, stageRef, scrollerHeight);
+			scroller = new ScrollerMC(labelContainer, TAB_SIZE, stageRef, maxHeight);
 			scroller.x = width-16;
 			scroller.y = labelContainer.y;
 									

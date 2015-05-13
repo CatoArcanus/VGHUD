@@ -20,7 +20,8 @@ package {
 	import com.vrl.utils.Icon;
 	import com.vrl.windows.SureWindow;
 	import com.vrl.windows.Window;
-	import com.vrl.windows.ChatWindow;
+	//import com.vrl.windows.ChatWindow;
+	import com.vrl.panels.ChatPanel;
 	import com.vrl.TabInfo;
 	import com.vrl.UIElement;
 	
@@ -38,7 +39,7 @@ package {
 		//set to true if you want debug output
 		var debug:Boolean = false;
 		//set to true if pushing live to scaleform, false if testing in the launcher
-		var scaleForm:Boolean = false;
+		var scaleForm:Boolean = true;
 		
 		//Consts
 		//This number actually controls the entire size of the menu.
@@ -72,7 +73,7 @@ package {
 		
 		//Stage Objects
 		var myMenu:Menu;
-		var chatWindow:ChatWindow;
+		//var chatWindow:ChatWindow;
 		var sureWindow:SureWindow;
 						
 		var windows:Array = new Array();
@@ -87,7 +88,7 @@ package {
 			new TabInfo(POSSESS, 	"NPCs",			!peek,	accordian, 	scaleForm, leftSide),
 			new TabInfo(KICK, 		"Players",		!peek,	accordian, 	scaleForm, leftSide),
 			new TabInfo(SCENARIO, 	"Scenarios",	!peek,	accordian, 	scaleForm, leftSide),
-			new TabInfo(CLOSE,	 	"Close",			!peek,	!accordian,	scaleForm, leftSide)
+			new TabInfo(CLOSE,	 	"Close",		!peek,	!accordian,	scaleForm, leftSide)
 		);
 		
 		//Main initializes objects and gives them values
@@ -114,11 +115,13 @@ package {
 			//FIXME: See if we can't find a way to hide the chatwindow's functions in itself.
 			//The idea would be to accept the Unrealscript call in the main, but then divert its tasks 
 			//up the chain through a simple one-line method call with some params.
+			/*
 			chatWindow = new ChatWindow("chatWindow", TAB_SIZE, leftSide, stage);
 			chatWindow.x = TAB_SIZE/2;
 			chatWindow.y = stage.stageHeight - chatWindow.height - TAB_SIZE/2;
 			chatWindow.visible = false;
 			windows[CHAT] = chatWindow;
+			*/
 			sureWindow = new SureWindow("sureWindow", TAB_SIZE, leftSide, stage);
 			sureWindow.x = 0;//stage.stageWidth/2 - sureWindow.width/2;
 			sureWindow.y = 0;//stage.stageHeight/2 - sureWindow.height/2;
@@ -144,11 +147,11 @@ package {
 			Mouse.hide();
 			
 			//This lets fonts get loaded
-			stage.focus = this;
+			//stage.focus = this;
 			
 			//Add our children now that they have been loaded in
 			addChild(myMenu);
-			addChild(chatWindow);
+			//addChild(chatWindow);
 			addChild(sureWindow);
 			addChild(cursor);
 			
@@ -165,7 +168,7 @@ package {
 			//myMenu.tabs[TAB_NUM[CHAT]].addEventListener(MouseEvent.CLICK, tg);
 			//FIXME: MAYBE: Finding an object in a hash twice could be memory intensive. Saving it could save time.
 			setUpGhostButton();
-			setUpChatButton();
+			//setUpChatPanel();
 			myMenu.tabs[TAB_NUM[CLOSE]].addEventListener(MouseEvent.CLICK, close);
 			//open();
 			
@@ -176,9 +179,9 @@ package {
 			
 			//set up toggle captureinput for the chatinput. We might be bale to do this in the chat window, 
 			//FIXME: Put this in the chat window if at all possible, let's clean out this main file
-			chatWindow.chatInput.addEventListener(MouseEvent.MOUSE_UP, toggleChat);
-			chatWindow.chatInput.addEventListener(MouseEvent.MOUSE_OUT, enableToggleChatClickListener);
-			chatWindow.chatInput.addEventListener(MouseEvent.MOUSE_OVER, disableToggleChatClickListener);
+			myMenu.panels[CHAT].chatInput.addEventListener(MouseEvent.MOUSE_UP, toggleChat);
+			myMenu.panels[CHAT].chatInput.addEventListener(MouseEvent.MOUSE_OUT, enableToggleChatClickListener);
+			myMenu.panels[CHAT].chatInput.addEventListener(MouseEvent.MOUSE_OVER, disableToggleChatClickListener);
 						
 			//If we are in a testing env, put some dummy variables in to test how US will do things
 			if(!scaleForm) {
@@ -191,7 +194,7 @@ package {
 		//This is some duct tape used, because the video disapears if we don't do stuff with it.
 		public function onLevelLoaded(e:Event):void {
 			myMenu.x = stage.stageWidth-TAB_SIZE*.75;
-			myMenu.openX = (stage.stageWidth - myMenu.x) + (stage.stageWidth - myMenu.myWidth);
+			myMenu.openX = (stage.stageWidth - myMenu.myWidth);
 			myMenu.y = 0;
 			myMenu.closeX = myMenu.x;
 			myMenu.moveX = myMenu.closeX;
@@ -248,10 +251,10 @@ package {
 			myMenu.panels[CHAT].closeY -= iconButton.myHeight + TAB_SIZE/4;
 			myMenu.panels[CHAT].y -= iconButton.myHeight + TAB_SIZE/4;
 			myMenu.panels[CHAT].labels[CHAT] = iconButton;
-			myMenu.panels[CHAT].labelContainer.addChild(iconButton);			
+			myMenu.panels[CHAT].labelContainer.addChild(iconButton);
 			myMenu.panels[CHAT].mask.height += iconButton.height;//= myMenu.panels[GHOST].labelContainer.height-TAB_SIZE;			
 		}
-		
+	
 		//Become a Human! and update the Tab. Send a call to US to tell it do it.
 		public function humanMode(external:Boolean = true):void {
 			if(playerState != HUMAN_MODE) {
@@ -292,22 +295,22 @@ package {
 		}
 		
 		public function chatBeginTalk():void {
-			if(!windows[CHAT].visible) {
-				windows[CHAT].visible = !windows[CHAT].visible;
+			if(tabNames[0].name != myMenu.currentPanel) {
+				showTab(1);//windows[CHAT].visible = !windows[CHAT].visible;
 			}
 			var myFormat:TextFormat = new TextFormat();
 			myFormat.size = TAB_SIZE*.30;
 			myFormat.font = "Arial";
 			var myFont = new Arial();
 			myFormat.font = myFont.fontName;
-			windows[CHAT].chatInput.setTextFormat(myFormat); 
-			windows[CHAT].chatInput.embedFonts = true;
+			myMenu.panels[CHAT].chatInput.setTextFormat(myFormat); 
+			myMenu.panels[CHAT].chatInput.embedFonts = true;
 			stage.addEventListener(KeyboardEvent.KEY_UP, changeFocus);
-			windows[CHAT].chatInput.dispatchEvent(new MouseEvent(MouseEvent.CLICK));
+			myMenu.panels[CHAT].chatInput.dispatchEvent(new MouseEvent(MouseEvent.CLICK));
 		}
 		
 		public function changeFocus(e:KeyboardEvent= null):void {
-			stage.focus = windows[CHAT].chatInput;
+			stage.focus = myMenu.panels[CHAT].chatInput;
 			stage.removeEventListener(KeyboardEvent.KEY_UP, changeFocus);
 			ExternalInterface.call("asReceiveToggleChatTrue");
 		}
@@ -371,7 +374,7 @@ package {
 		
 		//Unrealscript asks this to see if the chatpanel is open or not.
 		public function isChatWindowOpen():int {
-			if (stage.focus == chatWindow.chatInput) {
+			if (stage.focus == myMenu.panels[CHAT].chatInput) {
 				//open
 				return 1;
 			} else {
@@ -491,11 +494,11 @@ package {
 			} else {
 				myFormat.color = 0x13e87d;
 			}
-			var chatWindow:ChatWindow = windows[CHAT];
+			var chatPanel:ChatPanel = myMenu.panels[CHAT];
 			//get the current length
-			var oldLength = chatWindow.chatLog.length;
+			var oldLength = chatPanel.chatLog.length;
 			//Update flash textfield. We might override this later
-			chatWindow.chatLog.appendText( "\n\n" + playerName + ":\n\t" + textMessage );
+			chatPanel.chatLog.appendText( "\n\n" + playerName + ":\n\t" + textMessage );
 			//FIXME: Reimplement this
 			/*
 				alertPlayer(playerName);
@@ -507,13 +510,13 @@ package {
 			}
 			
 			//get the new length
-			var newLength = chatWindow.chatLog.length;
+			var newLength = chatPanel.chatLog.length;
 			
 			//Format just the newest added section
-			chatWindow.chatLog.setTextFormat(myFormat, oldLength, newLength);
+			chatPanel.chatLog.setTextFormat(myFormat, oldLength, newLength);
 			
 			//Update textfield to always scroll to bottom
-			chatWindow.chatLog.scrollV = chatWindow.chatLog.maxScrollV;
+			chatPanel.chatLog.scrollV = chatPanel.chatLog.maxScrollV;
 		}
 		
 		//FIXME: hide this crud in the Chat window
@@ -533,7 +536,7 @@ package {
 		//FIXME: hide this crud in the Chat window
 		//toggleChat captures keys when you type
 		public function toggleChat(e:MouseEvent) {
-			chatWindow.chatInput.removeEventListener(MouseEvent.MOUSE_UP, toggleChat);
+			myMenu.panels[CHAT].chatInput.removeEventListener(MouseEvent.MOUSE_UP, toggleChat);
 			utrace("dissallow input");
 			ExternalInterface.call("asReceiveToggleChatTrue");
 		}
@@ -543,7 +546,7 @@ package {
 		public function clickToggleChatListener(e:MouseEvent = null) {
 			utrace("allow input, capture esc");
 			if(e != null) {
-				chatWindow.chatInput.addEventListener(MouseEvent.MOUSE_UP, toggleChat);
+				myMenu.panels[CHAT].chatInput.addEventListener(MouseEvent.MOUSE_UP, toggleChat);
 			}
 			stage.focus = stage;
 			ExternalInterface.call("asReceiveToggleChatFalse");

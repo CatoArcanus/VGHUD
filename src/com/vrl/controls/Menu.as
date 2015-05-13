@@ -14,6 +14,7 @@ package com.vrl.controls {
 	import com.vrl.buttons.Tab;	
 	import com.vrl.panels.Panel;	
 	import com.vrl.panels.AvatarPanel;	
+	import com.vrl.panels.ChatPanel;	
 	
 	////////////////
 	// Menu Class //
@@ -82,6 +83,10 @@ package com.vrl.controls {
 										 
 					//set up a panel
 					var panel = new Panel(tabInfo.name, width, TAB_SIZE, TAB_SIZE, tabInfo.leftSide, true, stageRef, height-TAB_SIZE*(tabInfos.length));
+					if(tabInfo.name == "Chat") {
+						panel = new ChatPanel(tabInfo.name, myWidth, myHeight-TAB_SIZE*tabInfos.length, TAB_SIZE, tabInfo.leftSide, true, stageRef);
+						panelMask.height = myHeight-TAB_SIZE*tabInfos.length;
+					}
 					panel.x = 0;
 					panel.y = tab.y + tab.myHeight - panel.myHeight;
 					panel.closeY = panel.y;
